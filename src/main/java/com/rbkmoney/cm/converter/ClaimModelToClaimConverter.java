@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,7 +41,6 @@ public class ClaimModelToClaimConverter implements ClaimConverter<ClaimModel, Cl
                                 .collect(Collectors.toList())
                 ).setMetadata(
                         Optional.ofNullable(claimModel.getMetadata())
-                                .filter(metadataModels -> !metadataModels.isEmpty())
                                 .map(
                                         metadata -> metadata.stream()
                                                 .map(

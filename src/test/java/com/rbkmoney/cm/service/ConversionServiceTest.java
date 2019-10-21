@@ -152,7 +152,7 @@ public class ConversionServiceTest {
     }
 
     @Test
-    @Repeat(1000)
+    @Repeat(20)
     public void testAllClaimConverters() {
         Claim claim = MockUtil.generateTBase(Claim.class);
         assertEquals(
