@@ -26,7 +26,7 @@ public class ContinuationTokenServiceTest {
     public void testBuildAndValidateTokenWithEmptyParameters() {
         List<Object> parameters = List.of();
         String token = continuationTokenService.buildToken("чекаем с пустым дном", parameters);
-        continuationTokenService.validateAndGet(token, Pageable.class, parameters);
+        continuationTokenService.validateAndGet(token, String.class, parameters);
     }
 
     @Test(expected = InvalidContinuationTokenException.class)
