@@ -16,7 +16,6 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class ShopUrlLocationModel extends ShopLocationModel {
 
-    //    @Column(nullable = false)
     private String url;
 
 }

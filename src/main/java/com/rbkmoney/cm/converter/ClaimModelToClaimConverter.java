@@ -1,6 +1,7 @@
 package com.rbkmoney.cm.converter;
 
 import com.rbkmoney.cm.model.ClaimModel;
+import com.rbkmoney.cm.model.MetadataModel;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.ClaimStatus;
 import com.rbkmoney.damsel.claim_management.ModificationUnit;
@@ -11,8 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
-import java.util.AbstractMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,16 +44,10 @@ public class ClaimModelToClaimConverter implements ClaimConverter<ClaimModel, Cl
                                 .filter(metadataModels -> !metadataModels.isEmpty())
                                 .map(
                                         metadata -> metadata.stream()
-                                                .map(
-                                                        metadataModel -> new AbstractMap.SimpleEntry<>(
-                                                                metadataModel.getKey(),
-                                                                conversionService.convert(metadataModel, Value.class)
-                                                        )
-                                                )
                                                 .collect(
                                                         Collectors.toMap(
-                                                                Map.Entry::getKey,
-                                                                Map.Entry::getValue
+                                                                MetadataModel::getKey,
+                                                                metadataModel -> conversionService.convert(metadataModel, Value.class)
                                                         )
                                                 )
                                 )

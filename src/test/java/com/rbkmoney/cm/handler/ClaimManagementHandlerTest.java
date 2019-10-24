@@ -63,7 +63,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         runService(() -> client.updateClaim("party_id", claim.getId(), 0, MockUtil.generateTBaseList(Modification.claim_modfication(new ClaimModification()), 5)));
     }
 
-    @Repeat(200)
+    @Repeat(5)
     @Test(expected = ChangesetConflict.class)
     public void testTryingToGetConflictWhenUpdate() {
         List<Modification> modifications = MockUtil.generateTBaseList(Modification.class, 1);

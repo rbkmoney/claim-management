@@ -8,6 +8,9 @@ management:
       statsd:
         flavor: etsy
         enabled: false
+  endpoint:
+    health:
+      show-details: always
 spring:
   application:
     name: @project.name@
@@ -26,13 +29,13 @@ spring:
   jpa:
     show-sql: false
     properties:
-      javax:
-        persistence:
-          schema-generation:
-            create-source: metadata
-            scripts:
-              action: create
-              create-target: create.sql
+#      javax:
+#        persistence:
+#          schema-generation:
+#            create-source: metadata
+#            scripts:
+#              action: create
+#              create-target: create.sql
       hibernate:
         default_schema: cm
         format_sql: false
@@ -41,7 +44,7 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-      ddl-auto: create
+#      ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
 info:
   version: @project.version@

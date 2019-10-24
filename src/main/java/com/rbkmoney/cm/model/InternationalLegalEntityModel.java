@@ -16,12 +16,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("international_legal_entity")
 public class InternationalLegalEntityModel extends LegalEntityModel {
 
-    //    @Column(nullable = false)
     private String legalName;
 
     private String tradingName;
 
-    //    @Column(nullable = false)
     private String registeredAddress;
 
     private String actualAddress;

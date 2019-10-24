@@ -61,6 +61,11 @@
             <artifactId>common</artifactId>
             <version>0.6.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.rbkmoney</groupId>
+            <artifactId>custom-actuator-endpoints</artifactId>
+            <version>0.0.1</version>
+        </dependency>
 
         <!--spring-->
         <dependency>
