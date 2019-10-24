@@ -22,4 +22,10 @@ public class ContractCreationModificationModel extends ContractModificationModel
     @OneToOne(cascade = CascadeType.ALL)
     private ContractParamsModel contractParams;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractCreationModificationModel
+                && super.canEqual(that);
+    }
+
 }

@@ -22,4 +22,10 @@ public class ContractPayoutToolCreationModificationModel extends ContractPayoutT
     @OneToOne(cascade = CascadeType.ALL)
     private PayoutToolParamsModel payoutToolParams;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractPayoutToolCreationModificationModel
+                && super.canEqual(that);
+    }
+
 }

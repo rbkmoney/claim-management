@@ -18,4 +18,10 @@ public class ContractContractorChangeModificationModel extends ContractModificat
     @Column(nullable = false)
     private String contractorId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractContractorChangeModificationModel
+                && super.canEqual(that);
+    }
+
 }

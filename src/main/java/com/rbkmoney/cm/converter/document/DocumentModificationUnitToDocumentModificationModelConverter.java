@@ -1,7 +1,6 @@
 package com.rbkmoney.cm.converter.document;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
-import com.rbkmoney.cm.model.ClaimModificationModel;
 import com.rbkmoney.cm.model.document.DocumentModificationModel;
 import com.rbkmoney.cm.model.document.DocumentModificationTypeEnum;
 import com.rbkmoney.damsel.claim_management.DocumentModificationUnit;

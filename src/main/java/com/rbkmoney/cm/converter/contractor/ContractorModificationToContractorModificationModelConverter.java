@@ -1,7 +1,6 @@
 package com.rbkmoney.cm.converter.contractor;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
-import com.rbkmoney.cm.model.contract.ContractCreationModificationModel;
 import com.rbkmoney.cm.model.contractor.ContractorCreationModificationModel;
 import com.rbkmoney.cm.model.contractor.ContractorIdentificationLevelModificationModel;
 import com.rbkmoney.cm.model.contractor.ContractorModificationModel;

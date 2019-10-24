@@ -1,10 +1,7 @@
 package com.rbkmoney.cm.converter.file;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
-import com.rbkmoney.cm.model.comment.CommentModificationModel;
 import com.rbkmoney.cm.model.file.FileModificationModel;
-import com.rbkmoney.damsel.claim_management.CommentCreated;
-import com.rbkmoney.damsel.claim_management.CommentModification;
 import com.rbkmoney.damsel.claim_management.FileCreated;
 import com.rbkmoney.damsel.claim_management.FileModification;
 import org.springframework.stereotype.Component;

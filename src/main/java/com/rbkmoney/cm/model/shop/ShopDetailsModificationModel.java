@@ -23,4 +23,9 @@ public class ShopDetailsModificationModel extends ShopModificationModel {
     @JoinColumn(nullable = false, name = "shop_details_id", referencedColumnName = "id")
     private ShopDetailsModel details;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopDetailsModificationModel
+                && super.canEqual(that);
+    }
 }

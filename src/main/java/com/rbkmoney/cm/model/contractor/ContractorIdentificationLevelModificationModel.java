@@ -21,4 +21,10 @@ public class ContractorIdentificationLevelModificationModel extends ContractorMo
     @Enumerated(EnumType.STRING)
     private ContractorIdentificationLevel contractorIdentificationLevel;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractorIdentificationLevelModificationModel
+                && super.canEqual(that);
+    }
+
 }

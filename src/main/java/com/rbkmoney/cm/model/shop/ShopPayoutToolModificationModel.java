@@ -18,4 +18,10 @@ public class ShopPayoutToolModificationModel extends ShopModificationModel {
     @Column(nullable = false)
     private String payoutToolId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopPayoutToolModificationModel
+                && super.canEqual(that);
+    }
+
 }

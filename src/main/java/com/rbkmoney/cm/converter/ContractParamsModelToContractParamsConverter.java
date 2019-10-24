@@ -16,12 +16,12 @@ public class ContractParamsModelToContractParamsConverter implements ClaimConver
                 .setContractorId(contractParamsModel.getContractorId())
                 .setTemplate(
                         Optional.ofNullable(contractParamsModel.getContractTemplateId())
-                                .map(templateId -> new ContractTemplateRef(templateId))
+                                .map(ContractTemplateRef::new)
                                 .orElse(null)
                 )
                 .setPaymentInstitution(
                         Optional.ofNullable(contractParamsModel.getPaymentInstitutionId())
-                                .map(paymentInstitutionId -> new PaymentInstitutionRef(paymentInstitutionId))
+                                .map(PaymentInstitutionRef::new)
                                 .orElse(null)
                 );
     }

@@ -22,4 +22,10 @@ public class ShopLocationModificationModel extends ShopModificationModel {
     @JoinColumn(nullable = false, name = "shop_location_id", referencedColumnName = "id")
     private ShopLocationModel location;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopLocationModificationModel
+                && super.canEqual(that);
+    }
+
 }

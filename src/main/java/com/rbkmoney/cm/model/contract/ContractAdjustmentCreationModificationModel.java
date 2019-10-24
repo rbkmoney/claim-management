@@ -22,4 +22,10 @@ public class ContractAdjustmentCreationModificationModel extends ContractAdjustm
     @OneToOne(cascade = CascadeType.ALL)
     private ContractAdjustmentParamsModel contractAdjustmentParams;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractAdjustmentCreationModificationModel
+                && super.canEqual(that);
+    }
+
 }

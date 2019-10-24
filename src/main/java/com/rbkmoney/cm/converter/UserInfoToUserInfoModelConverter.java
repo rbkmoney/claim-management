@@ -4,7 +4,6 @@ import com.rbkmoney.cm.model.UserInfoModel;
 import com.rbkmoney.cm.model.UserTypeEnum;
 import com.rbkmoney.damsel.claim_management.UserInfo;
 import com.rbkmoney.damsel.claim_management.UserType;
-import com.rbkmoney.geck.common.util.TBaseUtil;
 import org.springframework.stereotype.Component;
 
 @Component

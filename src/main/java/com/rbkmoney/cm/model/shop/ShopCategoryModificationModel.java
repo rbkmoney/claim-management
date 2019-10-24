@@ -18,4 +18,10 @@ public class ShopCategoryModificationModel extends ShopModificationModel {
     @Column(nullable = false)
     private int shopCategoryId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopCategoryModificationModel
+                && super.canEqual(that);
+    }
+
 }

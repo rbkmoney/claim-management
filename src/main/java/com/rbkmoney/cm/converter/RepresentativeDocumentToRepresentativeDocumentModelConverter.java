@@ -24,7 +24,7 @@ public class RepresentativeDocumentToRepresentativeDocumentModelConverter implem
             case ARTICLES_OF_ASSOCIATION:
                 return new ArticlesOfAssociationRepresentativeDocumentModel();
             default:
-                throw new RuntimeException();
+                throw new IllegalArgumentException(String.format("Unknown type '%s'", representativeDocument.getSetField()));
         }
     }
 }

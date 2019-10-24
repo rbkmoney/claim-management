@@ -19,7 +19,7 @@ public class ContractPayoutToolCreationModificationModelToPayoutToolModification
     @Override
     public PayoutToolModification convert(ContractPayoutToolCreationModificationModel contractPayoutToolCreationModificationModel) {
         return PayoutToolModification.creation(
-            conversionService.convert(contractPayoutToolCreationModificationModel.getPayoutToolParams(), PayoutToolParams.class)
+                conversionService.convert(contractPayoutToolCreationModificationModel.getPayoutToolParams(), PayoutToolParams.class)
         );
     }
 }

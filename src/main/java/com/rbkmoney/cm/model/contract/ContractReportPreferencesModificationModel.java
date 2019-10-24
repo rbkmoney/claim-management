@@ -22,4 +22,10 @@ public class ContractReportPreferencesModificationModel extends ContractModifica
     @JoinColumn(name = "service_acceptance_act_preferences_id", referencedColumnName = "id")
     private ServiceAcceptanceActPreferencesModel serviceAcceptanceActPreferences;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractReportPreferencesModificationModel
+                && super.canEqual(that);
+    }
+
 }

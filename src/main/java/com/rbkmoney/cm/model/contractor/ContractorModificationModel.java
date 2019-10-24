@@ -22,4 +22,10 @@ public class ContractorModificationModel extends PartyModificationModel {
     @Column(nullable = false)
     private String contractorId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractorModificationModel
+                && contractorId.equals(((ContractorModificationModel) that).getContractorId());
+    }
+
 }

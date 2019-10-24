@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -21,5 +22,10 @@ public class ContractorPrivateEntityCreationModificationModel extends Contractor
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "private_entity_id", referencedColumnName = "id")
     PrivateEntityModel privateEntity;
+
+    @Override
+    public boolean canEqual(final Object that) {
+        return super.canEqual(that);
+    }
 
 }

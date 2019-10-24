@@ -22,4 +22,10 @@ public class ContractLegalAgreementBindingModificationModel extends ContractModi
     @OneToOne(cascade = CascadeType.ALL)
     private LegalAgreementModel legalAgreement;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractLegalAgreementBindingModificationModel
+                && super.canEqual(that);
+    }
+
 }

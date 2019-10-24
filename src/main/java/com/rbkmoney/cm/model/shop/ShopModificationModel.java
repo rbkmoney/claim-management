@@ -22,4 +22,10 @@ public class ShopModificationModel extends PartyModificationModel {
     @Column(nullable = false)
     private String shopId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopModificationModel
+                && shopId.equals(((ShopModificationModel) that).getShopId());
+    }
+
 }

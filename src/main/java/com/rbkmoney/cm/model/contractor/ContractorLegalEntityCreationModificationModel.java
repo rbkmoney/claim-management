@@ -22,4 +22,9 @@ public class ContractorLegalEntityCreationModificationModel extends ContractorCr
     @JoinColumn(nullable = false, name = "legal_entity_id", referencedColumnName = "id")
     private LegalEntityModel legalEntity;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return super.canEqual(that);
+    }
+
 }

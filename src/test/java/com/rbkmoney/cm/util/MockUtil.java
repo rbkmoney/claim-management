@@ -36,8 +36,16 @@ public class MockUtil {
             structHandler -> structHandler.value(Instant.now().toString())
     );
 
+    public static <T extends TBase> List<T> generateTBaseList(T tBase, int count) {
+        return generateTBaseList(tBase, count, timeFields, accountFields);
+    }
+
     public static <T extends TBase> List<T> generateTBaseList(Class<T> clazz, int count) {
         return generateTBaseList(clazz, count, timeFields, accountFields);
+    }
+
+    public static <T extends TBase> List<T> generateTBaseList(T tBase, int count, Map.Entry<String[], FieldHandler>... fieldHandlers) {
+        return Stream.generate(() -> generateTBase(tBase, fieldHandlers)).limit(count).collect(Collectors.toList());
     }
 
     public static <T extends TBase> List<T> generateTBaseList(Class<T> clazz, int count, Map.Entry<String[], FieldHandler>... fieldHandlers) {

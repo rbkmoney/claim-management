@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Entity
@@ -16,5 +15,11 @@ import javax.persistence.Entity;
 public class ShopPayoutScheduleModificationModel extends ShopModificationModel {
 
     private Integer businessScheduleId;
+
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopPayoutScheduleModificationModel
+                && super.canEqual(that);
+    }
 
 }

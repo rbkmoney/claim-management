@@ -18,4 +18,10 @@ public class ContractorRegisteredUserCreationModificationModel extends Contracto
     @Column(nullable = false)
     private String email;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractorRegisteredUserCreationModificationModel
+                && super.canEqual(that);
+    }
+
 }

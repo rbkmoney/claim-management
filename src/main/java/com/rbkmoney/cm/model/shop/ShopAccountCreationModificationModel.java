@@ -22,4 +22,10 @@ public class ShopAccountCreationModificationModel extends ShopModificationModel 
     @JoinColumn(nullable = false, name = "shop_account_params_id", referencedColumnName = "id")
     private ShopAccountParamsModel shopAccountParams;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ShopAccountCreationModificationModel
+                && super.canEqual(that);
+    }
+
 }

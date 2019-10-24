@@ -11,7 +11,7 @@ public class ClaimStatusToClaimStatusModelConverter implements ClaimConverter<Cl
     @Override
     public ClaimStatusModel convert(ClaimStatus claimStatus) {
         ClaimStatusModel claimStatusModel = new ClaimStatusModel();
-        claimStatusModel.setClaimStatus(TBaseUtil.unionFieldToEnum(claimStatus, ClaimStatusEnum.class));
+        claimStatusModel.setClaimStatusEnum(TBaseUtil.unionFieldToEnum(claimStatus, ClaimStatusEnum.class));
         claimStatusModel.setClaimStatusReason(extractReason(claimStatus));
         return claimStatusModel;
     }

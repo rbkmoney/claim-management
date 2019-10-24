@@ -6,7 +6,10 @@ import com.rbkmoney.cm.meta.UserIdentityRealmExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityUsernameExtensionKit;
 import com.rbkmoney.cm.model.UserInfoModel;
 import com.rbkmoney.woody.api.trace.ContextUtils;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ContextUtil {
 
     public static UserInfoModel getUserInfoFromContext() {

@@ -25,4 +25,10 @@ public class FileModificationModel extends ClaimModificationModel {
     @Enumerated(EnumType.STRING)
     private FileModificationTypeEnum fileModificationType;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof FileModificationModel
+                && fileId.equals(((FileModificationModel) that).getFileId());
+    }
+
 }

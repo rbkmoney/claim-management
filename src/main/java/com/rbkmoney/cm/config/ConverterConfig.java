@@ -9,7 +9,7 @@ import org.springframework.context.support.ConversionServiceFactoryBean;
 import java.util.Set;
 
 @Configuration
-@ComponentScan( basePackages = {"com.rbkmoney.cm.converter"})
+@ComponentScan(basePackages = {"com.rbkmoney.cm.converter"})
 public class ConverterConfig {
 
     @Bean

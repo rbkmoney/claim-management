@@ -1,7 +1,6 @@
 package com.rbkmoney.cm.converter.contract;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
-import com.rbkmoney.cm.model.contract.ContractPayoutToolChangeModificationModel;
 import com.rbkmoney.cm.model.contract.ContractPayoutToolModificationModel;
 import com.rbkmoney.damsel.claim_management.PayoutToolModification;
 import com.rbkmoney.damsel.claim_management.PayoutToolModificationUnit;

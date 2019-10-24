@@ -16,4 +16,10 @@ public class ContractTerminationModificationModel extends ContractModificationMo
 
     private String reason;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractTerminationModificationModel
+                && super.canEqual(that);
+    }
+
 }

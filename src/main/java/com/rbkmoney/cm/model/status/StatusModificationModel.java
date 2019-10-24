@@ -2,7 +2,10 @@ package com.rbkmoney.cm.model.status;
 
 import com.rbkmoney.cm.model.ClaimModificationModel;
 import com.rbkmoney.cm.model.ClaimStatusModel;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -19,5 +22,10 @@ public class StatusModificationModel extends ClaimModificationModel {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusModificationTypeEnum statusModificationType;
+
+    @Override
+    public boolean canEqual(Object that) {
+        return that instanceof StatusModificationModel;
+    }
 
 }

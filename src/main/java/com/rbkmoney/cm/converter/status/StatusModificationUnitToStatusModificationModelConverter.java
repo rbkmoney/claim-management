@@ -1,8 +1,6 @@
 package com.rbkmoney.cm.converter.status;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
-import com.rbkmoney.cm.model.ClaimStatusEnum;
-import com.rbkmoney.cm.model.ClaimModificationModel;
 import com.rbkmoney.cm.model.ClaimStatusModel;
 import com.rbkmoney.cm.model.status.StatusModificationModel;
 import com.rbkmoney.cm.model.status.StatusModificationTypeEnum;

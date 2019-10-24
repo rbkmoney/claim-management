@@ -15,11 +15,11 @@ public class ShopPayoutScheduleModificationModelToShopModificationConverter impl
     public ShopModification convert(ShopPayoutScheduleModificationModel shopPayoutScheduleModificationModel) {
         return ShopModification.payout_schedule_modification(
                 new ScheduleModification()
-                .setSchedule(
-                Optional.ofNullable(shopPayoutScheduleModificationModel.getBusinessScheduleId())
-                .map(BusinessScheduleRef::new)
-                .orElse(null)
-                )
+                        .setSchedule(
+                                Optional.ofNullable(shopPayoutScheduleModificationModel.getBusinessScheduleId())
+                                        .map(BusinessScheduleRef::new)
+                                        .orElse(null)
+                        )
         );
     }
 }

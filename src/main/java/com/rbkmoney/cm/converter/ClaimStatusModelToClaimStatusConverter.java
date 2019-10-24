@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ClaimStatusModelToClaimStatusConverter implements ClaimConverter<ClaimStatusModel, ClaimStatus> {
     @Override
     public ClaimStatus convert(ClaimStatusModel claimStatusModel) {
-        ClaimStatusEnum claimStatusEnum = claimStatusModel.getClaimStatus();
+        ClaimStatusEnum claimStatusEnum = claimStatusModel.getClaimStatusEnum();
         switch (claimStatusEnum) {
             case pending:
                 return ClaimStatus.pending(new ClaimPending());

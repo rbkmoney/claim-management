@@ -21,4 +21,10 @@ public class ContractPayoutToolModificationModel extends ContractModificationMod
     @Column(nullable = false)
     private String payoutToolId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractPayoutToolModificationModel
+                && payoutToolId.equals(((ContractPayoutToolModificationModel) that).getPayoutToolId());
+    }
+
 }

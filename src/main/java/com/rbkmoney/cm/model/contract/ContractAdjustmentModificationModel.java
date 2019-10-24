@@ -21,5 +21,10 @@ public class ContractAdjustmentModificationModel extends ContractModificationMod
     @Column(nullable = false)
     private String contractAdjustmentId;
 
+    @Override
+    public boolean canEqual(final Object that) {
+        return that instanceof ContractAdjustmentModificationModel
+                && super.canEqual(that);
+    }
 
 }

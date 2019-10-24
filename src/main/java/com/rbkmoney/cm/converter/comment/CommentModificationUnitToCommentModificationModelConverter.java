@@ -1,7 +1,6 @@
 package com.rbkmoney.cm.converter.comment;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
-import com.rbkmoney.cm.model.ClaimModificationModel;
 import com.rbkmoney.cm.model.comment.CommentModificationModel;
 import com.rbkmoney.cm.model.comment.CommentModificationTypeEnum;
 import com.rbkmoney.damsel.claim_management.CommentModificationUnit;

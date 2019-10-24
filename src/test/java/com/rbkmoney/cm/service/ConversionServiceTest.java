@@ -155,6 +155,9 @@ public class ConversionServiceTest {
     @Repeat(20)
     public void testAllClaimConverters() {
         Claim claim = MockUtil.generateTBase(Claim.class);
+        if (claim.getMetadata() != null && claim.getMetadata().isEmpty()) {
+            claim.setMetadata(null);
+        }
         assertEquals(
                 claim,
                 conversionService.convert(
