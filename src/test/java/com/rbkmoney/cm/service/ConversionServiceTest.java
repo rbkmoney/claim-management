@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.CollectionUtils;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -155,7 +156,7 @@ public class ConversionServiceTest {
     @Repeat(20)
     public void testAllClaimConverters() {
         Claim claim = MockUtil.generateTBase(Claim.class);
-        if (claim.getMetadata() != null && claim.getMetadata().isEmpty()) {
+        if (CollectionUtils.isEmpty(claim.getMetadata())) {
             claim.setMetadata(null);
         }
         assertEquals(

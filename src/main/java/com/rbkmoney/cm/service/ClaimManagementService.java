@@ -109,7 +109,6 @@ public class ClaimManagementService {
         );
     }
 
-    @Transactional
     public void changeStatus(String partyId, long claimId, int revision, ClaimStatusModel targetClaimStatus, List<ClaimStatusEnum> expectedStatuses) {
         log.info("Trying to change status in claim, claimId='{}', targetStatus='{}'", claimId, targetClaimStatus);
         ClaimModel claimModel = getClaim(partyId, claimId, false);
@@ -164,23 +163,26 @@ public class ClaimManagementService {
 
     @Transactional
     public MetadataModel getMetaData(String partyId, long claimId, String key) {
+        log.info("Trying to get metadata field, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
         ClaimModel claimModel = getClaim(partyId, claimId, false);
 
         MetadataModel metadataModel = claimModel.getMetadata().stream()
                 .filter(metadata -> key.equals(metadata.getKey()))
                 .findFirst()
                 .orElseThrow(MetadataKeyNotFoundException::new);
-
+        log.info("Metadata field have been found, metadata='{}'", metadataModel);
         return metadataModel;
     }
 
     @Transactional
     public void setMetaData(String partyId, long claimId, String key, MetadataModel metadataModel) {
+        log.info("Trying to change metadata field, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
         ClaimModel claimModel = getClaim(partyId, claimId, false);
 
         claimModel.getMetadata().removeIf(metadata -> key.equals(metadata.getKey()));
         claimModel.getMetadata().add(metadataModel);
         claimRepository.save(claimModel);
+        log.info("metadata field have been changed, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
     }
 
     private void checkForConflicts(List<ModificationModel> oldModifications, List<ModificationModel> newModifications) {

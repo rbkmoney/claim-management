@@ -145,7 +145,11 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     @Override
     public void setMetaData(String partyId, long claimId, String key, Value value) throws PartyNotFound, ClaimNotFound, TException {
         MetadataModel metadataModel = conversionService.convert(Map.entry(key, value), MetadataModel.class);
-        claimManagementService.setMetaData(partyId, claimId, key, metadataModel);
+        try {
+            claimManagementService.setMetaData(partyId, claimId, key, metadataModel);
+        } catch (ClaimNotFoundException ex) {
+            throw new ClaimNotFound();
+        }
     }
 
     @Override
