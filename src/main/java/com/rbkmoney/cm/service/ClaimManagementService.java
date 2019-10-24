@@ -109,6 +109,7 @@ public class ClaimManagementService {
         );
     }
 
+    @Transactional
     public void changeStatus(String partyId, long claimId, int revision, ClaimStatusModel targetClaimStatus, List<ClaimStatusEnum> expectedStatuses) {
         log.info("Trying to change status in claim, claimId='{}', targetStatus='{}'", claimId, targetClaimStatus);
         ClaimModel claimModel = getClaim(partyId, claimId, false);
