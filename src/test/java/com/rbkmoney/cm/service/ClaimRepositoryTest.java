@@ -6,6 +6,7 @@ import com.rbkmoney.cm.model.shop.ShopLocationModificationModel;
 import com.rbkmoney.cm.repository.ClaimRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionSystemException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -16,7 +17,7 @@ public class ClaimRepositoryTest extends AbstractIntegrationTest {
     private ClaimRepository claimRepository;
 
     @Test(expected = ConstraintViolationException.class)
-    public void testRequireNullSave() {
+    public void testRequireNullSave() throws Throwable {
         ClaimModel claimModel = new ClaimModel();
         claimModel.setPartyId("party_id");
         claimModel.setClaimStatus(new ClaimStatusModel(ClaimStatusEnum.pending, null));
@@ -35,7 +36,11 @@ public class ClaimRepositoryTest extends AbstractIntegrationTest {
 
         claimModel.setModifications(List.of(shopLocationModificationModel));
 
-        claimRepository.save(claimModel);
+        try {
+            claimRepository.save(claimModel);
+        } catch (TransactionSystemException ex) {
+            throw ex.getOriginalException().getCause();
+        }
     }
 
 }
