@@ -60,8 +60,8 @@ public class ClaimManagementService {
         modifications.forEach(this::addUserInfo);
         claimModel.getModifications().addAll(modifications);
 
-        claimRepository.save(claimModel);
-        log.info("Claim have been updated, partyId='{}', claimId='{}'", partyId, claimId);
+        claimModel = claimRepository.save(claimModel);
+        log.info("Claim have been updated, partyId='{}', claim='{}'", partyId, claimModel);
     }
 
     @Transactional
