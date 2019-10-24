@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -19,6 +20,7 @@ import java.util.Objects;
 @EqualsAndHashCode(callSuper = true)
 public class ContractorPrivateEntityCreationModificationModel extends ContractorCreationModificationModel {
 
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "private_entity_id", referencedColumnName = "id")
     PrivateEntityModel privateEntity;

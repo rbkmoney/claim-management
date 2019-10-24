@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ import javax.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class ShopModificationModel extends PartyModificationModel {
 
+    @NotNull
     @Column(nullable = false)
     private String shopId;
 

@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ public class StatusModificationModel extends ClaimModificationModel {
     @Embedded
     private ClaimStatusModel claimStatus;
 
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private StatusModificationTypeEnum statusModificationType;

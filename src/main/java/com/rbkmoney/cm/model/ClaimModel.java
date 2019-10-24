@@ -7,6 +7,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class ClaimModel {
     @GeneratedValue
     private long id;
 
+    @NotNull
     @Column(nullable = false)
     private String partyId;
 
@@ -36,12 +38,10 @@ public class ClaimModel {
     private LocalDateTime updatedAt;
 
     @OrderBy
-    @LazyCollection(LazyCollectionOption.TRUE)
     @JoinColumn(name = "claim_id", nullable = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ModificationModel> modifications;
 
-    @LazyCollection(LazyCollectionOption.TRUE)
     @JoinColumn(name = "claim_id", nullable = false)
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MetadataModel> metadata;

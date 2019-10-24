@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -16,7 +17,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class PayoutToolInfoWalletInfoModel extends PayoutToolInfoModel {
 
-    //    @Column(nullable = false)
+    @NotNull
     String walletId;
 
 }

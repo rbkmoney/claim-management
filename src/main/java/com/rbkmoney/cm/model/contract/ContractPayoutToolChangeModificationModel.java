@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -18,8 +19,9 @@ import javax.persistence.OneToOne;
 @EqualsAndHashCode(callSuper = true)
 public class ContractPayoutToolChangeModificationModel extends ContractPayoutToolModificationModel {
 
-    @JoinColumn(nullable = false, name = "payout_tool_info_id", referencedColumnName = "id")
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(nullable = false, name = "payout_tool_info_id", referencedColumnName = "id")
     private PayoutToolInfoModel payoutToolInfoModel;
 
     @Override

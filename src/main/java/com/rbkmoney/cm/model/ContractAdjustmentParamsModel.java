@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -15,6 +16,7 @@ public class ContractAdjustmentParamsModel {
     @GeneratedValue
     private long id;
 
+    @NotNull
     @Column(nullable = false)
     private int contractTemplateId;
 

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -15,8 +16,9 @@ import javax.persistence.*;
 @DiscriminatorValue("power_of_attorney")
 public class PowerOfAttorneyRepresentativeDocumentModel extends RepresentativeDocumentModel {
 
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(/*nullable = false, */name = "legal_agreement_id", referencedColumnName = "id")
+    @JoinColumn(name = "legal_agreement_id", referencedColumnName = "id")
     private LegalAgreementModel legalAgreement;
 
 }

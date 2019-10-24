@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -18,6 +19,7 @@ import javax.persistence.OneToOne;
 @EqualsAndHashCode(callSuper = true)
 public class ShopCreationModificationModel extends ShopModificationModel {
 
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "shop_params_id", referencedColumnName = "id")
     private ShopParamsModel shopParams;

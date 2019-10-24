@@ -7,6 +7,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Setter
@@ -25,6 +26,7 @@ public class ModificationModel {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(nullable = false, name = "user_info_id", referencedColumnName = "id")
     private UserInfoModel userInfo;

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -15,8 +16,9 @@ import javax.persistence.*;
 @DiscriminatorValue("international_bank_account")
 public class PayoutToolInfoInternationalBankAccountModel extends PayoutToolInfoModel {
 
-    @JoinColumn(/*nullable = false, */name = "international_bank_account_id", referencedColumnName = "id")
+    @NotNull
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "international_bank_account_id", referencedColumnName = "id")
     private InternationalBankAccountModel internationalBankAccountModel;
 
 }

@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -15,9 +16,11 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class ShopContractModificationModel extends ShopModificationModel {
 
+    @NotNull
     @Column(nullable = false)
     private String contractId;
 
+    @NotNull
     @Column(nullable = false)
     private String payoutToolId;
 
