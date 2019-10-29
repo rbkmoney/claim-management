@@ -1,4 +1,4 @@
-create schema cm;
+create schema if not exists cm;
 create sequence cm.hibernate_sequence start 1 increment 1;
 
 create table cm.claim_model
