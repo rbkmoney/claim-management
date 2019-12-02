@@ -11,6 +11,7 @@ import com.rbkmoney.cm.util.ContextUtil;
 import com.rbkmoney.cm.util.MockUtil;
 import com.rbkmoney.damsel.claim_management.*;
 import com.rbkmoney.damsel.msgpack.Value;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import com.rbkmoney.woody.api.flow.WFlow;
 import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
 import lombok.SneakyThrows;
@@ -21,7 +22,9 @@ import org.springframework.test.annotation.Repeat;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -60,7 +63,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     public void testCreateClaimAndUpdate() {
         Claim claim = createClaim("party_id", MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
-        runService(() -> client.updateClaim("party_id", claim.getId(), 0, MockUtil.generateTBaseList(Modification.claim_modfication(new ClaimModification()), 5)));
+        runService(() -> client.updateClaim("party_id", claim.getId(), 0, MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5)));
     }
 
     @Repeat(5)
@@ -98,19 +101,46 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void testCreateRequestReviewAndRequestChanges() {
+        Claim claim = createClaim("party_id", 5);
+        runService(() -> client.requestClaimReview("party_id", claim.getId(), 0));
+        assertEquals(ClaimStatus.review(new ClaimReview()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
+        runService(() -> client.requestClaimChanges("party_id", claim.getId(), 1));
+        assertEquals(ClaimStatus.pending(new ClaimPending()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
+    }
+
+    @Test
     public void testSearchClaims() {
         ClaimSearchQuery claimSearchQuery = new ClaimSearchQuery();
         claimSearchQuery.setPartyId("claim_search_party_id");
         claimSearchQuery.setLimit(20);
 
         List<Claim> claims = createClaims(claimSearchQuery.getPartyId(), claimSearchQuery.getLimit(), 5);
-        assertEquals(claims.size(), callService(() -> client.searchClaims(claimSearchQuery)).size());
+        assertEquals(claims.size(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
 
         claimSearchQuery.setStatuses(Arrays.asList(ClaimStatus.pending(new ClaimPending())));
-        assertEquals(claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(), callService(() -> client.searchClaims(claimSearchQuery)).size());
+        assertEquals(claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
 
         claimSearchQuery.setStatuses(Arrays.asList(ClaimStatus.review(new ClaimReview()), ClaimStatus.accepted(new ClaimAccepted())));
-        assertEquals(claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(), callService(() -> client.searchClaims(claimSearchQuery)).size());
+        assertEquals(claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
+    }
+
+    @Test
+    public void testSearchClaimsWithContinuation() {
+        ClaimSearchQuery claimSearchQuery = new ClaimSearchQuery();
+        claimSearchQuery.setLimit(1);
+
+        createClaims("claim_search_party_id", 20, 1);
+
+        List<Claim> searchedClaimList = new ArrayList<>();
+        ClaimSearchResponse claimSearchResponse;
+        do {
+            claimSearchResponse = callService(() -> client.searchClaims(claimSearchQuery));
+            assertEquals(claimSearchQuery.getLimit(), claimSearchResponse.getResult().size());
+            searchedClaimList.addAll(claimSearchResponse.getResult());
+            claimSearchQuery.setContinuationToken(claimSearchResponse.getContinuationToken());
+        } while (claimSearchResponse.isSetContinuationToken());
+        assertEquals(callService(() -> client.searchClaims(claimSearchQuery.setLimit(20))).getResult(), searchedClaimList);
     }
 
     @Test
@@ -119,10 +149,20 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         Claim claim = callService(() -> client.createClaim("party_id", modification));
 
         Value value = MockUtil.generateTBase(Value.class);
-        runService(() -> client.setMetaData("party_id", claim.getId(), "key", value));
+        runService(() -> client.setMetadata("party_id", claim.getId(), "key", value));
         Value value2 = MockUtil.generateTBase(Value.class);
-        runService(() -> client.setMetaData("party_id", claim.getId(), "key", value2));
-        assertEquals(value2, callService(() -> client.getMetaData("party_id", claim.getId(), "key")));
+        runService(() -> client.setMetadata("party_id", claim.getId(), "key", value2));
+        assertEquals(value2, callService(() -> client.getMetadata("party_id", claim.getId(), "key")));
+    }
+
+    @Test(expected = MetadataKeyNotFound.class)
+    public void removeMetadataTest() {
+        Claim claim = createClaim("party_id", 5);
+        Value value = MockUtil.generateTBase(Value.class);
+        runService(() -> client.setMetadata("party_id", claim.getId(), "key", value));
+        assertEquals(value, callService(() -> client.getMetadata("party_id", claim.getId(), "key")));
+        runService(() -> client.removeMetadata("party_id", claim.getId(), "key"));
+        callService(() -> client.getMetadata("party_id", claim.getId(), "key"));
     }
 
     private List<Claim> createClaims(String partyId, int claimCount, int modificationCountPerClaim) {

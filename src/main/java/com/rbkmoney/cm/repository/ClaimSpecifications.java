@@ -9,7 +9,9 @@ import java.util.List;
 public class ClaimSpecifications {
 
     public static Specification<ClaimModel> equalsByPartyId(String partyId) {
-        return ((Specification<ClaimModel>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("partyId"), partyId));
+        return (Specification<ClaimModel>) (root, criteriaQuery, criteriaBuilder) -> partyId != null
+                ? criteriaBuilder.equal(root.get("partyId"), partyId)
+                : criteriaBuilder.conjunction();
     }
 
     public static Specification<ClaimModel> equalsByClaimId(long claimId) {

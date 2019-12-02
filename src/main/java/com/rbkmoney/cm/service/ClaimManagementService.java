@@ -96,7 +96,7 @@ public class ClaimManagementService {
         changeStatus(
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.revoked, reason),
-                Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review, ClaimStatusEnum.denied)
+                Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review)
         );
     }
 
@@ -106,6 +106,24 @@ public class ClaimManagementService {
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.denied, reason),
                 Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review)
+        );
+    }
+
+    @Transactional
+    public void requestClaimReview(String partyId, long claimId, int revision) {
+        changeStatus(
+                partyId, claimId, revision,
+                new ClaimStatusModel(ClaimStatusEnum.review, null),
+                Arrays.asList(ClaimStatusEnum.pending)
+        );
+    }
+
+    @Transactional
+    public void requestClaimChanges(String partyId, long claimId, int revision) {
+        changeStatus(
+                partyId, claimId, revision,
+                new ClaimStatusModel(ClaimStatusEnum.pending, null),
+                Arrays.asList(ClaimStatusEnum.review)
         );
     }
 
@@ -163,7 +181,7 @@ public class ClaimManagementService {
     }
 
     @Transactional
-    public MetadataModel getMetaData(String partyId, long claimId, String key) {
+    public MetadataModel getMetadata(String partyId, long claimId, String key) {
         log.info("Trying to get metadata field, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
         ClaimModel claimModel = getClaim(partyId, claimId, false);
 
@@ -176,7 +194,7 @@ public class ClaimManagementService {
     }
 
     @Transactional
-    public void setMetaData(String partyId, long claimId, String key, MetadataModel metadataModel) {
+    public void setMetadata(String partyId, long claimId, String key, MetadataModel metadataModel) {
         log.info("Trying to change metadata field, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
         ClaimModel claimModel = getClaim(partyId, claimId, false);
 
@@ -184,6 +202,16 @@ public class ClaimManagementService {
         claimModel.getMetadata().add(metadataModel);
         claimRepository.save(claimModel);
         log.info("metadata field have been changed, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
+    }
+
+    @Transactional
+    public void removeMetadata(String partyId, long claimId, String key) {
+        log.info("Trying to remove metadata field, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
+        ClaimModel claimModel = getClaim(partyId, claimId, false);
+
+        claimModel.getMetadata().removeIf(metadata -> key.equals(metadata.getKey()));
+        claimRepository.save(claimModel);
+        log.info("metadata field have been removed, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
     }
 
     private void checkForConflicts(List<ModificationModel> oldModifications, List<ModificationModel> newModifications) {

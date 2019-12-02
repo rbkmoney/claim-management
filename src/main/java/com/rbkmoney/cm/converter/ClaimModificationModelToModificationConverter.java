@@ -17,7 +17,7 @@ public class ClaimModificationModelToModificationConverter implements ClaimConve
 
     @Override
     public Modification convert(ClaimModificationModel claimModificationModel) {
-        return Modification.claim_modfication(
+        return Modification.claim_modification(
                 conversionService.convert(
                         claimModificationModel,
                         ClaimModification.class

@@ -19,8 +19,8 @@ public class ModificationToModificationModelConverter implements ClaimConverter<
     @Override
     public ModificationModel convert(Modification modification) {
         switch (modification.getSetField()) {
-            case CLAIM_MODFICATION:
-                return conversionService.convert(modification.getClaimModfication(), ClaimModificationModel.class);
+            case CLAIM_MODIFICATION:
+                return conversionService.convert(modification.getClaimModification(), ClaimModificationModel.class);
             case PARTY_MODIFICATION:
                 return conversionService.convert(modification.getPartyModification(), PartyModificationModel.class);
             default:

@@ -65,7 +65,7 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     }
 
     @Override
-    public List<Claim> searchClaims(ClaimSearchQuery claimRequest) throws PartyNotFound, LimitExceeded, BadContinuationToken, TException {
+    public ClaimSearchResponse searchClaims(ClaimSearchQuery claimRequest) throws PartyNotFound, LimitExceeded, BadContinuationToken, TException {
         List<ClaimStatusEnum> claimStatusEnums = Optional.ofNullable(claimRequest.getStatuses())
                 .map(
                         statuses -> statuses.stream()
@@ -78,14 +78,17 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
             ClaimPageResponse claimsWithContinuationToken = claimManagementService.searchClaims(
                     claimRequest.getPartyId(),
                     claimStatusEnums,
-                    claimRequest.getToken(),
+                    claimRequest.getContinuationToken(),
                     claimRequest.getLimit()
             );
-            //where continuation token in response?
-            // claimsWithContinuationToken.getToken();
-            return claimsWithContinuationToken.getClaims().stream()
-                    .map(claimModel -> conversionService.convert(claimModel, Claim.class))
-                    .collect(Collectors.toList());
+
+            return new ClaimSearchResponse()
+                    .setResult(
+                            claimsWithContinuationToken.getClaims().stream()
+                                    .map(claimModel -> conversionService.convert(claimModel, Claim.class))
+                                    .collect(Collectors.toList())
+                    )
+                    .setContinuationToken(claimsWithContinuationToken.getToken());
         } catch (InvalidContinuationTokenException ex) {
             throw new BadContinuationToken(ex.getMessage());
         }
@@ -130,10 +133,37 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         }
     }
 
+
     @Override
-    public Value getMetaData(String partyId, long claimId, String key) throws PartyNotFound, ClaimNotFound, MetadataKeyNotFound, TException {
+    public void requestClaimReview(String partyId, long claimId, int revision) throws PartyNotFound, ClaimNotFound, InvalidClaimStatus, InvalidClaimRevision, TException {
         try {
-            MetadataModel metadataModel = claimManagementService.getMetaData(partyId, claimId, key);
+            claimManagementService.requestClaimReview(partyId, claimId, revision);
+        } catch (ClaimNotFoundException ex) {
+            throw new ClaimNotFound();
+        } catch (InvalidRevisionException ex) {
+            throw new InvalidClaimRevision();
+        } catch (InvalidClaimStatusException ex) {
+            throw new InvalidClaimStatus(conversionService.convert(ex.getClaimStatusModel(), ClaimStatus.class));
+        }
+    }
+
+    @Override
+    public void requestClaimChanges(String partyId, long claimId, int revision) throws PartyNotFound, ClaimNotFound, InvalidClaimStatus, InvalidClaimRevision, TException {
+        try {
+            claimManagementService.requestClaimChanges(partyId, claimId, revision);
+        } catch (ClaimNotFoundException ex) {
+            throw new ClaimNotFound();
+        } catch (InvalidRevisionException ex) {
+            throw new InvalidClaimRevision();
+        } catch (InvalidClaimStatusException ex) {
+            throw new InvalidClaimStatus(conversionService.convert(ex.getClaimStatusModel(), ClaimStatus.class));
+        }
+    }
+
+    @Override
+    public Value getMetadata(String partyId, long claimId, String key) throws PartyNotFound, ClaimNotFound, MetadataKeyNotFound, TException {
+        try {
+            MetadataModel metadataModel = claimManagementService.getMetadata(partyId, claimId, key);
             return conversionService.convert(metadataModel, Value.class);
         } catch (ClaimNotFoundException ex) {
             throw new ClaimNotFound();
@@ -143,18 +173,21 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     }
 
     @Override
-    public void setMetaData(String partyId, long claimId, String key, Value value) throws PartyNotFound, ClaimNotFound, TException {
+    public void setMetadata(String partyId, long claimId, String key, Value value) throws PartyNotFound, ClaimNotFound, TException {
         MetadataModel metadataModel = conversionService.convert(Map.entry(key, value), MetadataModel.class);
         try {
-            claimManagementService.setMetaData(partyId, claimId, key, metadataModel);
+            claimManagementService.setMetadata(partyId, claimId, key, metadataModel);
         } catch (ClaimNotFoundException ex) {
             throw new ClaimNotFound();
         }
     }
 
     @Override
-    public void removeMetaData(String partyId, String key) throws PartyNotFound, ClaimNotFound, MetadataKeyNotFound, TException {
-        //TODO Where claim id in parameters?
-        throw new UnsupportedOperationException();
+    public void removeMetadata(String partyId, long claimId, String key) throws PartyNotFound, ClaimNotFound, MetadataKeyNotFound, TException {
+        try {
+            claimManagementService.removeMetadata(partyId, claimId, key);
+        } catch (ClaimNotFoundException ex) {
+            throw new ClaimNotFound();
+        }
     }
 }
