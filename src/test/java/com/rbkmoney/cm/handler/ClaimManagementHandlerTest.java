@@ -41,7 +41,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     public void setUp() throws URISyntaxException {
         client = new THSpawnClientBuilder()
                 .withAddress(new URI("http://localhost:" + port + "/v1/cm"))
-                .withNetworkTimeout(0)
+                .withNetworkTimeout(-1)
                 .withMetaExtensions(
                         List.of(
                                 UserIdentityIdExtensionKit.INSTANCE,
@@ -128,9 +128,10 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     @Test
     public void testSearchClaimsWithContinuation() {
         ClaimSearchQuery claimSearchQuery = new ClaimSearchQuery();
+        claimSearchQuery.setPartyId("claim_search_party_id_with_continuation");
         claimSearchQuery.setLimit(1);
 
-        createClaims("claim_search_party_id", 20, 1);
+        createClaims(claimSearchQuery.getPartyId(), 20, 1);
 
         List<Claim> searchedClaimList = new ArrayList<>();
         ClaimSearchResponse claimSearchResponse;
