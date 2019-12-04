@@ -25,7 +25,7 @@
         <dockerfile.base.service.tag>bc95d0d6dc13c693acd2b274531a7d604b877bf3</dockerfile.base.service.tag>
         <dockerfile.registry>${env.REGISTRY}</dockerfile.registry>
         <shared.resources.version>0.3.6</shared.resources.version>
-        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.jacoco.reportPaths>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPaths>
         <db.name>claim-management</db.name>
         <db.port>5432</db.port>
         <db.url>jdbc:postgresql://localhost:${db.port}/${db.name}</db.url>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.rbkmoney</groupId>
             <artifactId>damsel</artifactId>
-            <version>1.365-f7d518b</version>
+            <version>1.366-5a78a60</version>
         </dependency>
         <dependency>
             <groupId>com.rbkmoney</groupId>
@@ -185,9 +185,9 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.2</version>
+                <version>0.8.5</version>
                 <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
+                    <destFile>${sonar.jacoco.reportPaths}</destFile>
                     <append>true</append>
                 </configuration>
                 <executions>

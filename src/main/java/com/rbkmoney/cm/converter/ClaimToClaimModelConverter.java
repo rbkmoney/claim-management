@@ -24,6 +24,7 @@ public class ClaimToClaimModelConverter implements ClaimConverter<Claim, ClaimMo
     public ClaimModel convert(Claim claim) {
         ClaimModel claimModel = new ClaimModel();
         claimModel.setId(claim.getId());
+        claimModel.setPartyId(claim.getPartyId());
         claimModel.setCreatedAt(TypeUtil.stringToLocalDateTime(claim.getCreatedAt()));
         claimModel.setRevision(claim.getRevision());
         claimModel.setClaimStatus(conversionService.convert(claim.getStatus(), ClaimStatusModel.class));
