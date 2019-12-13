@@ -14,11 +14,13 @@ public class ClaimSpecifications {
                 : criteriaBuilder.conjunction();
     }
 
-    public static Specification<ClaimModel> equalsByClaimId(long claimId) {
-        return (Specification<ClaimModel>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), claimId);
+    public static Specification<ClaimModel> equalsByClaimId(Long claimId) {
+        return (Specification<ClaimModel>) (root, criteriaQuery, criteriaBuilder) -> claimId != null
+                ? criteriaBuilder.equal(root.get("id"), claimId)
+                : criteriaBuilder.conjunction();
     }
 
-    public static Specification<ClaimModel> equalsByPartyIdAndClaimId(String partyId, long claimId) {
+    public static Specification<ClaimModel> equalsByPartyIdAndClaimId(String partyId, Long claimId) {
         return equalsByPartyId(partyId).and(equalsByClaimId(claimId));
     }
 
@@ -28,8 +30,8 @@ public class ClaimSpecifications {
                 : criteriaBuilder.conjunction();
     }
 
-    public static Specification<ClaimModel> equalsByPartyIdAndStatusIn(String partyId, List<ClaimStatusEnum> statuses) {
-        return equalsByPartyId(partyId).and(statusIn(statuses));
+    public static Specification<ClaimModel> equalsByPartyIdClaimIdAndStatusIn(String partyId, Long claimId, List<ClaimStatusEnum> statuses) {
+        return equalsByPartyId(partyId).and(equalsByClaimId(claimId)).and(statusIn(statuses));
     }
 
 }

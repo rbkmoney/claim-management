@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.rbkmoney.cm.repository.ClaimSpecifications.equalsByPartyIdAndClaimId;
-import static com.rbkmoney.cm.repository.ClaimSpecifications.equalsByPartyIdAndStatusIn;
+import static com.rbkmoney.cm.repository.ClaimSpecifications.equalsByPartyIdClaimIdAndStatusIn;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
@@ -152,15 +152,15 @@ public class ClaimManagementService {
     }
 
     @Transactional
-    public ClaimPageResponse searchClaims(String partyId, List<ClaimStatusEnum> statuses, String continuationToken, int limit) {
-        List<Object> parameters = Arrays.asList(partyId, statuses, limit);
+    public ClaimPageResponse searchClaims(String partyId, Long claimId, List<ClaimStatusEnum> statuses, String continuationToken, int limit) {
+        List<Object> parameters = Arrays.asList(partyId, claimId, statuses, limit);
         ClaimPageRequest claimPageRequest = new ClaimPageRequest(0, limit);
         if (continuationToken != null) {
             int pageNumber = continuationTokenService.validateAndGet(continuationToken, Integer.class, parameters);
             claimPageRequest.setPage(pageNumber);
         }
 
-        Page<ClaimModel> claimsPage = searchClaims(partyId, statuses, claimPageRequest);
+        Page<ClaimModel> claimsPage = searchClaims(partyId, claimId, statuses, claimPageRequest);
 
         return new ClaimPageResponse(
                 claimsPage.getContent(),
@@ -169,10 +169,10 @@ public class ClaimManagementService {
     }
 
     @Transactional
-    public Page<ClaimModel> searchClaims(String partyId, List<ClaimStatusEnum> statuses, ClaimPageRequest claimPageRequest) {
+    public Page<ClaimModel> searchClaims(String partyId, Long claimId, List<ClaimStatusEnum> statuses, ClaimPageRequest claimPageRequest) {
         log.info("Trying to search claims, partyId='{}', statuses='{}', pageRequest='{}'", partyId, statuses, claimPageRequest);
         Page<ClaimModel> claims = claimRepository.findAll(
-                equalsByPartyIdAndStatusIn(partyId, statuses),
+                equalsByPartyIdClaimIdAndStatusIn(partyId, claimId, statuses),
                 PageRequest.of(claimPageRequest.getPage(), claimPageRequest.getLimit(), Sort.Direction.DESC, "id")
         );
         claims.getContent().forEach(this::initializeClaim);

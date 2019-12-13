@@ -77,6 +77,7 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             ClaimPageResponse claimsWithContinuationToken = claimManagementService.searchClaims(
                     claimRequest.getPartyId(),
+                    claimRequest.isSetClaimId() ? claimRequest.getClaimId() : null,
                     claimStatusEnums,
                     claimRequest.getContinuationToken(),
                     claimRequest.getLimit()
