@@ -6,6 +6,6 @@
     <root level="warn">
         <appender-ref ref="CONSOLE"/>
     </root>
-    <logger name="com.rbkmoney.woody" level="ALL"/>
+    <logger name="com.rbkmoney.woody" level="WARN"/>
     <logger name="com.rbkmoney.cm" level="ALL"/>
 </configuration>

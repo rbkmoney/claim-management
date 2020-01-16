@@ -1,7 +1,7 @@
 package com.rbkmoney.cm.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rbkmoney.cm.exception.InvalidContinuationTokenException;
+import com.rbkmoney.cm.exception.BadContinuationTokenException;
 import com.rbkmoney.cm.pageable.ClaimPageRequest;
 import org.junit.Test;
 
@@ -28,13 +28,13 @@ public class ContinuationTokenServiceTest {
         continuationTokenService.validateAndGet(token, String.class, parameters);
     }
 
-    @Test(expected = InvalidContinuationTokenException.class)
+    @Test(expected = BadContinuationTokenException.class)
     public void testValidateWrongParameters() {
         String token = continuationTokenService.buildToken(123, Arrays.asList("1", "2"));
         continuationTokenService.validateAndGet(token, Integer.class, Arrays.asList("wrong"));
     }
 
-    @Test(expected = InvalidContinuationTokenException.class)
+    @Test(expected = BadContinuationTokenException.class)
     public void testValidateWrongToken() {
         continuationTokenService.validateAndGet("kek", Integer.class, Arrays.asList());
         continuationTokenService.validateAndGet("kasddsdfsgsdgdgek", Integer.class, Arrays.asList());

@@ -3,7 +3,7 @@ package com.rbkmoney.cm.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.rbkmoney.cm.exception.InvalidContinuationTokenException;
+import com.rbkmoney.cm.exception.BadContinuationTokenException;
 import com.rbkmoney.cm.util.HmacUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -37,7 +37,7 @@ public class ContinuationTokenService {
             validateParameters(tokenNode.get(TOKEN_FIELD).asText(), parameters);
             return objectMapper.readValue(tokenNode.get(CONTINUATION_DATA_FIELD).binaryValue(), type);
         } catch (Exception ex) {
-            throw new InvalidContinuationTokenException(ex);
+            throw new BadContinuationTokenException(ex);
         }
     }
 
