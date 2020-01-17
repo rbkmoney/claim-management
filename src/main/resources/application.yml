@@ -10,13 +10,13 @@ management:
         enabled: false
   endpoint:
     health:
-      show-details: always
+      show-details: ALWAYS
 spring:
   application:
     name: @project.name@
   output:
     ansi:
-      enabled: always
+      enabled: ALWAYS
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.postgresql.Driver

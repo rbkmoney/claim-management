@@ -5,6 +5,7 @@ import com.rbkmoney.cm.meta.UserIdentityEmailExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityIdExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityRealmExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityUsernameExtensionKit;
+import com.rbkmoney.cm.model.ModificationModel;
 import com.rbkmoney.cm.model.UserInfoModel;
 import com.rbkmoney.cm.model.UserTypeEnum;
 import com.rbkmoney.cm.util.ContextUtil;
@@ -16,6 +17,8 @@ import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
 import lombok.SneakyThrows;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.test.annotation.Repeat;
 
 import java.net.URI;
@@ -29,8 +32,10 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
 
-
 public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
+
+    @Autowired
+    private ConversionService conversionService;
 
     private ClaimManagementSrv.Iface client;
 
@@ -58,15 +63,15 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void testCreateClaimAndUpdate() {
-        Claim claim = createClaim("party_id", MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5));
+        Claim claim = createClaim("party_id", generateModifications(5));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
-        runService(() -> client.updateClaim("party_id", claim.getId(), 0, MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5)));
+        runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(5)));
     }
 
     @Repeat(5)
     @Test(expected = ChangesetConflict.class)
     public void testTryingToGetConflictWhenUpdate() {
-        List<Modification> modifications = MockUtil.generateTBaseList(Modification.class, 1);
+        List<Modification> modifications = generateModifications(1);
         Claim claim = createClaim("party_id", modifications);
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
         runService(() -> client.updateClaim("party_id", claim.getId(), 0, modifications));
@@ -154,8 +159,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void setAndGetMetadata() {
-        List<Modification> modification = MockUtil.generateTBaseList(Modification.class, 5);
-        Claim claim = callService(() -> client.createClaim("party_id", modification));
+        Claim claim = callService(() -> client.createClaim("party_id", generateModifications(5)));
 
         Value value = MockUtil.generateTBase(Value.class);
         runService(() -> client.setMetadata("party_id", claim.getId(), "key", value));
@@ -181,8 +185,38 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     }
 
     private Claim createClaim(String partyId, int modificationCount) {
-        List<Modification> modification = MockUtil.generateTBaseList(Modification.class, 5);
+        List<Modification> modification = generateModifications(modificationCount);
+
         return createClaim(partyId, modification);
+    }
+
+    private List<Modification> generateModifications(int modificationCount) {
+        boolean flag = true;
+
+        List<Modification> modification = new ArrayList<>();
+
+        while (flag) {
+            flag = false;
+
+            modification = MockUtil.generateTBaseList(Modification.class, modificationCount);
+
+            List<ModificationModel> modificationModels = modification.stream()
+                    .map(change -> conversionService.convert(change, ModificationModel.class))
+                    .collect(Collectors.toList());
+
+            for (int i = 0; i < modificationModels.size() - 1; i++) {
+                for (int j = i + 1; j < modificationModels.size(); j++) {
+                    if (modificationModels.get(i).canEqual(modificationModels.get(j))) {
+                        flag = true;
+                    }
+                }
+            }
+
+            if (flag) {
+                modification = MockUtil.generateTBaseList(Modification.class, modificationCount);
+            }
+        }
+        return modification;
     }
 
     private Claim createClaim(String partyId, List<Modification> modification) {
@@ -230,5 +264,4 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         void run() throws Exception;
 
     }
-
 }

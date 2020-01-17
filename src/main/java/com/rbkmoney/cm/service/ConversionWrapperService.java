@@ -8,7 +8,6 @@ import com.rbkmoney.cm.model.ModificationModel;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.ClaimStatus;
 import com.rbkmoney.damsel.claim_management.Modification;
-import com.rbkmoney.damsel.claim_management.ModificationUnit;
 import com.rbkmoney.damsel.msgpack.Value;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +34,9 @@ public class ConversionWrapperService {
         return modificationModels;
     }
 
-    public List<ModificationUnit> convertModificationModels(List<ModificationModel> modifications) {
+    public List<Modification> convertModificationModels(List<ModificationModel> modifications) {
         return modifications.stream()
-                .map(modification -> conversionService.convert(modification, ModificationUnit.class))
+                .map(modification -> conversionService.convert(modification, Modification.class))
                 .collect(Collectors.toList());
     }
 
@@ -60,16 +59,16 @@ public class ConversionWrapperService {
     private void checkEquals(List<ModificationModel> oldModifications, List<ModificationModel> newModifications) {
         List<ModificationModel> conflictModifications = new ArrayList<>();
 
-        for (int i = 0; i < newModifications.size(); i++) {
-            for (int j = 0; j < oldModifications.size(); j++) {
-                if (i != j && newModifications.get(i).canEqual(oldModifications.get(j))) {
+        for (int i = 0; i < newModifications.size() - 1; i++) {
+            for (int j = i + 1; j < oldModifications.size(); j++) {
+                if (newModifications.get(i).canEqual(oldModifications.get(j))) {
                     conflictModifications.add(oldModifications.get(j));
                 }
             }
         }
 
         if (!conflictModifications.isEmpty()) {
-            String message = String.format("ModificationModels contains doubles, size=%s", conflictModifications.size());
+            String message = String.format("ModificationModels contains doubles, count=%s", conflictModifications.size());
 
             log.warn(message);
 
