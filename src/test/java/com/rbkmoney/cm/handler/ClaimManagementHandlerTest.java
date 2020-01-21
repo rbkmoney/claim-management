@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -63,9 +64,9 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void testCreateClaimAndUpdate() {
-        Claim claim = createClaim("party_id", generateModifications(5));
+        Claim claim = createClaim("party_id", generateModifications(() -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
-        runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(5)));
+        runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(() -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
     }
 
     @Repeat(5)
@@ -191,6 +192,10 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     }
 
     private List<Modification> generateModifications(int modificationCount) {
+        return generateModifications(() -> MockUtil.generateTBaseList(Modification.class, modificationCount));
+    }
+
+    private List<Modification> generateModifications(Supplier<List<Modification>> supplier) {
         boolean flag = true;
 
         List<Modification> modification = new ArrayList<>();
@@ -198,7 +203,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         while (flag) {
             flag = false;
 
-            modification = MockUtil.generateTBaseList(Modification.class, modificationCount);
+            modification = supplier.get();
 
             List<ModificationModel> modificationModels = modification.stream()
                     .map(change -> conversionService.convert(change, ModificationModel.class))
@@ -213,7 +218,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
             }
 
             if (flag) {
-                modification = MockUtil.generateTBaseList(Modification.class, modificationCount);
+                modification = supplier.get();
             }
         }
         return modification;
