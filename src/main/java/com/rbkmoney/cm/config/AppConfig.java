@@ -42,9 +42,9 @@ public class AppConfig {
     }
 
     @Bean
-    public ClaimManagementHandler claimManagementHandler(@Value("${claim-managment.limit}") long limit,
-                                                         ClaimManagementService claimManagementService,
-                                                         ConversionWrapperService conversionService) {
+    public ClaimManagementHandler claimManagementHandler(ClaimManagementService claimManagementService,
+                                                         ConversionWrapperService conversionService,
+                                                         @Value("${claim-managment.limit}") long limit) {
         return new ClaimManagementHandler(limit, claimManagementService, conversionService);
     }
 }
