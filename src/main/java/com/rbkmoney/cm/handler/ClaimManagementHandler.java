@@ -4,7 +4,6 @@ import com.rbkmoney.cm.exception.*;
 import com.rbkmoney.cm.model.ClaimModel;
 import com.rbkmoney.cm.model.ClaimStatusEnum;
 import com.rbkmoney.cm.model.MetadataModel;
-import com.rbkmoney.cm.model.ModificationModel;
 import com.rbkmoney.cm.pageable.ClaimPageResponse;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
@@ -33,9 +32,7 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     @Override
     public Claim createClaim(String partyId, List<Modification> changeset) throws InvalidChangeset, TException {
         try {
-            List<ModificationModel> modifications = conversionWrapperService.convertModifications(changeset);
-            ClaimModel claimModel = claimManagementService.createClaim(partyId, modifications);
-            return conversionWrapperService.convertClaim(claimModel);
+            return claimManagementService.createClaim(partyId, changeset);
         } catch (InvalidChangesetException ex) {
             log.warn(ex.getMessage(), ex);
             throw new InvalidChangeset(ex.getMessage(), conversionWrapperService.convertModificationModels(ex.getModifications()));
@@ -115,8 +112,7 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     @Override
     public void updateClaim(String partyId, long claimId, int revision, List<Modification> changeset) throws ClaimNotFound, InvalidClaimStatus, InvalidClaimRevision, ChangesetConflict, InvalidChangeset, TException {
         try {
-            List<ModificationModel> modifications = conversionWrapperService.convertModifications(changeset);
-            claimManagementService.updateClaim(partyId, claimId, revision, modifications);
+            claimManagementService.updateClaim(partyId, claimId, revision, changeset);
         } catch (ClaimNotFoundException ex) {
             throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {

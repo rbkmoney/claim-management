@@ -6,10 +6,15 @@ import com.rbkmoney.cm.repository.ClaimRepository;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ContinuationTokenService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
+import com.rbkmoney.cm.service.impl.ClaimManagementServiceImpl;
+import com.rbkmoney.cm.util.ClaimEventFactory;
+import org.apache.thrift.TBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.retry.support.RetryTemplate;
 
 @Configuration
 public class AppConfig {
@@ -25,8 +30,15 @@ public class AppConfig {
     }
 
     @Bean
-    public ClaimManagementService claimManagementService(ClaimRepository claimRepository, ContinuationTokenService continuationTokenService) {
-        return new ClaimManagementService(claimRepository, continuationTokenService);
+    public ClaimManagementService claimManagementService(ContinuationTokenService continuationTokenService,
+                                                         ConversionWrapperService conversionWrapperService,
+                                                         ClaimRepository claimRepository,
+                                                         ClaimEventFactory claimEventFactory,
+                                                         KafkaTemplate<String, TBase> kafkaTemplate,
+                                                         RetryTemplate retryTemplate,
+                                                         @Value("${kafka.topic.claim.event.sink}")
+                                                                 String eventSinkTopic) {
+        return new ClaimManagementServiceImpl(continuationTokenService, conversionWrapperService, claimRepository, claimEventFactory, kafkaTemplate, retryTemplate, eventSinkTopic);
     }
 
     @Bean
