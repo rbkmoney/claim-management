@@ -25,7 +25,7 @@ public class AppConfig {
     }
 
     @Bean
-    public ContinuationTokenService continuationTokenService(@Value("${claim-managment.continuation-secret}") String secret,
+    public ContinuationTokenService continuationTokenService(@Value("${claim-management.continuation-secret}") String secret,
                                                              ObjectMapper objectMapper) {
         return new ContinuationTokenService(secret, objectMapper);
     }
@@ -44,7 +44,7 @@ public class AppConfig {
     @Bean
     public ClaimManagementHandler claimManagementHandler(ClaimManagementService claimManagementService,
                                                          ConversionWrapperService conversionService,
-                                                         @Value("${claim-managment.limit}") long limit) {
+                                                         @Value("${claim-management.limit}") long limit) {
         return new ClaimManagementHandler(claimManagementService, conversionService, limit);
     }
 }

@@ -5,23 +5,17 @@ import com.rbkmoney.cm.meta.UserIdentityEmailExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityIdExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityRealmExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityUsernameExtensionKit;
-import com.rbkmoney.cm.model.ModificationModel;
-import com.rbkmoney.cm.model.UserInfoModel;
-import com.rbkmoney.cm.model.UserTypeEnum;
-import com.rbkmoney.cm.util.ContextUtil;
+import com.rbkmoney.cm.service.ConversionWrapperService;
 import com.rbkmoney.cm.util.MockUtil;
 import com.rbkmoney.damsel.claim_management.*;
 import com.rbkmoney.damsel.msgpack.Value;
-import com.rbkmoney.woody.api.flow.WFlow;
 import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
-import lombok.SneakyThrows;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.ConversionService;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -32,18 +26,15 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
+import static com.rbkmoney.cm.util.ServiceUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Autowired
-    private ConversionService conversionService;
+    private ConversionWrapperService conversionWrapperService;
 
     private ClaimManagementSrv.Iface client;
 
@@ -66,27 +57,32 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
                 .build(ClaimManagementSrv.Iface.class);
 
         Mockito.when(kafkaTemplate.send(any(), any(), any())).thenReturn(new AsyncResult<>(null));
-
     }
 
     @Test
     public void testCreateClaimAndGet() {
-        Claim claim = createClaim("party_id", 5);
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
     }
 
     @Test
     public void testCreateClaimAndUpdate() {
-        Claim claim = createClaim("party_id", generateModifications(() -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
+        Claim claim = createClaim(client, "party_id", generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
-        runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(() -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
+        runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
+    }
+
+    @Test(expected = InvalidChangeset.class)
+    public void testTryingToInvalidChansetWhenCreateClaimAndGet() {
+        Modification modification = MockUtil.generateTBase(Modification.class);
+        createClaim(client, "party_id", List.of(modification, modification));
     }
 
     @Repeat(5)
     @Test(expected = ChangesetConflict.class)
     public void testTryingToGetConflictWhenUpdate() {
-        List<Modification> modifications = generateModifications(1);
-        Claim claim = createClaim("party_id", modifications);
+        List<Modification> modifications = generateModifications(conversionWrapperService, 1);
+        Claim claim = createClaim(client, "party_id", modifications);
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
         runService(() -> client.updateClaim("party_id", claim.getId(), 0, modifications));
     }
@@ -98,27 +94,27 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test(expected = ClaimNotFound.class)
     public void testGetClaimWithWrongParty() {
-        Claim claim = createClaim("party_id", 5);
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         assertEquals(claim, callService(() -> client.getClaim("wrong_party", claim.getId())));
     }
 
     @Test
     public void testCreateClaimAndAccept() {
-        Claim claim = createClaim("party_id", 5);
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         runService(() -> client.acceptClaim("party_id", claim.getId(), 0));
         assertEquals(ClaimStatus.pending_acceptance(new ClaimPendingAcceptance()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
     }
 
     @Test
     public void testCreateClaimAndDeny() {
-        Claim claim = createClaim("party_id", 5);
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         runService(() -> client.denyClaim("party_id", claim.getId(), 0, "kek"));
         assertEquals(ClaimStatus.denied(new ClaimDenied().setReason("kek")), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
     }
 
     @Test
     public void testCreateRequestReviewAndRequestChanges() {
-        Claim claim = createClaim("party_id", 5);
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         runService(() -> client.requestClaimReview("party_id", claim.getId(), 0));
         assertEquals(ClaimStatus.review(new ClaimReview()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
         runService(() -> client.requestClaimChanges("party_id", claim.getId(), 1));
@@ -131,7 +127,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         claimSearchQuery.setPartyId("claim_search_party_id");
         claimSearchQuery.setLimit(20);
 
-        List<Claim> claims = createClaims(claimSearchQuery.getPartyId(), claimSearchQuery.getLimit(), 5);
+        List<Claim> claims = createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(), claimSearchQuery.getLimit(), 5);
         assertEquals(claims.size(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
 
         claimSearchQuery.setStatuses(Arrays.asList(ClaimStatus.pending(new ClaimPending())));
@@ -146,7 +142,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         ClaimSearchQuery claimSearchQuery = new ClaimSearchQuery();
         claimSearchQuery.setLimit(1);
 
-        Claim claim = createClaims("claim_search_party_id_and_claim_id", claimSearchQuery.getLimit(), 5).get(0);
+        Claim claim = createClaims(client, conversionWrapperService, "claim_search_party_id_and_claim_id", claimSearchQuery.getLimit(), 5).get(0);
         claimSearchQuery.setClaimId(claim.getId());
 
         assertEquals(claim, callService(() -> client.searchClaims(claimSearchQuery).getResult().get(0)));
@@ -158,7 +154,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         claimSearchQuery.setPartyId("claim_search_party_id_with_continuation");
         claimSearchQuery.setLimit(1);
 
-        createClaims(claimSearchQuery.getPartyId(), 20, 1);
+        createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(), 20, 1);
 
         List<Claim> searchedClaimList = new ArrayList<>();
         ClaimSearchResponse claimSearchResponse;
@@ -173,7 +169,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void setAndGetMetadata() {
-        Claim claim = callService(() -> client.createClaim("party_id", generateModifications(5)));
+        Claim claim = callService(() -> client.createClaim("party_id", generateModifications(conversionWrapperService, 5)));
 
         Value value = MockUtil.generateTBase(Value.class);
         runService(() -> client.setMetadata("party_id", claim.getId(), "key", value));
@@ -184,11 +180,11 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void setAndGetMetadataError() throws TException {
-        Claim claim = createClaim("party_id", MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5));
+        Claim claim = createClaim(client, "party_id", generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
         try {
             Mockito.when(kafkaTemplate.send(any(), any())).thenThrow(new RuntimeException());
-            runService(() -> client.updateClaim("party_id", claim.getId(), 0, MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5)));
+            runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
         } catch (Exception e) {
             assertEquals(5, callService(() -> client.getClaim("party_id", claim.getId())).getChangesetSize());
             Mockito.verify(kafkaTemplate, Mockito.times(4)).send(any(), any());
@@ -197,102 +193,11 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test(expected = MetadataKeyNotFound.class)
     public void removeMetadataTest() {
-        Claim claim = createClaim("party_id", 5);
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         Value value = MockUtil.generateTBase(Value.class);
         runService(() -> client.setMetadata("party_id", claim.getId(), "key", value));
         assertEquals(value, callService(() -> client.getMetadata("party_id", claim.getId(), "key")));
         runService(() -> client.removeMetadata("party_id", claim.getId(), "key"));
         callService(() -> client.getMetadata("party_id", claim.getId(), "key"));
-    }
-
-    private List<Claim> createClaims(String partyId, int claimCount, int modificationCountPerClaim) {
-        return IntStream.rangeClosed(1, claimCount)
-                .mapToObj(value -> createClaim(partyId, modificationCountPerClaim))
-                .collect(Collectors.toList());
-    }
-
-    private Claim createClaim(String partyId, int modificationCount) {
-        List<Modification> modification = generateModifications(modificationCount);
-
-        return createClaim(partyId, modification);
-    }
-
-    private List<Modification> generateModifications(int modificationCount) {
-        return generateModifications(() -> MockUtil.generateTBaseList(Modification.class, modificationCount));
-    }
-
-    private List<Modification> generateModifications(Supplier<List<Modification>> supplier) {
-        boolean flag = true;
-
-        List<Modification> modification = new ArrayList<>();
-
-        while (flag) {
-            flag = false;
-
-            modification = supplier.get();
-
-            List<ModificationModel> modificationModels = modification.stream()
-                    .map(change -> conversionService.convert(change, ModificationModel.class))
-                    .collect(Collectors.toList());
-
-            for (int i = 0; i < modificationModels.size() - 1; i++) {
-                for (int j = i + 1; j < modificationModels.size(); j++) {
-                    if (modificationModels.get(i).canEqual(modificationModels.get(j))) {
-                        flag = true;
-                    }
-                }
-            }
-
-            if (flag) {
-                modification = supplier.get();
-            }
-        }
-        return modification;
-    }
-
-    private Claim createClaim(String partyId, List<Modification> modification) {
-        return callService(() -> client.createClaim(partyId, modification));
-    }
-
-    private <T> T callService(Callable<T> callable) {
-        return callService(callable, buildDefaultUserInfo());
-    }
-
-    private void runService(ThrowableRunnable runnable) {
-        runService(runnable, buildDefaultUserInfo());
-    }
-
-    @SneakyThrows
-    private <T> T callService(Callable<T> callable, UserInfoModel userInfoModel) {
-        return new WFlow().createServiceFork(
-                () -> {
-                    ContextUtil.addUserInfoToContext(userInfoModel);
-                    return callable.call();
-                }).call();
-    }
-
-    @SneakyThrows
-    private void runService(ThrowableRunnable runnable, UserInfoModel userInfoModel) {
-        new WFlow().createServiceFork(
-                () -> {
-                    ContextUtil.addUserInfoToContext(userInfoModel);
-                    runnable.run();
-                    return null;
-                }).call();
-    }
-
-    private UserInfoModel buildDefaultUserInfo() {
-        UserInfoModel userInfoModel = new UserInfoModel();
-        userInfoModel.setUserId("100");
-        userInfoModel.setUsername("user_id");
-        userInfoModel.setEmail("user_id@users");
-        userInfoModel.setType(UserTypeEnum.external);
-        return userInfoModel;
-    }
-
-    public interface ThrowableRunnable {
-
-        void run() throws Exception;
-
     }
 }

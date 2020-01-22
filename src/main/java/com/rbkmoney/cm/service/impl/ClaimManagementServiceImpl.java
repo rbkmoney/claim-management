@@ -26,6 +26,7 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -60,6 +61,8 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
         List<ModificationModel> modifications = conversionWrapperService.convertModifications(changeset);
 
+        checkEquals(modifications, modifications);
+
         ClaimStatusModel claimStatusModel = new ClaimStatusModel();
         claimStatusModel.setClaimStatusEnum(ClaimStatusEnum.pending);
 
@@ -89,6 +92,8 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         log.info("Trying to update claim, partyId='{}', claimId='{}', revision='{}', modifications='{}'", partyId, claimId, revision, changeset);
 
         List<ModificationModel> modifications = conversionWrapperService.convertModifications(changeset);
+
+        checkEquals(modifications, modifications);
 
         ClaimModel claimModel = getClaim(partyId, claimId, false);
 
@@ -352,6 +357,25 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         if (claimModel.getRevision() != revision) {
             throw new InvalidRevisionException(
                     String.format("Invalid claim revision, expected='%s', actual='%s'", claimModel.getRevision(), revision)
+            );
+        }
+    }
+
+    private void checkEquals(List<ModificationModel> oldModifications, List<ModificationModel> newModifications) {
+        List<ModificationModel> conflictModifications = new ArrayList<>();
+
+        for (int i = 0; i < newModifications.size() - 1; i++) {
+            for (int j = i + 1; j < oldModifications.size(); j++) {
+                if (newModifications.get(i).canEqual(oldModifications.get(j))) {
+                    conflictModifications.add(oldModifications.get(j));
+                }
+            }
+        }
+
+        if (!conflictModifications.isEmpty()) {
+            throw new InvalidChangesetException(
+                    String.format("ModificationModels contains doubles, count=%s", conflictModifications.size()),
+                    conflictModifications
             );
         }
     }

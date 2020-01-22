@@ -50,7 +50,7 @@ spring:
 info:
   version: @project.version@
   stage: dev
-claim-managment:
+claim-management:
   continuation-secret: "Yp3s5v8t/B?E(H+MbQeThWB?E(H+MbQeThW"
   limit: 1000
 kafka:
