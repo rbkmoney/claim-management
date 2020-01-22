@@ -45,6 +45,6 @@ public class AppConfig {
     public ClaimManagementHandler claimManagementHandler(ClaimManagementService claimManagementService,
                                                          ConversionWrapperService conversionService,
                                                          @Value("${claim-managment.limit}") long limit) {
-        return new ClaimManagementHandler(limit, claimManagementService, conversionService);
+        return new ClaimManagementHandler(claimManagementService, conversionService, limit);
     }
 }

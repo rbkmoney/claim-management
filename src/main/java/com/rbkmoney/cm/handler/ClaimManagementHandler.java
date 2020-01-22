@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
 
-    private final long limit;
-
     private final ClaimManagementService claimManagementService;
 
     private final ConversionWrapperService conversionWrapperService;
+
+    private final long limit;
 
     @Override
     public Claim createClaim(String partyId, List<Modification> changeset) throws InvalidChangeset, TException {
