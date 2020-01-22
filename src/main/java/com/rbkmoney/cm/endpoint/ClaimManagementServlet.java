@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClaimManagementServlet extends GenericServlet {
 
-    private final ClaimManagementSrv.Iface requestHandler;
+    private final ClaimManagementSrv.Iface claimManagementHandler;
     private Servlet thriftServlet;
 
     @Override
@@ -32,7 +32,7 @@ public class ClaimManagementServlet extends GenericServlet {
                                 UserIdentityRealmExtensionKit.INSTANCE
                         )
                 )
-                .build(ClaimManagementSrv.Iface.class, requestHandler);
+                .build(ClaimManagementSrv.Iface.class, claimManagementHandler);
     }
 
     @Override
