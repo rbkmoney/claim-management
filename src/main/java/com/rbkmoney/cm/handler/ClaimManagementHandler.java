@@ -11,7 +11,9 @@ import com.rbkmoney.cm.service.ConversionWrapperService;
 import com.rbkmoney.damsel.claim_management.*;
 import com.rbkmoney.damsel.msgpack.Value;
 import com.rbkmoney.geck.common.util.TBaseUtil;
+import com.rbkmoney.woody.api.flow.error.WUndefinedResultException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TException;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Slf4j
 public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
 
     private final long limit;
@@ -34,7 +37,10 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
             ClaimModel claimModel = claimManagementService.createClaim(partyId, modifications);
             return conversionWrapperService.convertClaim(claimModel);
         } catch (InvalidChangesetException ex) {
+            log.warn(ex.getMessage(), ex);
             throw new InvalidChangeset(ex.getMessage(), conversionWrapperService.convertModificationModels(ex.getModifications()));
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "createClaim");
         }
     }
 
@@ -44,7 +50,9 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
             ClaimModel claimModel = claimManagementService.getClaim(partyId, claimId);
             return conversionWrapperService.convertClaim(claimModel);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "getClaim");
         }
     }
 
@@ -79,9 +87,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
                     )
                     .setContinuationToken(claimsWithContinuationToken.getToken());
         } catch (BadContinuationTokenException ex) {
+            log.warn(String.format("Error then '%s'", "searchClaims"), ex);
             throw new BadContinuationToken(ex.getMessage());
         } catch (LimitExceededException ex) {
+            log.warn(ex.getMessage(), ex);
             throw new LimitExceeded(ex.getMessage());
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "searchClaims");
         }
     }
 
@@ -90,11 +102,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.acceptClaim(partyId, claimId, revision);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {
-            throw new InvalidClaimRevision();
+            throw invalidClaimRevision(ex, "acceptClaim");
         } catch (InvalidClaimStatusException ex) {
-            throw new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+            throw invalidClaimStatus(ex, "acceptClaim");
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "acceptClaim");
         }
     }
 
@@ -104,15 +118,19 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
             List<ModificationModel> modifications = conversionWrapperService.convertModifications(changeset);
             claimManagementService.updateClaim(partyId, claimId, revision, modifications);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {
-            throw new InvalidClaimRevision();
+            throw invalidClaimRevision(ex, "updateClaim");
         } catch (InvalidClaimStatusException ex) {
-            throw new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+            throw invalidClaimStatus(ex, "updateClaim");
         } catch (ChangesetConflictException ex) {
+            log.warn(ex.getMessage(), ex);
             throw new ChangesetConflict(ex.getConflictedId());
         } catch (InvalidChangesetException ex) {
+            log.warn(ex.getMessage(), ex);
             throw new InvalidChangeset(ex.getMessage(), conversionWrapperService.convertModificationModels(ex.getModifications()));
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "updateClaim");
         }
     }
 
@@ -121,11 +139,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.requestClaimReview(partyId, claimId, revision);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {
-            throw new InvalidClaimRevision();
+            throw invalidClaimRevision(ex, "requestClaimReview");
         } catch (InvalidClaimStatusException ex) {
-            throw new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+            throw invalidClaimStatus(ex, "requestClaimReview");
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "requestClaimReview");
         }
     }
 
@@ -134,11 +154,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.requestClaimChanges(partyId, claimId, revision);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {
-            throw new InvalidClaimRevision();
+            throw invalidClaimRevision(ex, "requestClaimChanges");
         } catch (InvalidClaimStatusException ex) {
-            throw new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+            throw invalidClaimStatus(ex, "requestClaimChanges");
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "requestClaimChanges");
         }
     }
 
@@ -147,11 +169,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.denyClaim(partyId, claimId, revision, reason);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {
-            throw new InvalidClaimRevision();
+            throw invalidClaimRevision(ex, "denyClaim");
         } catch (InvalidClaimStatusException ex) {
-            throw new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+            throw invalidClaimStatus(ex, "denyClaim");
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "denyClaim");
         }
     }
 
@@ -160,11 +184,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.revokeClaim(partyId, claimId, revision, reason);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {
-            throw new InvalidClaimRevision();
+            throw invalidClaimRevision(ex, "revokeClaim");
         } catch (InvalidClaimStatusException ex) {
-            throw new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+            throw invalidClaimStatus(ex, "revokeClaim");
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "revokeClaim");
         }
     }
 
@@ -174,9 +200,12 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
             MetadataModel metadataModel = claimManagementService.getMetadata(partyId, claimId, key);
             return conversionWrapperService.convertMsgpackValue(metadataModel);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
         } catch (MetadataKeyNotFoundException ex) {
+            log.warn(String.format("Error then '%s'", "getMetadata"), ex);
             throw new MetadataKeyNotFound();
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "getMetadata");
         }
     }
 
@@ -186,7 +215,9 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.setMetadata(partyId, claimId, key, metadataModel);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "setMetadata");
         }
     }
 
@@ -195,7 +226,29 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
         try {
             claimManagementService.removeMetadata(partyId, claimId, key);
         } catch (ClaimNotFoundException ex) {
-            throw new ClaimNotFound();
+            throw claimNotFound(claimId, ex);
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "removeMetadata");
         }
+    }
+
+    private InvalidClaimRevision invalidClaimRevision(InvalidRevisionException ex, String msg) {
+        log.warn(String.format("Error then '%s'", msg), ex);
+        return new InvalidClaimRevision();
+    }
+
+    private InvalidClaimStatus invalidClaimStatus(InvalidClaimStatusException ex, String msg) {
+        log.warn(String.format("Error then '%s'", msg), ex);
+        return new InvalidClaimStatus(conversionWrapperService.convertClaimStatus(ex));
+    }
+
+    private ClaimNotFound claimNotFound(long claimId, ClaimNotFoundException ex) {
+        log.warn("Claim not found, claimId={}", claimId, ex);
+        return new ClaimNotFound();
+    }
+
+    private WUndefinedResultException undefinedResultException(Exception ex, String msg) {
+        log.warn(String.format("Error then '%s'", msg), ex);
+        return new WUndefinedResultException(msg, ex);
     }
 }

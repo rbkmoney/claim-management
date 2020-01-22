@@ -68,11 +68,10 @@ public class ConversionWrapperService {
         }
 
         if (!conflictModifications.isEmpty()) {
-            String message = String.format("ModificationModels contains doubles, count=%s", conflictModifications.size());
-
-            log.warn(message);
-
-            throw new InvalidChangesetException(message, conflictModifications);
+            throw new InvalidChangesetException(
+                    String.format("ModificationModels contains doubles, count=%s", conflictModifications.size()),
+                    conflictModifications
+            );
         }
     }
 }

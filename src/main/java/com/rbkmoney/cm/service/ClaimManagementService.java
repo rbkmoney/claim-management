@@ -218,8 +218,10 @@ public class ClaimManagementService {
         for (ModificationModel newModification : newModifications) {
             for (ModificationModel oldModification : oldModifications) {
                 if (oldModification.canEqual(newModification)) {
-                    log.warn("Found conflict in modifications, oldModification='{}', newModification='{}'", oldModification, newModification);
-                    throw new ChangesetConflictException(oldModification.getId());
+                    throw new ChangesetConflictException(
+                            String.format("Found conflict in modifications, oldModification='%s', newModification='%s'", oldModification, newModification),
+                            oldModification.getId()
+                    );
                 }
             }
         }
@@ -227,15 +229,18 @@ public class ClaimManagementService {
 
     private void checkStatus(ClaimModel claimModel, List<ClaimStatusEnum> expectedStatuses) {
         if (!expectedStatuses.isEmpty() && !expectedStatuses.contains(claimModel.getClaimStatus().getClaimStatusEnum())) {
-            log.warn("Invalid claim status, expected='{}', actual='{}'", expectedStatuses, claimModel.getClaimStatus().getClaimStatusEnum());
-            throw new InvalidClaimStatusException(claimModel.getClaimStatus());
+            throw new InvalidClaimStatusException(
+                    String.format("Invalid claim status, expected='%s', actual='%s'", expectedStatuses, claimModel.getClaimStatus().getClaimStatusEnum()),
+                    claimModel.getClaimStatus()
+            );
         }
     }
 
     private void checkRevision(ClaimModel claimModel, int revision) {
         if (claimModel.getRevision() != revision) {
-            log.warn("Invalid claim revision, expected='{}', actual='{}'", claimModel.getRevision(), revision);
-            throw new InvalidRevisionException();
+            throw new InvalidRevisionException(
+                    String.format("Invalid claim revision, expected='%s', actual='%s'", claimModel.getRevision(), revision)
+            );
         }
     }
 
