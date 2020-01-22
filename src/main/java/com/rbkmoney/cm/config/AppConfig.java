@@ -25,7 +25,8 @@ public class AppConfig {
     }
 
     @Bean
-    public ContinuationTokenService continuationTokenService(@Value("${claim-managment.continuation-secret}") String secret, ObjectMapper objectMapper) {
+    public ContinuationTokenService continuationTokenService(@Value("${claim-managment.continuation-secret}") String secret,
+                                                             ObjectMapper objectMapper) {
         return new ContinuationTokenService(secret, objectMapper);
     }
 
