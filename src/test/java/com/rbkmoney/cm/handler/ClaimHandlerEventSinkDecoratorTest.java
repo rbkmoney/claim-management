@@ -28,7 +28,7 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
 
     @Test
     public void testCreateClaimAndGet() throws InterruptedException {
-        Claim claim = createClaim(client, conversionWrapperService, PARTY_ID_2, 5);
+        Claim claim = createClaim(client, PARTY_ID_2, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
 
         Consumer<String, Event> consumer = createConsumer(WebHookDeserializer.class);
         consumer.subscribe(List.of(Initializer.CLAIM_EVENT_SINK));
