@@ -53,17 +53,33 @@ info:
 claim-management:
   continuation-secret: "Yp3s5v8t/B?E(H+MbQeThWB?E(H+MbQeThW"
   limit: 1000
+  committers:
+    - id: hellgate
+      uri: http://hellgate:8022/v1/claim-committer
+      timeout: 5000
 kafka:
   bootstrap.servers: "localhost:29092"
   topic:
-    claim.event.sink: "claim-event-sink"
+    claim-event-sink:
+      id: "claim-event-sink"
+      enabled: false
+  client-id: claim-management
+  consumer:
+    group-id: claim-management-group-1
+    enable-auto-commit: false
+    auto-offset-reset: earliest
+    concurrency: 3
+    max-poll-records: 500
+  error-handler:
+    sleep-time-seconds: 5
+    maxAttempts: -1
   ssl:
     enable: false
-    keystore-location: src/main/resources/cert/kenny-k.struzhkin.p12
-    keystore-password: kenny
-    key-password: kenny
-    server-password: kenny12
-    server-keystore-location: src/main/resources/cert/truststore.p12
+    keystore-location:
+    keystore-password:
+    key-password:
+    server-password:
+    server-keystore-location:
 event.sink.retry:
   backoff.period: 1000
   max.attempts: 3

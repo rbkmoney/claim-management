@@ -79,7 +79,7 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
         Event claimEvent = claimEventFactory.createCreatedClaimEvent(partyId, changeset, claim);
 
-        sendToEventSinkWithRetry(String.valueOf(claim.getId()), claimEvent);
+        sendToEventSinkWithRetry(partyId, claimEvent);
 
         log.info("Claim have been created, partyId='{}', claim='{}'", partyId, claim);
 
@@ -108,7 +108,7 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
         Event claimEvent = claimEventFactory.createUpdateClaimEvent(partyId, claimId, revision, changeset, claimModel.getUpdatedAt());
 
-        sendToEventSinkWithRetry(String.valueOf(claimId), claimEvent);
+        sendToEventSinkWithRetry(partyId, claimEvent);
 
         log.info("Claim have been updated, partyId='{}', claim='{}'", partyId, claimModel);
     }
@@ -121,93 +121,72 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
     @Override
     @Transactional
-    public ClaimModel acceptClaim(String partyId, long claimId, int revision) {
-        ClaimModel claimModel = changeStatus(
+    public ClaimModel pendingAcceptanceClaim(String partyId, long claimId, int revision) {
+        return changeStatus(
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.pending_acceptance, null),
                 Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review)
         );
+    }
 
-        ClaimStatus accepted = ClaimStatus.accepted(new ClaimAccepted());
-        Event claimEvent = claimEventFactory.createChangeStatusEvent(partyId, claimId, revision, accepted, claimModel.getUpdatedAt());
+    @Override
+    @Transactional
+    public ClaimModel failClaimAcceptance(String partyId, long claimId, int revision) {
+        return changeStatus(
+                partyId, claimId, revision,
+                new ClaimStatusModel(ClaimStatusEnum.pending, null),
+                Collections.singletonList(ClaimStatusEnum.pending_acceptance)
+        );
+    }
 
-        sendToEventSinkWithRetry(String.valueOf(claimId), claimEvent);
-
-        return claimModel;
+    @Override
+    @Transactional
+    public ClaimModel acceptClaim(String partyId, long claimId, int revision) {
+        return changeStatus(
+                partyId, claimId, revision,
+                new ClaimStatusModel(ClaimStatusEnum.accepted, null),
+                Arrays.asList(ClaimStatusEnum.pending_acceptance)
+        );
     }
 
     @Override
     @Transactional
     public ClaimModel revokeClaim(String partyId, long claimId, int revision, String reason) {
-        ClaimModel claimModel = changeStatus(
+        return changeStatus(
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.revoked, reason),
                 Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review)
         );
-
-        ClaimRevoked claimRevoked = new ClaimRevoked();
-        claimRevoked.setReason(reason);
-
-        ClaimStatus revoked = ClaimStatus.revoked(claimRevoked);
-        Event claimEvent = claimEventFactory.createChangeStatusEvent(partyId, claimId, revision, revoked, claimModel.getUpdatedAt());
-
-        sendToEventSinkWithRetry(String.valueOf(claimId), claimEvent);
-
-        return claimModel;
     }
 
     @Override
     @Transactional
     public ClaimModel denyClaim(String partyId, long claimId, int revision, String reason) {
-        ClaimModel claimModel = changeStatus(
+        return changeStatus(
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.denied, reason),
                 Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review)
         );
-
-        ClaimDenied claimDenied = new ClaimDenied();
-        claimDenied.setReason(reason);
-
-        ClaimStatus denied = ClaimStatus.denied(claimDenied);
-        Event claimEvent = claimEventFactory.createChangeStatusEvent(partyId, claimId, revision, denied, claimModel.getUpdatedAt());
-
-        sendToEventSinkWithRetry(String.valueOf(claimId), claimEvent);
-
-        return claimModel;
     }
 
     @Override
     @Transactional
     public ClaimModel requestClaimReview(String partyId, long claimId, int revision) {
-        ClaimModel claimModel = changeStatus(
+        return changeStatus(
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.review, null),
                 Collections.singletonList(ClaimStatusEnum.pending)
         );
-
-        ClaimStatus review = ClaimStatus.review(new ClaimReview());
-        Event claimEvent = claimEventFactory.createChangeStatusEvent(partyId, claimId, revision, review, claimModel.getUpdatedAt());
-
-        sendToEventSinkWithRetry(String.valueOf(claimId), claimEvent);
-
-        return claimModel;
     }
 
     @Override
     @Transactional
     public ClaimModel requestClaimChanges(String partyId, long claimId, int revision) {
-        ClaimModel claimModel = changeStatus(
+        return changeStatus(
                 partyId, claimId, revision,
                 new ClaimStatusModel(ClaimStatusEnum.pending, null),
                 Collections.singletonList(ClaimStatusEnum.review)
         );
-
-        ClaimStatus pending = ClaimStatus.pending(new ClaimPending());
-        Event claimEvent = claimEventFactory.createChangeStatusEvent(partyId, claimId, revision, pending, claimModel.getUpdatedAt());
-
-        sendToEventSinkWithRetry(String.valueOf(claimId), claimEvent);
-
-        return claimModel;
     }
 
     @Override
@@ -232,9 +211,16 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         statusModificationModel.setUserInfo(ContextUtil.getUserInfoFromContext());
         claimModel.getModifications().add(statusModificationModel);
 
-        log.info("Status in claim have been changed, claimId='{}', targetStatus='{}'", claimId, targetClaimStatus);
+        claimModel = claimRepository.save(claimModel);
 
-        claimRepository.save(claimModel);
+        Event claimEvent = claimEventFactory.createChangeStatusEvent(
+                partyId, claimId, revision,
+                conversionWrapperService.convertClaimStatus(claimModel.getClaimStatus()),
+                claimModel.getUpdatedAt()
+        );
+
+        sendToEventSinkWithRetry(partyId, claimEvent);
+        log.info("Status in claim have been changed, claimId='{}', targetStatus='{}'", claimId, targetClaimStatus);
 
         return claimModel;
     }
@@ -389,17 +375,17 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         modificationModel.setUserInfo(ContextUtil.getUserInfoFromContext());
     }
 
-    private void sendToEventSinkWithRetry(String claimId, Event event) {
+    private void sendToEventSinkWithRetry(String partyId, Event event) {
         retryTemplate.execute(
                 retryCallback -> {
                     try {
-                        ListenableFuture<SendResult<String, TBase>> future = kafkaTemplate.send(eventSinkTopic, claimId, event);
+                        ListenableFuture<SendResult<String, TBase>> future = kafkaTemplate.send(eventSinkTopic, partyId, event);
                         future.get();
                     } catch (InterruptedException e) {
-                        log.error("Error when sendToEventSinkWithRetry claimId: {}", claimId, e);
+                        log.error("Error when sendToEventSinkWithRetry claimId: {}, event: {}", partyId, event, e);
                         Thread.currentThread().interrupt();
                     } catch (ExecutionException e) {
-                        log.error("Error when sendToEventSinkWithRetry claimId: {}", claimId, e);
+                        log.error("Error when sendToEventSinkWithRetry claimId: {}, event: {}", partyId, event, e);
                         throw new RuntimeException("Error when sendToEventSinkWithRetry", e);
                     }
                     return null;

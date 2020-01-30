@@ -97,7 +97,7 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     @Override
     public void acceptClaim(String partyId, long claimId, int revision) throws ClaimNotFound, InvalidClaimStatus, InvalidClaimRevision, TException {
         try {
-            claimManagementService.acceptClaim(partyId, claimId, revision);
+            claimManagementService.pendingAcceptanceClaim(partyId, claimId, revision);
         } catch (ClaimNotFoundException ex) {
             throw claimNotFound(claimId, ex);
         } catch (InvalidRevisionException ex) {

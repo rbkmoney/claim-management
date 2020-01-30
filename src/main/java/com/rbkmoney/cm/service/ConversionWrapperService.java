@@ -2,6 +2,7 @@ package com.rbkmoney.cm.service;
 
 import com.rbkmoney.cm.exception.InvalidClaimStatusException;
 import com.rbkmoney.cm.model.ClaimModel;
+import com.rbkmoney.cm.model.ClaimStatusModel;
 import com.rbkmoney.cm.model.MetadataModel;
 import com.rbkmoney.cm.model.ModificationModel;
 import com.rbkmoney.damsel.claim_management.Claim;
@@ -36,6 +37,10 @@ public class ConversionWrapperService {
 
     public Claim convertClaim(ClaimModel claimModel) {
         return conversionService.convert(claimModel, Claim.class);
+    }
+
+    public ClaimStatus convertClaimStatus(ClaimStatusModel claimStatusModel) {
+        return conversionService.convert(claimStatusModel, ClaimStatus.class);
     }
 
     public ClaimStatus convertClaimStatus(InvalidClaimStatusException ex) {

@@ -20,6 +20,10 @@ public interface ClaimManagementService {
 
     ClaimModel getClaim(String partyId, long claimId);
 
+    ClaimModel failClaimAcceptance(String partyId, long claimId, int revision);
+
+    ClaimModel pendingAcceptanceClaim(String partyId, long claimId, int revision);
+
     ClaimModel acceptClaim(String partyId, long claimId, int revision);
 
     ClaimModel revokeClaim(String partyId, long claimId, int revision, String reason);
