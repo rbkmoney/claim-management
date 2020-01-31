@@ -29,6 +29,7 @@ public class ClaimCommitterService {
 
     @Transactional
     public void doCommitClaim(String partyId, long claimId, int revision) {
+        log.info("Trying to commit and accept claim, partyId='{}', claimId='{}'", partyId, claimId);
         try {
             ClaimModel claimModel = claimManagementService.getClaim(partyId, claimId);
 
@@ -46,12 +47,12 @@ public class ClaimCommitterService {
             }
 
             Claim claim = conversionWrapperService.convertClaim(claimModel);
-            for (CommitterConfig.Committer committer : committers) {
-                sendAccept(partyId, claim, committer);
-                sendCommit(partyId, claim, committer);
-            }
+            committers.forEach(committer -> sendAccept(partyId, claim, committer));
             claimManagementService.acceptClaim(partyId, claimId, revision);
+            committers.forEach(committer -> sendCommit(partyId, claim, committer));
+            log.info("Claim have been commited and accepted, partyId='{}', claimId='{}'", partyId, claimId);
         } catch (InvalidChangesetException ex) {
+            log.warn("An invalid changeset occurred while trying to apply the claim, rollback to pending status", ex);
             claimManagementService.failClaimAcceptance(partyId, claimId, revision);
         } catch (InvalidClaimStatusException | InvalidRevisionException ex) {
             log.warn("Claim has been changed, no commit needed", ex);
@@ -61,18 +62,25 @@ public class ClaimCommitterService {
     }
 
     public void sendAccept(String partyId, Claim claim, CommitterConfig.Committer committer) {
+        log.info("Trying to accept claim in service, serviceId='{}', partyId='{}', claimId='{}'", committer.getId(), partyId, claim.getId());
         try {
             buildClaimCommitterClient(committer).accept(partyId, claim);
+            log.info("Claim have been accepted in service, serviceId='{}', claimId='{}'", committer.getId(), claim.getId());
         } catch (InvalidChangeset ex) {
-            throw new InvalidChangesetException(conversionWrapperService.convertModifications(ex.getInvalidChangeset()));
+            throw new InvalidChangesetException(
+                    String.format("Failed to accept claim in service, serviceId='%s', partyId='%s' claimId='%d'", committer.getId(), partyId, claim.getId()),
+                    conversionWrapperService.convertModifications(ex.getInvalidChangeset())
+            );
         } catch (TException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     public void sendCommit(String partyId, Claim claim, CommitterConfig.Committer committer) {
+        log.info("Trying to commit claim in service, serviceId='{}', partyId='{}' claimId='{}'", committer.getId(), partyId, claim.getId());
         try {
             buildClaimCommitterClient(committer).commit(partyId, claim);
+            log.info("Claim have been commited in service, serviceId='{}', partyId='{}', claimId='{}'", committer.getId(), partyId, claim.getId());
         } catch (TException ex) {
             throw new RuntimeException(ex);
         }

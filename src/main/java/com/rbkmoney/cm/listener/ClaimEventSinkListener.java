@@ -19,10 +19,17 @@ public class ClaimEventSinkListener {
         if (event.getChange().isSetStatusChanged()) {
             ClaimStatusChanged claimStatusChanged = event.getChange().getStatusChanged();
             if (claimStatusChanged.getStatus().isSetPendingAcceptance()) {
-                String partyId = claimStatusChanged.getPartyId();
-                long claimId = claimStatusChanged.getId();
-                int revision = claimStatusChanged.getRevision();
-                claimCommitterService.doCommitClaim(partyId, claimId, revision);
+                log.info("Found event in 'pending_acceptance' status, event='{}'", event);
+                try {
+                    claimCommitterService.doCommitClaim(
+                            claimStatusChanged.getPartyId(),
+                            claimStatusChanged.getId(),
+                            claimStatusChanged.getRevision()
+                    );
+                    log.info("Event have been processed, event='{}'", event);
+                } catch (RuntimeException ex) {
+                    log.error("Failed to process event, event='{}'", event, ex);
+                }
             }
         }
         ack.acknowledge();

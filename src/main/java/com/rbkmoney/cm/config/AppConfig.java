@@ -9,8 +9,6 @@ import com.rbkmoney.cm.service.ContinuationTokenService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
 import com.rbkmoney.cm.service.impl.ClaimManagementServiceImpl;
 import com.rbkmoney.cm.util.ClaimEventFactory;
-import com.rbkmoney.damsel.claim_management.ClaimCommitterSrv;
-import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
 import org.apache.thrift.TBase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +16,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.retry.support.RetryTemplate;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 public class AppConfig {
