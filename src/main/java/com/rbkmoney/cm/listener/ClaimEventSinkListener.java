@@ -29,6 +29,7 @@ public class ClaimEventSinkListener {
                     log.info("Event have been processed, event='{}'", event);
                 } catch (RuntimeException ex) {
                     log.error("Failed to process event, event='{}'", event, ex);
+                    throw ex;
                 }
             }
         }
