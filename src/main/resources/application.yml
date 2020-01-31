@@ -55,7 +55,7 @@ claim-management:
   limit: 1000
   committers:
     - id: hellgate
-      uri: http://hellgate:8022/v1/claim-committer
+      uri: http://hellgate:8022/v1/processing/claim_committer
       timeout: 5000
 kafka:
   bootstrap.servers: "localhost:29092"
