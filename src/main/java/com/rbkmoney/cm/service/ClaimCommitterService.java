@@ -56,8 +56,6 @@ public class ClaimCommitterService {
             claimManagementService.failClaimAcceptance(partyId, claimId, revision);
         } catch (InvalidClaimStatusException | InvalidRevisionException ex) {
             log.warn("Claim has been changed, no commit needed", ex);
-        } catch (RuntimeException ex) {
-            throw ex;
         }
     }
 
