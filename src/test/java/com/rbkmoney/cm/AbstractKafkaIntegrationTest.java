@@ -1,6 +1,6 @@
 package com.rbkmoney.cm;
 
-import com.rbkmoney.cm.util.WebHookDeserializer;
+import com.rbkmoney.cm.serde.ClaimManagementEventDeserializer;
 import com.rbkmoney.kafka.common.serialization.ThriftSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.Consumer;
@@ -51,7 +51,7 @@ public abstract class AbstractKafkaIntegrationTest extends AbstractIntegrationTe
 
         @NotNull
         private <T> Consumer<String, T> initTopic(String topicName) {
-            Consumer<String, T> consumer = createConsumer(WebHookDeserializer.class);
+            Consumer<String, T> consumer = createConsumer(ClaimManagementEventDeserializer.class);
             try {
                 consumer.subscribe(Collections.singletonList(topicName));
                 consumer.poll(Duration.ofMillis(100L));
