@@ -382,10 +382,10 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
                         ListenableFuture<SendResult<String, TBase>> future = kafkaTemplate.send(eventSinkTopic, partyId, event);
                         future.get();
                     } catch (InterruptedException e) {
-                        log.error("Error when sendToEventSinkWithRetry claimId: {}, event: {}", partyId, event, e);
+                        log.error("Error when sendToEventSinkWithRetry partyId: {}, event: {}", partyId, event, e);
                         Thread.currentThread().interrupt();
                     } catch (ExecutionException e) {
-                        log.error("Error when sendToEventSinkWithRetry claimId: {}, event: {}", partyId, event, e);
+                        log.error("Error when sendToEventSinkWithRetry partyId: {}, event: {}", partyId, event, e);
                         throw new RuntimeException("Error when sendToEventSinkWithRetry", e);
                     }
                     return null;
