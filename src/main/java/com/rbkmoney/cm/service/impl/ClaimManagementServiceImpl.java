@@ -211,7 +211,7 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         statusModificationModel.setUserInfo(ContextUtil.getUserInfoFromContext());
         claimModel.getModifications().add(statusModificationModel);
 
-        claimModel = claimRepository.save(claimModel);
+        claimModel = claimRepository.saveAndFlush(claimModel);
 
         Event claimEvent = claimEventFactory.createChangeStatusEvent(
                 partyId, claimId, claimModel.getRevision(),
