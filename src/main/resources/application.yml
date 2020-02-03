@@ -59,7 +59,7 @@ claim-management:
 #      timeout: 5000
 kafka:
   bootstrap.servers: "localhost:29092"
-  topic:
+  topics:
     claim-event-sink:
       id: "claim-event-sink"
       enabled: false

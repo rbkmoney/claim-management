@@ -38,7 +38,7 @@ public class AppConfig {
                                                          ClaimEventFactory claimEventFactory,
                                                          KafkaTemplate<String, TBase> kafkaTemplate,
                                                          RetryTemplate retryTemplate,
-                                                         @Value("${kafka.topic.claim-event-sink.id}") String eventSinkTopic) {
+                                                         @Value("${kafka.topics.claim-event-sink.id}") String eventSinkTopic) {
         return new ClaimManagementServiceImpl(continuationTokenService, conversionWrapperService, claimRepository, claimEventFactory, kafkaTemplate, retryTemplate, eventSinkTopic);
     }
 
