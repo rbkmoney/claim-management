@@ -1,6 +1,7 @@
 package com.rbkmoney.cm.service;
 
 import com.rbkmoney.cm.AbstractWithCommittersIntegrationTest;
+import com.rbkmoney.cm.exception.InvalidRevisionException;
 import com.rbkmoney.cm.meta.UserIdentityEmailExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityIdExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityRealmExtensionKit;
@@ -15,7 +16,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.AsyncResult;
 
@@ -37,9 +37,6 @@ public class ClaimCommitterServiceTest extends AbstractWithCommittersIntegration
 
     @Autowired
     private ConversionWrapperService conversionWrapperService;
-
-    @Autowired
-    private ConversionService conversionService;
 
     @Autowired
     private ClaimManagementService claimManagementService;
@@ -83,8 +80,12 @@ public class ClaimCommitterServiceTest extends AbstractWithCommittersIntegration
         startSimpleCommitter();
 
         ClaimModel claimModel = createClaimWithPendingAcceptance("party_id");
-
-        claimCommitterService.doCommitClaim(claimModel.getPartyId(), claimModel.getId(), claimModel.getRevision() + 1);
+        try {
+            claimCommitterService.doCommitClaim(claimModel.getPartyId(), claimModel.getId(), claimModel.getRevision() + 1);
+            fail();
+        } catch (InvalidRevisionException ex) {
+            //do nothing
+        }
         ClaimModel newClaimModel = claimManagementService.getClaim(claimModel.getPartyId(), claimModel.getId());
         assertEquals(claimModel.getClaimStatus(), newClaimModel.getClaimStatus());
         assertEquals(claimModel.getRevision(), newClaimModel.getRevision());

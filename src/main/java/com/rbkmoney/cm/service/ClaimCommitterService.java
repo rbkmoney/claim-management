@@ -66,7 +66,7 @@ public class ClaimCommitterService {
             ).run();
 
         } catch (InvalidClaimStatusException | InvalidRevisionException ex) {
-            log.warn("Claim has been changed, no commit needed", ex);
+            throw ex;
         }
     }
 
