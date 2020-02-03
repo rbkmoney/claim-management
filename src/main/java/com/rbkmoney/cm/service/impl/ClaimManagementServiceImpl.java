@@ -106,7 +106,7 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
         claimModel = claimRepository.saveAndFlush(claimModel);
 
-        Event claimEvent = claimEventFactory.createUpdateClaimEvent(partyId, claimId, revision, changeset, claimModel.getUpdatedAt());
+        Event claimEvent = claimEventFactory.createUpdateClaimEvent(partyId, claimId, claimModel.getRevision(), changeset, claimModel.getUpdatedAt());
 
         sendToEventSinkWithRetry(partyId, claimEvent);
 
@@ -214,7 +214,7 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         claimModel = claimRepository.save(claimModel);
 
         Event claimEvent = claimEventFactory.createChangeStatusEvent(
-                partyId, claimId, revision,
+                partyId, claimId, claimModel.getRevision(),
                 conversionWrapperService.convertClaimStatus(claimModel.getClaimStatus()),
                 claimModel.getUpdatedAt()
         );
