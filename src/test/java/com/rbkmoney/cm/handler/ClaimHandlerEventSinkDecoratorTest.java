@@ -36,6 +36,7 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
         consumer.poll(Duration.ofSeconds(5))
                 .forEach(event -> {
                     Event value = event.value();
+                    assertEquals(EMAIL, value.getUserInfo().getEmail());
                     assertEquals(claim.getPartyId(), event.key());
                     assertEquals(claim.getId(), value.getChange().getCreated().getId());
                     assertEquals(5, value.getChange().getCreated().getChangesetSize());
@@ -46,6 +47,7 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
         consumer.poll(Duration.ofSeconds(5))
                 .forEach(event -> {
                     Event value = event.value();
+                    assertEquals(EMAIL, value.getUserInfo().getEmail());
                     assertEquals(claim.getPartyId(), event.key());
                     assertEquals(claim.getId(), value.getChange().getUpdated().getId());
                     assertEquals(5, value.getChange().getUpdated().getChangesetSize());
@@ -56,6 +58,7 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
         consumer.poll(Duration.ofSeconds(5))
                 .forEach(event -> {
                     Event value = event.value();
+                    assertEquals(EMAIL, value.getUserInfo().getEmail());
                     assertEquals(claim.getPartyId(), event.key());
                     assertEquals(claim.getId(), value.getChange().getStatusChanged().getId());
                     assertTrue(value.getChange().getStatusChanged().getStatus().isSetReview());
@@ -66,6 +69,7 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
         consumer.poll(Duration.ofSeconds(5))
                 .forEach(event -> {
                     Event value = event.value();
+                    assertEquals(EMAIL, value.getUserInfo().getEmail());
                     assertEquals(claim.getPartyId(), event.key());
                     assertEquals(claim.getId(), value.getChange().getStatusChanged().getId());
                     assertTrue(value.getChange().getStatusChanged().getStatus().isSetPending());

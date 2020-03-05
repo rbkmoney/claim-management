@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.List;
 
+import static com.rbkmoney.cm.util.ContextUtil.getUserInfo;
+
 @Service
 public class ClaimEventFactory {
 
@@ -21,7 +23,8 @@ public class ClaimEventFactory {
         );
         return new Event()
                 .setChange(change)
-                .setOccuredAt(Instant.now().toString());
+                .setOccuredAt(Instant.now().toString())
+                .setUserInfo(getUserInfo());
     }
 
     public Event createUpdateClaimEvent(String partyId, long claimId, int revision, List<Modification> changeset, Instant updatedAt) {
@@ -36,7 +39,8 @@ public class ClaimEventFactory {
         );
         return new Event()
                 .setChange(change)
-                .setOccuredAt(Instant.now().toString());
+                .setOccuredAt(Instant.now().toString())
+                .setUserInfo(getUserInfo());
     }
 
     public Event createChangeStatusEvent(String partyId, long claimId, int revision, ClaimStatus claimStatus, Instant updatedAt) {
@@ -51,6 +55,7 @@ public class ClaimEventFactory {
         );
         return new Event()
                 .setChange(change)
-                .setOccuredAt(Instant.now().toString());
+                .setOccuredAt(Instant.now().toString())
+                .setUserInfo(getUserInfo());
     }
 }

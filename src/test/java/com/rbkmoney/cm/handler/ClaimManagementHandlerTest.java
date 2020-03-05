@@ -159,9 +159,10 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     @Test
     public void testSearchClaimsByClaimId() {
         ClaimSearchQuery claimSearchQuery = new ClaimSearchQuery();
+        claimSearchQuery.setPartyId("claim_search_party_id_and_claim_id");
         claimSearchQuery.setLimit(1);
 
-        Claim claim = createClaims(client, conversionWrapperService, "claim_search_party_id_and_claim_id", claimSearchQuery.getLimit(), 5).get(0);
+        Claim claim = createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(), claimSearchQuery.getLimit(), 5).get(0);
         claimSearchQuery.setClaimId(claim.getId());
 
         assertEquals(claim, callService(() -> client.searchClaims(claimSearchQuery).getResult().get(0)));

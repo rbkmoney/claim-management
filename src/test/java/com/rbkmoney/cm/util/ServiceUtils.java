@@ -19,6 +19,8 @@ import java.util.stream.IntStream;
 
 public class ServiceUtils {
 
+    public static final String EMAIL = "user_id@users";
+
     public static List<Claim> createClaims(ClaimManagementSrv.Iface client, ConversionWrapperService conversionWrapperService, String partyId, int claimCount, int modificationCountPerClaim) {
         return IntStream.rangeClosed(1, claimCount)
                 .mapToObj(value -> createClaim(client, conversionWrapperService, partyId, modificationCountPerClaim))
@@ -54,11 +56,8 @@ public class ServiceUtils {
                     }
                 }
             }
-
-            if (flag) {
-                modification = supplier.get();
-            }
         }
+
         return modification;
     }
 
@@ -97,7 +96,7 @@ public class ServiceUtils {
         UserInfoModel userInfoModel = new UserInfoModel();
         userInfoModel.setUserId("100");
         userInfoModel.setUsername("user_id");
-        userInfoModel.setEmail("user_id@users");
+        userInfoModel.setEmail(EMAIL);
         userInfoModel.setType(UserTypeEnum.external);
         return userInfoModel;
     }
