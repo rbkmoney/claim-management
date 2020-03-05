@@ -70,7 +70,7 @@ public class MockUtil {
     }
 
     public static MockTBaseProcessor buildMockTBaseProcessor(Map.Entry<String[], FieldHandler>... fieldHandlers) {
-        MockTBaseProcessor mockTBaseProcessor = new MockTBaseProcessor(MockMode.RANDOM, 40, 5);
+        MockTBaseProcessor mockTBaseProcessor = new MockTBaseProcessor(MockMode.RANDOM, 10, 5);
         Arrays.stream(fieldHandlers).forEach(entry -> mockTBaseProcessor.addFieldHandler(entry.getValue(), entry.getKey()));
         return mockTBaseProcessor;
     }
