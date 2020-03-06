@@ -12,7 +12,9 @@ import com.rbkmoney.cm.service.ContinuationTokenService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
 import com.rbkmoney.cm.util.ClaimEventFactory;
 import com.rbkmoney.cm.util.ContextUtil;
-import com.rbkmoney.damsel.claim_management.*;
+import com.rbkmoney.damsel.claim_management.Claim;
+import com.rbkmoney.damsel.claim_management.Event;
+import com.rbkmoney.damsel.claim_management.Modification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TBase;
@@ -116,7 +118,12 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public ClaimModel getClaim(String partyId, long claimId) {
-        return getClaim(partyId, claimId, true);
+        log.info("Trying to get Claim, partyId={}, claimId={}", partyId, claimId);
+
+        ClaimModel claimModel = getClaim(partyId, claimId, true);
+
+        log.info("Claim has been got, partyId={}, claimId={}, claimModel={}", partyId, claimId, claimModel);
+        return claimModel;
     }
 
     @Override
@@ -379,8 +386,13 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         retryTemplate.execute(
                 retryCallback -> {
                     try {
+                        log.info("Trying to send Event to kafka, partyId={}, event={}", partyId, event);
+
                         ListenableFuture<SendResult<String, TBase>> future = kafkaTemplate.send(eventSinkTopic, partyId, event);
+
                         future.get();
+
+                        log.info("Event has been sent to kafka, partyId={}, event={}", partyId, event);
                     } catch (InterruptedException e) {
                         log.error("Error when sendToEventSinkWithRetry partyId: {}, event: {}", partyId, event, e);
                         Thread.currentThread().interrupt();
