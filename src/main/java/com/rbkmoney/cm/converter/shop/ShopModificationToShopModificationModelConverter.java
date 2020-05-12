@@ -34,6 +34,8 @@ public class ShopModificationToShopModificationModelConverter implements ClaimCo
                 return conversionService.convert(shopModification.getPayoutScheduleModification(), ShopPayoutScheduleModificationModel.class);
             case SHOP_ACCOUNT_CREATION:
                 return conversionService.convert(shopModification.getShopAccountCreation(), ShopAccountCreationModificationModel.class);
+            case CASH_REGISTER_MODIFICATION_UNIT:
+                return conversionService.convert(shopModification.getCashRegisterModificationUnit(), ShopCashRegisterModificationModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", shopModification.getSetField()));
         }
