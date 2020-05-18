@@ -4,8 +4,9 @@ import com.rbkmoney.cm.model.ClaimModel;
 import com.rbkmoney.cm.model.ClaimStatusEnum;
 import com.rbkmoney.cm.model.ClaimStatusModel;
 import com.rbkmoney.cm.model.MetadataModel;
-import com.rbkmoney.cm.pageable.ClaimPageRequest;
-import com.rbkmoney.cm.pageable.ClaimPageResponse;
+import com.rbkmoney.cm.search.ClaimPageSearchParameters;
+import com.rbkmoney.cm.search.ClaimPageSearchRequest;
+import com.rbkmoney.cm.search.ClaimPageSearchResponse;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.Modification;
 import org.springframework.data.domain.Page;
@@ -36,9 +37,9 @@ public interface ClaimManagementService {
 
     ClaimModel changeStatus(String partyId, long claimId, int revision, ClaimStatusModel targetClaimStatus, List<ClaimStatusEnum> expectedStatuses);
 
-    ClaimPageResponse searchClaims(String partyId, Long claimId, List<ClaimStatusEnum> statuses, String continuationToken, int limit);
+    ClaimPageSearchResponse searchClaims(ClaimPageSearchRequest claimSearchRequest, String continuationToken, int limit);
 
-    Page<ClaimModel> searchClaims(String partyId, Long claimId, List<ClaimStatusEnum> statuses, ClaimPageRequest claimPageRequest);
+    Page<ClaimModel> searchClaims(ClaimPageSearchRequest claimSearchRequest, ClaimPageSearchParameters claimSearchParameters);
 
     MetadataModel getMetadata(String partyId, long claimId, String key);
 

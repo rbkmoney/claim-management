@@ -4,9 +4,10 @@ import com.rbkmoney.cm.exception.*;
 import com.rbkmoney.cm.model.*;
 import com.rbkmoney.cm.model.status.StatusModificationModel;
 import com.rbkmoney.cm.model.status.StatusModificationTypeEnum;
-import com.rbkmoney.cm.pageable.ClaimPageRequest;
-import com.rbkmoney.cm.pageable.ClaimPageResponse;
 import com.rbkmoney.cm.repository.ClaimRepository;
+import com.rbkmoney.cm.search.ClaimPageSearchParameters;
+import com.rbkmoney.cm.search.ClaimPageSearchRequest;
+import com.rbkmoney.cm.search.ClaimPageSearchResponse;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ContinuationTokenService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static com.rbkmoney.cm.repository.ClaimSpecifications.equalsByPartyIdAndClaimId;
-import static com.rbkmoney.cm.repository.ClaimSpecifications.equalsByPartyIdClaimIdAndStatusIn;
+import static com.rbkmoney.cm.repository.ClaimSpecifications.equalsByPartyIdClaimIdEmailAndStatusIn;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Slf4j
@@ -102,7 +103,6 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         checkRevision(claimModel, revision);
         checkStatus(claimModel, Arrays.asList(ClaimStatusEnum.pending, ClaimStatusEnum.review));
         checkForConflicts(claimModel.getModifications(), modifications);
-
         modifications.forEach(this::addUserInfo);
         claimModel.getModifications().addAll(modifications);
 
@@ -234,17 +234,17 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
     @Override
     @Transactional
-    public ClaimPageResponse searchClaims(String partyId, Long claimId, List<ClaimStatusEnum> statuses, String continuationToken, int limit) {
-        List<Object> parameters = Arrays.asList(partyId, claimId, statuses, limit);
-        ClaimPageRequest claimPageRequest = new ClaimPageRequest(0, limit);
+    public ClaimPageSearchResponse searchClaims(ClaimPageSearchRequest claimSearchRequest, String continuationToken, int limit) {
+        List<Object> parameters = Arrays.asList(claimSearchRequest, limit);
+        ClaimPageSearchParameters claimSearchParameters = new ClaimPageSearchParameters(0, limit);
         if (continuationToken != null) {
             int pageNumber = continuationTokenService.validateAndGet(continuationToken, Integer.class, parameters);
-            claimPageRequest.setPage(pageNumber);
+            claimSearchParameters.setPage(pageNumber);
         }
 
-        Page<ClaimModel> claimsPage = searchClaims(partyId, claimId, statuses, claimPageRequest);
+        Page<ClaimModel> claimsPage = searchClaims(claimSearchRequest, claimSearchParameters);
 
-        return new ClaimPageResponse(
+        return new ClaimPageSearchResponse(
                 claimsPage.getContent(),
                 claimsPage.hasNext() ? continuationTokenService.buildToken(claimsPage.getPageable().next().getPageNumber(), parameters) : null
         );
@@ -252,12 +252,17 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
     @Override
     @Transactional
-    public Page<ClaimModel> searchClaims(String partyId, Long claimId, List<ClaimStatusEnum> statuses, ClaimPageRequest claimPageRequest) {
-        log.info("Trying to search claims, partyId='{}', statuses='{}', pageRequest='{}'", partyId, statuses, claimPageRequest);
+    public Page<ClaimModel> searchClaims(ClaimPageSearchRequest claimSearchRequest, ClaimPageSearchParameters claimSearchParameters) {
+        log.info("Trying to search claims, claimSearchRequest='{}', claimSearchParameters='{}'", claimSearchRequest, claimSearchParameters);
 
         Page<ClaimModel> claims = claimRepository.findAll(
-                equalsByPartyIdClaimIdAndStatusIn(partyId, claimId, statuses),
-                PageRequest.of(claimPageRequest.getPage(), claimPageRequest.getLimit(), Sort.Direction.DESC, "id")
+                equalsByPartyIdClaimIdEmailAndStatusIn(
+                        claimSearchRequest.getPartyId(),
+                        claimSearchRequest.getClaimId(),
+                        claimSearchRequest.getEmail(),
+                        claimSearchRequest.getStatuses()
+                ),
+                PageRequest.of(claimSearchParameters.getPage(), claimSearchParameters.getLimit(), Sort.Direction.DESC, "id")
         );
 
         claims.getContent().forEach(this::initializeClaim);

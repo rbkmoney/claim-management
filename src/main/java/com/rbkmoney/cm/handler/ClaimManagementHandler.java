@@ -4,7 +4,8 @@ import com.rbkmoney.cm.exception.*;
 import com.rbkmoney.cm.model.ClaimModel;
 import com.rbkmoney.cm.model.ClaimStatusEnum;
 import com.rbkmoney.cm.model.MetadataModel;
-import com.rbkmoney.cm.pageable.ClaimPageResponse;
+import com.rbkmoney.cm.search.ClaimPageSearchRequest;
+import com.rbkmoney.cm.search.ClaimPageSearchResponse;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
 import com.rbkmoney.damsel.claim_management.*;
@@ -68,10 +69,13 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
                     )
                     .orElse(null);
 
-            ClaimPageResponse claimsWithContinuationToken = claimManagementService.searchClaims(
-                    claimRequest.getPartyId(),
-                    claimRequest.isSetClaimId() ? claimRequest.getClaimId() : null,
-                    claimStatusEnums,
+            ClaimPageSearchResponse claimsWithContinuationToken = claimManagementService.searchClaims(
+                    ClaimPageSearchRequest.builder()
+                            .partyId(claimRequest.getPartyId())
+                            .claimId(claimRequest.isSetClaimId() ? claimRequest.getClaimId() : null)
+                            .email(claimRequest.getEmail())
+                            .statuses(claimStatusEnums)
+                            .build(),
                     claimRequest.getContinuationToken(),
                     claimRequest.getLimit()
             );

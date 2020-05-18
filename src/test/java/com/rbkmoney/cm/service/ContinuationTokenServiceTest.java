@@ -2,7 +2,7 @@ package com.rbkmoney.cm.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rbkmoney.cm.exception.BadContinuationTokenException;
-import com.rbkmoney.cm.pageable.ClaimPageRequest;
+import com.rbkmoney.cm.search.ClaimPageSearchParameters;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -17,8 +17,8 @@ public class ContinuationTokenServiceTest {
     @Test
     public void testBuildAndValidateToken() {
         List<Object> parameters = Arrays.asList(1, null, "kek", 1L, Arrays.asList(pending));
-        String token = continuationTokenService.buildToken(new ClaimPageRequest(1, -1), parameters);
-        continuationTokenService.validateAndGet(token, ClaimPageRequest.class, parameters);
+        String token = continuationTokenService.buildToken(new ClaimPageSearchParameters(1, -1), parameters);
+        continuationTokenService.validateAndGet(token, ClaimPageSearchParameters.class, parameters);
     }
 
     @Test

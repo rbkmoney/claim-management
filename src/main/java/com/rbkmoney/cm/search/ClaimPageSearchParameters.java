@@ -1,4 +1,4 @@
-package com.rbkmoney.cm.pageable;
+package com.rbkmoney.cm.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClaimPageRequest {
+public class ClaimPageSearchParameters {
 
     private int page;
 
