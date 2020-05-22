@@ -34,9 +34,12 @@ public class ClaimSpecifications {
     }
 
     public static Specification<ClaimModel> equalsByEmail(String email) {
-        return (root, criteriaQuery, criteriaBuilder) -> email != null
-                ? criteriaBuilder.equal(root.join("modifications").get("userInfo").get("email"), email)
-                : criteriaBuilder.conjunction();
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            criteriaQuery.distinct(email != null);
+            return email != null
+                    ? criteriaBuilder.equal(root.join("modifications").get("userInfo").get("email"), email)
+                    : criteriaBuilder.conjunction();
+        };
     }
 
     public static Specification<ClaimModel> equalsByPartyIdClaimIdEmailAndStatusIn(String partyId, Long claimId, String email, List<ClaimStatusEnum> statuses) {

@@ -82,7 +82,12 @@ public class ClaimRepositoryTest extends AbstractIntegrationTest {
         userInfoModel.setUsername("qwe");
         userInfoModel.setType(UserTypeEnum.external);
         commentModificationModel.setUserInfo(userInfoModel);
-        claimModel.setModifications(Arrays.asList(commentModificationModel));
+
+        CommentModificationModel secondCommentModificationModel = new CommentModificationModel();
+        secondCommentModificationModel.setCommentId("comment_id_2");
+        secondCommentModificationModel.setCommentModificationType(CommentModificationTypeEnum.creation);
+        secondCommentModificationModel.setUserInfo(userInfoModel);
+        claimModel.setModifications(Arrays.asList(commentModificationModel, secondCommentModificationModel));
         claimRepository.save(claimModel);
 
         List<ClaimModel> claimModels = claimRepository.findAll(ClaimSpecifications.equalsByEmail(userInfoModel.getEmail()));
