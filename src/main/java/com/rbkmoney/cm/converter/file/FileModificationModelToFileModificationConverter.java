@@ -14,7 +14,7 @@ public class FileModificationModelToFileModificationConverter implements ClaimCo
         switch (fileModificationModel.getFileModificationType()) {
             case creation:
                 return FileModification.creation(new FileCreated());
-            case deleteion:
+            case deletion:
                 return FileModification.deletion(new FileDeleted());
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", fileModificationModel.getFileModificationType()));
