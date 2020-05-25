@@ -2,6 +2,7 @@ package com.rbkmoney.cm.model.comment;
 
 public enum CommentModificationTypeEnum {
 
-    creation
+    creation,
+    deletion
 
 }
