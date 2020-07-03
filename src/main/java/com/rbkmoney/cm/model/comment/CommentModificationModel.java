@@ -31,6 +31,7 @@ public class CommentModificationModel extends ClaimModificationModel {
     @Override
     public boolean canEqual(final Object that) {
         return that instanceof CommentModificationModel
-                && commentId.equals(((CommentModificationModel) that).getCommentId());
+                && commentId.equals(((CommentModificationModel) that).getCommentId())
+                && commentModificationType == ((CommentModificationModel) that).getCommentModificationType();
     }
 }

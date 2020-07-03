@@ -31,7 +31,8 @@ public class FileModificationModel extends ClaimModificationModel {
     @Override
     public boolean canEqual(final Object that) {
         return that instanceof FileModificationModel
-                && fileId.equals(((FileModificationModel) that).getFileId());
+                && fileId.equals(((FileModificationModel) that).getFileId())
+                && fileModificationType == ((FileModificationModel) that).getFileModificationType();
     }
 
 }
