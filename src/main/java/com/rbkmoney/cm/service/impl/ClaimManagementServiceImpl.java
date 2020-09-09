@@ -8,6 +8,7 @@ import com.rbkmoney.cm.repository.ClaimRepository;
 import com.rbkmoney.cm.search.ClaimPageSearchParameters;
 import com.rbkmoney.cm.search.ClaimPageSearchRequest;
 import com.rbkmoney.cm.search.ClaimPageSearchResponse;
+import com.rbkmoney.cm.repository.ModificationRepository;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ContinuationTokenService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
@@ -16,10 +17,12 @@ import com.rbkmoney.cm.util.ContextUtil;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.Event;
 import com.rbkmoney.damsel.claim_management.Modification;
+import com.rbkmoney.damsel.claim_management.ModificationChange;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.thrift.TBase;
 import org.hibernate.Hibernate;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,6 +32,7 @@ import org.springframework.retry.support.RetryTemplate;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,7 +51,11 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
     private final ConversionWrapperService conversionWrapperService;
 
+    private final ConversionService conversionService;
+
     private final ClaimRepository claimRepository;
+
+    private final ModificationRepository modificationRepository;
 
     private final ClaimEventFactory claimEventFactory;
 
@@ -314,6 +322,61 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         claimRepository.save(claimModel);
 
         log.info("metadata field have been removed, partyId='{}', claimId='{}', key='{}'", partyId, claimId, key);
+    }
+
+    @Override
+    @Transactional
+    public void updateModification(String partyId, long claimId, int revision, long modificationId, ModificationChange modificationChange) {
+        log.info("Update modification by partyId='{}', claimId='{}', revision='{}'", partyId, claimId, revision);
+
+        ClaimModel claimModel = getClaim(partyId, claimId, false);
+        checkRevision(claimModel, revision);
+
+        ModificationModel modificationModel = claimModel.getModifications().stream()
+                .filter(mod -> mod.getId() == modificationId).findFirst()
+                .orElseThrow(() -> new ModificationNotFoundException(modificationId));
+
+        ModificationModel modificationChangeModel = conversionService.convert(modificationChange, ModificationModel.class);
+
+        if (!modificationModel.getClass().equals(modificationChangeModel.getClass())) {
+            log.warn("Wrong modification type: {}. Expected type: {}", modificationChangeModel.getClass(), modificationModel.getClass());
+            throw new ModificationWrongTypeException();
+        }
+
+        modificationChangeModel.setId(modificationId);
+        modificationChangeModel.setUserInfo(modificationModel.getUserInfo());
+        modificationChangeModel.setChangedAt(Instant.now());
+
+        modificationRepository.save(modificationChangeModel);
+
+        log.info("Modification has been successfully update: {}", modificationId);
+    }
+
+    @Override
+    @Transactional
+    public void removeModification(String partyId, long claimId, int revision, long modificationId, boolean soft) {
+        log.info("Remove modification by partyId='{}', claimId='{}', revision='{}', modificationId='{}'",
+                partyId, claimId, revision, modificationId);
+
+        if (soft) {
+            ClaimModel claimModel = getClaim(partyId, claimId, false);
+            checkRevision(claimModel, revision);
+            ModificationModel modificationModel = claimModel.getModifications().stream()
+                    .filter(mod -> mod.getId() == modificationId)
+                    .findFirst()
+                    .orElseThrow(() -> new ModificationNotFoundException(modificationId));
+            modificationModel.setDeleted(true);
+            modificationModel.setRemovedAt(Instant.now());
+            modificationRepository.save(modificationModel);
+        } else {
+            ClaimModel claimModel = getClaim(partyId, claimId, false);
+            checkRevision(claimModel, revision);
+            claimModel.getModifications().removeIf(mod -> mod.getId() == modificationId);
+
+            claimRepository.save(claimModel);
+        }
+
+        log.info("Modification has been successfully removed: {}", modificationId);
     }
 
     private ClaimModel getClaim(String partyId, long claimId, boolean needInitialize) {

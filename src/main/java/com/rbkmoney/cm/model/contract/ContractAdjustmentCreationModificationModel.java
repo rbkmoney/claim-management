@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class ContractAdjustmentCreationModificationModel extends ContractAdjustmentModificationModel {
 
     @NotNull

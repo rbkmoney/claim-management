@@ -8,10 +8,14 @@ import com.rbkmoney.cm.meta.UserIdentityUsernameExtensionKit;
 import com.rbkmoney.cm.service.ConversionWrapperService;
 import com.rbkmoney.cm.util.MockUtil;
 import com.rbkmoney.damsel.claim_management.*;
+import com.rbkmoney.damsel.domain.CategoryRef;
+import com.rbkmoney.damsel.domain.ShopDetails;
+import com.rbkmoney.damsel.domain.ShopLocation;
 import com.rbkmoney.damsel.msgpack.Value;
 import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
 import org.apache.thrift.TBase;
 import org.apache.thrift.TException;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -201,4 +205,155 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         runService(() -> client.removeMetadata("party_id", claim.getId(), "key"));
         callService(() -> client.getMetadata("party_id", claim.getId(), "key"));
     }
+
+    @Test
+    public void softRemoveModificationTest() {
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
+        long modificationId = claim.changeset.get(0).getModificationId();
+        runService(() -> client.removeModification("party_id", claim.getId(), claim.getRevision(), modificationId, true));
+        Claim claimWithRemovedMod = callService(() -> client.getClaim("party_id", claim.getId()));
+        assertEquals(4, claimWithRemovedMod.getChangeset().size());
+    }
+
+    @Test
+    public void removeModificationTest() {
+        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
+        long modificationId = claim.changeset.get(0).getModificationId();
+        runService(() -> client.removeModification("party_id", claim.getId(), claim.getRevision(), modificationId, false));
+        Claim claimWithRemovedMod = callService(() -> client.getClaim("party_id", claim.getId()));
+        assertEquals(4, claimWithRemovedMod.getChangeset().size());
+    }
+
+    @Test(expected = ModificationWrongType.class)
+    public void updateBadTypeModificationTest() {
+        Modification commentModification = buildCommentModification();
+        Claim claim = createClaim(
+                client,
+                "party_id",
+                generateModifications(
+                        conversionWrapperService,
+                        () -> MockUtil.generateTBaseList(commentModification, 1)
+                )
+        );
+        ModificationUnit modificationUnit = claim.changeset.get(0);
+
+        ClaimModificationChange claimModificationChange = new ClaimModificationChange();
+        FileModificationUnit fileModificationUnit = new FileModificationUnit();
+        fileModificationUnit.setId("testId");
+        FileModification fileModification = new FileModification();
+        fileModification.setChanged(new FileChanged());
+        fileModificationUnit.setModification(fileModification);
+        claimModificationChange.setFileModification(fileModificationUnit);
+
+        ModificationChange modificationChange = ModificationChange.claim_modification(claimModificationChange);
+
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), modificationChange));
+    }
+
+    @Test
+    public void updateClaimModificationTest() {
+        Modification commentModification = buildCommentModification();
+        Claim claim = createClaim(
+                client,
+                "party_id",
+                generateModifications(
+                        conversionWrapperService,
+                        () -> MockUtil.generateTBaseList(commentModification, 1)
+                )
+        );
+        ModificationUnit modificationUnit = claim.changeset.get(0);
+
+        ClaimModificationChange claimModificationChange = new ClaimModificationChange();
+        CommentModificationUnit commentModificationUnit = new CommentModificationUnit();
+        commentModificationUnit.setId("testModId");
+        CommentModification cmntModification = new CommentModification();
+        cmntModification.setChanged(new CommentChanged());
+        commentModificationUnit.setModification(cmntModification);
+        claimModificationChange.setCommentModification(commentModificationUnit);
+
+        ModificationChange modificationChange = ModificationChange.claim_modification(claimModificationChange);
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), modificationChange));
+
+        Claim modifiedClaim = callService(() -> client.getClaim("party_id", claim.getId()));
+        ModificationUnit changedModificationUnit = modifiedClaim.getChangeset().get(0);
+        Assert.assertEquals(commentModificationUnit.getId(),
+                changedModificationUnit.getModification().getClaimModification().getCommentModification().getId());
+        Assert.assertTrue(changedModificationUnit.getModification().getClaimModification().getCommentModification().getModification().isSetChanged());
+        Assert.assertNotNull(changedModificationUnit.getChangedAt());
+    }
+
+    @Test
+    public void updatePartyModificationTest() {
+        Modification shopModification = buildShopModification();
+        Claim claim = createClaim(
+                client,
+                "party_id",
+                generateModifications(
+                        conversionWrapperService,
+                        () -> MockUtil.generateTBaseList(shopModification, 1)
+                )
+        );
+        ModificationUnit modificationUnit = claim.changeset.get(0);
+
+        PartyModificationChange partyModificationChange = new PartyModificationChange();
+        ShopModification shopModificationThrift = new ShopModification();
+        ShopParams shopParams = buildShopParams();
+        ShopLocation shopLocation = new ShopLocation();
+        shopLocation.setUrl("newTestLocationUrl");
+        shopParams.setLocation(shopLocation);
+        shopModificationThrift.setCreation(shopParams);
+        ShopModificationUnit shopModificationUnit = new ShopModificationUnit();
+        shopModificationUnit.setId("testShopModId");
+        shopModificationUnit.setModification(shopModificationThrift);
+        partyModificationChange.setShopModification(shopModificationUnit);
+
+        ModificationChange modificationChange = ModificationChange.party_modification(partyModificationChange);
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), modificationChange));
+
+        Claim modifiedClaim = callService(() -> client.getClaim("party_id", claim.getId()));
+        ModificationUnit changedModificationUnit = modifiedClaim.getChangeset().get(0);
+        ShopModificationUnit shopModificationChanged = changedModificationUnit.getModification().getPartyModification().getShopModification();
+        Assert.assertEquals(shopLocation.getUrl(), shopModificationChanged.getModification().getCreation().getLocation().getUrl());
+    }
+
+    private Modification buildCommentModification() {
+        ClaimModification claimModification = new ClaimModification();
+        CommentModificationUnit commentModificationUnit = new CommentModificationUnit();
+        commentModificationUnit.setId("12345");
+        CommentModification commentModification = new CommentModification();
+        commentModification.setCreation(new CommentCreated());
+        commentModificationUnit.setModification(commentModification);
+        claimModification.setCommentModification(commentModificationUnit);
+
+        return Modification.claim_modification(claimModification);
+    }
+
+    private Modification buildShopModification() {
+        PartyModification partyModification = new PartyModification();
+        ShopModificationUnit shopModificationUnit = new ShopModificationUnit();
+        shopModificationUnit.setId("testShopModId");
+        ShopModification shopModification = new ShopModification();
+        shopModification.setCreation(buildShopParams());
+        shopModificationUnit.setModification(shopModification);
+        partyModification.setShopModification(shopModificationUnit);
+
+        return Modification.party_modification(partyModification);
+    }
+
+    private ShopParams buildShopParams() {
+        ShopParams shopParams = new ShopParams();
+        shopParams.setCategory(new CategoryRef(1));
+        shopParams.setContractId("testContractId");
+        ShopDetails shopDetails = new ShopDetails();
+        shopDetails.setName("testNameDetail");
+        shopDetails.setDescription("testDescription");
+        shopParams.setDetails(shopDetails);
+        ShopLocation shopLocation = new ShopLocation();
+        shopLocation.setUrl("testUrl");
+        shopParams.setLocation(shopLocation);
+        shopParams.setPayoutToolId("testPayoutToolId");
+
+        return shopParams;
+    }
+
 }

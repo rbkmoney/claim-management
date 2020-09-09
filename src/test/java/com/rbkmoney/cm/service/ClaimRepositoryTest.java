@@ -7,6 +7,7 @@ import com.rbkmoney.cm.model.comment.CommentModificationTypeEnum;
 import com.rbkmoney.cm.model.shop.ShopLocationModificationModel;
 import com.rbkmoney.cm.repository.ClaimRepository;
 import com.rbkmoney.cm.repository.ClaimSpecifications;
+import com.rbkmoney.cm.repository.ModificationRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
@@ -22,6 +23,9 @@ public class ClaimRepositoryTest extends AbstractIntegrationTest {
 
     @Autowired
     private ClaimRepository claimRepository;
+
+    @Autowired
+    private ModificationRepository modificationRepository;
 
     @Test(expected = ConstraintViolationException.class)
     public void testRequireNullSave() throws Throwable {

@@ -3,6 +3,7 @@ package com.rbkmoney.cm.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rbkmoney.cm.handler.ClaimManagementHandler;
 import com.rbkmoney.cm.repository.ClaimRepository;
+import com.rbkmoney.cm.repository.ModificationRepository;
 import com.rbkmoney.cm.service.ClaimCommitterService;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ContinuationTokenService;
@@ -34,12 +35,24 @@ public class AppConfig {
     @Bean
     public ClaimManagementService claimManagementService(ContinuationTokenService continuationTokenService,
                                                          ConversionWrapperService conversionWrapperService,
+                                                         ConversionService conversionService,
                                                          ClaimRepository claimRepository,
+                                                         ModificationRepository modificationRepository,
                                                          ClaimEventFactory claimEventFactory,
                                                          KafkaTemplate<String, TBase> kafkaTemplate,
                                                          RetryTemplate retryTemplate,
                                                          @Value("${kafka.topics.claim-event-sink.id}") String eventSinkTopic) {
-        return new ClaimManagementServiceImpl(continuationTokenService, conversionWrapperService, claimRepository, claimEventFactory, kafkaTemplate, retryTemplate, eventSinkTopic);
+        return new ClaimManagementServiceImpl(
+                continuationTokenService,
+                conversionWrapperService,
+                conversionService,
+                claimRepository,
+                modificationRepository,
+                claimEventFactory,
+                kafkaTemplate,
+                retryTemplate,
+                eventSinkTopic
+        );
     }
 
     @Bean

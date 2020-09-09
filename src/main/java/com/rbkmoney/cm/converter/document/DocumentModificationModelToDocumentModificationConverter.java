@@ -2,6 +2,7 @@ package com.rbkmoney.cm.converter.document;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
 import com.rbkmoney.cm.model.document.DocumentModificationModel;
+import com.rbkmoney.damsel.claim_management.DocumentChanged;
 import com.rbkmoney.damsel.claim_management.DocumentCreated;
 import com.rbkmoney.damsel.claim_management.DocumentModification;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,8 @@ public class DocumentModificationModelToDocumentModificationConverter implements
         switch (documentModificationModel.getDocumentModificationType()) {
             case creation:
                 return DocumentModification.creation(new DocumentCreated());
+            case changed:
+                return DocumentModification.changed(new DocumentChanged());
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", documentModificationModel.getDocumentModificationType()));
         }

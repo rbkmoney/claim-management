@@ -2,7 +2,9 @@ package com.rbkmoney.cm.model;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -37,7 +39,9 @@ public class ClaimModel {
 
     @OrderBy
     @JoinColumn(name = "claim_id", nullable = false)
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @SQLDelete(sql = "UPDATE cm.modification_model SET deleted = true WHERE id = ?")
+    @Where(clause = "deleted <> true")
     private List<ModificationModel> modifications;
 
     @JoinColumn(name = "claim_id", nullable = false)

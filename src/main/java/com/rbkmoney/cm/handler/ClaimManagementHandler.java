@@ -1,6 +1,7 @@
 package com.rbkmoney.cm.handler;
 
 import com.rbkmoney.cm.exception.*;
+import com.rbkmoney.cm.exception.ModificationWrongTypeException;
 import com.rbkmoney.cm.model.ClaimModel;
 import com.rbkmoney.cm.model.ClaimStatusEnum;
 import com.rbkmoney.cm.model.MetadataModel;
@@ -135,6 +136,30 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     }
 
     @Override
+    public void updateModification(String partyId, long id, int revision, long modificationId, ModificationChange modificationChange) throws TException {
+        try {
+            claimManagementService.updateModification(partyId, id, revision, modificationId, modificationChange);
+        } catch (ModificationNotFoundException ex) {
+            throw modificationNotFound(ex);
+        } catch (ModificationWrongTypeException ex) {
+            throw modificationWrongType(modificationId, ex);
+        } catch (InvalidRevisionException ex) {
+            throw invalidClaimRevision(ex, "updateModification");
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "updateModification");
+        }
+    }
+
+    @Override
+    public void removeModification(String partyId, long id, int revision, long modificationId, boolean soft) throws TException {
+        try {
+            claimManagementService.removeModification(partyId, id, revision, modificationId, soft);
+        } catch (Exception ex) {
+            throw undefinedResultException(ex, "removeModification");
+        }
+    }
+
+    @Override
     public void requestClaimReview(String partyId, long claimId, int revision) throws ClaimNotFound, InvalidClaimStatus, InvalidClaimRevision, TException {
         try {
             claimManagementService.requestClaimReview(partyId, claimId, revision);
@@ -245,6 +270,16 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     private ClaimNotFound claimNotFound(long claimId, ClaimNotFoundException ex) {
         log.warn("Claim not found, claimId={}", claimId, ex);
         return new ClaimNotFound();
+    }
+
+    private ModificationNotFound modificationNotFound(ModificationNotFoundException ex) {
+        log.warn("Modification not found: {}", ex.getModificationId(), ex);
+        return new ModificationNotFound(ex.getModificationId());
+    }
+
+    private ModificationWrongType modificationWrongType(long modificationId, ModificationWrongTypeException ex) {
+        log.warn("Modification wrong type: {}", modificationId, ex);
+        return new ModificationWrongType();
     }
 
     private WUndefinedResultException undefinedResultException(Exception ex, String msg) {

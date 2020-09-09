@@ -9,6 +9,7 @@ import com.rbkmoney.cm.search.ClaimPageSearchRequest;
 import com.rbkmoney.cm.search.ClaimPageSearchResponse;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.Modification;
+import com.rbkmoney.damsel.claim_management.ModificationChange;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -47,4 +48,7 @@ public interface ClaimManagementService {
 
     void removeMetadata(String partyId, long claimId, String key);
 
+    void updateModification(String partyId, long id, int revision, long modificationId, ModificationChange modificationChange);
+
+    void removeModification(String partyId, long id, int revision, long modificationId, boolean soft);
 }
