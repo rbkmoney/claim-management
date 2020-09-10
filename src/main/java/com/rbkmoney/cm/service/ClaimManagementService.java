@@ -50,5 +50,5 @@ public interface ClaimManagementService {
 
     void updateModification(String partyId, long id, int revision, long modificationId, ModificationChange modificationChange);
 
-    void removeModification(String partyId, long id, int revision, long modificationId, boolean soft);
+    void removeModification(String partyId, long id, int revision, long modificationId);
 }

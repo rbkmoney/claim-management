@@ -13,6 +13,7 @@ import com.rbkmoney.cm.model.shop.ShopModificationModel;
 import com.rbkmoney.cm.model.status.StatusModificationModel;
 import com.rbkmoney.cm.util.MockUtil;
 import com.rbkmoney.damsel.claim_management.*;
+import com.rbkmoney.geck.common.util.TypeUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,10 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.test.annotation.Repeat;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.CollectionUtils;
+
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -159,6 +164,13 @@ public class ConversionServiceTest {
         if (CollectionUtils.isEmpty(claim.getMetadata())) {
             claim.setMetadata(null);
         }
+        List<ModificationUnit> modificationUnits = claim.getChangeset().stream()
+                .peek(mod -> {
+                    mod.setChangedAt(TypeUtil.temporalToString(Instant.now()));
+                    mod.setRemovedAt(null);
+                })
+                .collect(Collectors.toList());
+        claim.setChangeset(modificationUnits);
         assertEquals(
                 claim,
                 conversionService.convert(

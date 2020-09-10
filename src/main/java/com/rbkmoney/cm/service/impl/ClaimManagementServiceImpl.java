@@ -354,27 +354,18 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
     @Override
     @Transactional
-    public void removeModification(String partyId, long claimId, int revision, long modificationId, boolean soft) {
+    public void removeModification(String partyId, long claimId, int revision, long modificationId) {
         log.info("Remove modification by partyId='{}', claimId='{}', revision='{}', modificationId='{}'",
                 partyId, claimId, revision, modificationId);
 
-        if (soft) {
-            ClaimModel claimModel = getClaim(partyId, claimId, false);
-            checkRevision(claimModel, revision);
-            ModificationModel modificationModel = claimModel.getModifications().stream()
-                    .filter(mod -> mod.getId() == modificationId)
-                    .findFirst()
-                    .orElseThrow(() -> new ModificationNotFoundException(modificationId));
-            modificationModel.setDeleted(true);
-            modificationModel.setRemovedAt(Instant.now());
-            modificationRepository.save(modificationModel);
-        } else {
-            ClaimModel claimModel = getClaim(partyId, claimId, false);
-            checkRevision(claimModel, revision);
-            claimModel.getModifications().removeIf(mod -> mod.getId() == modificationId);
-
-            claimRepository.save(claimModel);
-        }
+        ClaimModel claimModel = getClaim(partyId, claimId, false);
+        checkRevision(claimModel, revision);
+        ModificationModel modificationModel = claimModel.getModifications().stream()
+                .filter(mod -> mod.getId() == modificationId)
+                .findFirst()
+                .orElseThrow(() -> new ModificationNotFoundException(modificationId));
+        modificationModel.setDeleted(true);
+        modificationModel.setRemovedAt(Instant.now());
 
         log.info("Modification has been successfully removed: {}", modificationId);
     }

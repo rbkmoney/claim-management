@@ -151,9 +151,11 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     }
 
     @Override
-    public void removeModification(String partyId, long id, int revision, long modificationId, boolean soft) throws TException {
+    public void removeModification(String partyId, long id, int revision, long modificationId) throws TException {
         try {
-            claimManagementService.removeModification(partyId, id, revision, modificationId, soft);
+            claimManagementService.removeModification(partyId, id, revision, modificationId);
+        } catch (ModificationNotFoundException ex) {
+            throw modificationNotFound(ex);
         } catch (Exception ex) {
             throw undefinedResultException(ex, "removeModification");
         }

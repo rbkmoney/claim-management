@@ -210,16 +210,7 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     public void softRemoveModificationTest() {
         Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         long modificationId = claim.changeset.get(0).getModificationId();
-        runService(() -> client.removeModification("party_id", claim.getId(), claim.getRevision(), modificationId, true));
-        Claim claimWithRemovedMod = callService(() -> client.getClaim("party_id", claim.getId()));
-        assertEquals(4, claimWithRemovedMod.getChangeset().size());
-    }
-
-    @Test
-    public void removeModificationTest() {
-        Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
-        long modificationId = claim.changeset.get(0).getModificationId();
-        runService(() -> client.removeModification("party_id", claim.getId(), claim.getRevision(), modificationId, false));
+        runService(() -> client.removeModification("party_id", claim.getId(), claim.getRevision(), modificationId));
         Claim claimWithRemovedMod = callService(() -> client.getClaim("party_id", claim.getId()));
         assertEquals(4, claimWithRemovedMod.getChangeset().size());
     }
