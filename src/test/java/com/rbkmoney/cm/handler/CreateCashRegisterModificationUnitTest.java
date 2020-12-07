@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.rbkmoney.cm.util.ServiceUtils.callService;
+import static com.rbkmoney.cm.util.ServiceUtils.runService;
 
 public class CreateCashRegisterModificationUnitTest {
 
@@ -86,6 +87,11 @@ public class CreateCashRegisterModificationUnitTest {
         System.out.println(cashRegisterClaim);
 
         System.out.println(callService(() -> client.getClaim(cashRegisterClaim.getPartyId(), cashRegisterClaim.getId())));
+    }
+
+    @Test
+    public void acceptCashRegisterModificationUnitClaim() {
+        runService(() -> client.acceptClaim(/* claim.getPartyId() */ "22d0a254-885d-47de-8b72-de483d0d990c", /* claim.getId() */1L, /* claim.getRevision() */ 1));
     }
 
     private UserInfoModel buildUserInfo() {
