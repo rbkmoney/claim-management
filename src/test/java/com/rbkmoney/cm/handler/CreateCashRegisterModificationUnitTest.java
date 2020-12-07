@@ -21,6 +21,7 @@ import java.util.Map;
 import static com.rbkmoney.cm.util.ServiceUtils.callService;
 import static com.rbkmoney.cm.util.ServiceUtils.runService;
 
+@Ignore
 public class CreateCashRegisterModificationUnitTest {
 
     private ClaimManagementSrv.Iface client;
@@ -42,7 +43,6 @@ public class CreateCashRegisterModificationUnitTest {
     }
 
     @Test
-    @Ignore
     public void createCashRegisterModificationUnitClaim() {
         Map<String, String> params = new HashMap<>();
         params.put("url", "https://check.business.ru/api-rbkmoney/v4/");
@@ -91,7 +91,14 @@ public class CreateCashRegisterModificationUnitTest {
 
     @Test
     public void acceptCashRegisterModificationUnitClaim() {
-        runService(() -> client.acceptClaim(/* claim.getPartyId() */ "22d0a254-885d-47de-8b72-de483d0d990c", /* claim.getId() */1L, /* claim.getRevision() */ 1));
+        runService(
+                () -> client.acceptClaim(
+                        "22d0a254-885d-47de-8b72-de483d0d990c", //claim.getPartyId()
+                        1L, //claim.getId()
+                        1 //claim.getRevision()
+                ),
+                buildUserInfo()
+        );
     }
 
     private UserInfoModel buildUserInfo() {
