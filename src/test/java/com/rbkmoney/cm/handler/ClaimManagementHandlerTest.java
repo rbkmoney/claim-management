@@ -274,6 +274,39 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void updateDocClaimModificationTest() {
+        Modification docModification = buildDocumentModification();
+        Claim claim = createClaim(
+                client,
+                "party_id",
+                generateModifications(
+                        conversionWrapperService,
+                        () -> MockUtil.generateTBaseList(docModification, 1)
+                )
+        );
+        ModificationUnit modificationUnit = claim.changeset.get(0);
+
+        ClaimModificationChange documentClaimModificationChange = new ClaimModificationChange();
+        DocumentModificationUnit documentModificationUnit = new DocumentModificationUnit();
+        documentModificationUnit.setId("testDocId");
+        DocumentModification documentModification = new DocumentModification();
+        DocumentChanged documentChanged = new DocumentChanged();
+        documentModification.setChanged(documentChanged);
+        documentModificationUnit.setModification(documentModification);
+        documentClaimModificationChange.setDocumentModification(documentModificationUnit);
+        ModificationChange docModificationChange = ModificationChange.claim_modification(documentClaimModificationChange);
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), docModificationChange));
+
+        Claim modifiedClaim = callService(() -> client.getClaim("party_id", claim.getId()));
+        List<ModificationUnit> changeset = modifiedClaim.getChangeset();
+        ModificationUnit docModificationUnit = changeset.get(0);
+        Assert.assertEquals(documentModificationUnit.getId(),
+                docModificationUnit.getModification().getClaimModification().getDocumentModification().getId());
+        Assert.assertTrue(docModificationUnit.getModification().getClaimModification().getDocumentModification().getModification().isSetChanged());
+        Assert.assertNotNull(docModificationUnit.getChangedAt());
+    }
+
+    @Test
     public void updatePartyModificationTest() {
         Modification shopModification = buildShopModification();
         Claim claim = createClaim(
@@ -305,6 +338,18 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         ModificationUnit changedModificationUnit = modifiedClaim.getChangeset().get(0);
         ShopModificationUnit shopModificationChanged = changedModificationUnit.getModification().getPartyModification().getShopModification();
         Assert.assertEquals(shopLocation.getUrl(), shopModificationChanged.getModification().getCreation().getLocation().getUrl());
+    }
+
+    private Modification buildDocumentModification() {
+        ClaimModification docModification = new ClaimModification();
+        DocumentModificationUnit documentModificationUnit = new DocumentModificationUnit();
+        documentModificationUnit.setId("testDocId");
+        DocumentModification documentModification = new DocumentModification();
+        DocumentChanged documentChanged = new DocumentChanged();
+        documentModification.setChanged(documentChanged);
+        documentModificationUnit.setModification(documentModification);
+        docModification.setDocumentModification(documentModificationUnit);
+        return Modification.claim_modification(docModification);
     }
 
     private Modification buildCommentModification() {
