@@ -96,6 +96,9 @@ public class ConversionServiceTest {
     @Repeat(10)
     public void testClaimModificationConverters() {
         ClaimModification claimModification = MockUtil.generateTBase(ClaimModification.class);
+        if (claimModification.isSetDocumentModification()) {
+            claimModification.getDocumentModification().setType(null);
+        }
         assertEquals(
                 claimModification,
                 conversionService.convert(
