@@ -11,7 +11,7 @@ management:
         flavor: etsy
         enabled: false
       prometheus:
-        enabled: true
+        enabled: false
   endpoint:
     health:
       show-details: ALWAYS
