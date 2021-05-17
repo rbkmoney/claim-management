@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayoutToolInfoRussianBankAccountModelToPayoutToolInfoConverter implements ClaimConverter<PayoutToolInfoRussianBankAccountModel, PayoutToolInfo> {
+public class PayoutToolInfoRussianBankAccountModelToPayoutToolInfoConverter
+        implements ClaimConverter<PayoutToolInfoRussianBankAccountModel, PayoutToolInfo> {
 
     @Lazy
     @Autowired
@@ -18,7 +19,8 @@ public class PayoutToolInfoRussianBankAccountModelToPayoutToolInfoConverter impl
     @Override
     public PayoutToolInfo convert(PayoutToolInfoRussianBankAccountModel payoutToolInfoRussianBankAccountModel) {
         return PayoutToolInfo.russian_bank_account(
-                conversionService.convert(payoutToolInfoRussianBankAccountModel.getRussianBankAccount(), RussianBankAccount.class)
+                conversionService.convert(payoutToolInfoRussianBankAccountModel.getRussianBankAccount(),
+                        RussianBankAccount.class)
         );
     }
 }

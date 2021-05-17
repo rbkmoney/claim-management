@@ -18,7 +18,8 @@ public class ShopCashRegisterCreationModificationModelToCashRegisterModification
     private ConversionService conversionService;
 
     @Override
-    public CashRegisterModification convert(ShopCashRegisterCreationModificationModel shopCashRegisterCreationModificationModel) {
+    public CashRegisterModification convert(
+            ShopCashRegisterCreationModificationModel shopCashRegisterCreationModificationModel) {
         CashRegisterModification cashRegisterModification = new CashRegisterModification();
         cashRegisterModification.setCreation(
                 conversionService.convert(

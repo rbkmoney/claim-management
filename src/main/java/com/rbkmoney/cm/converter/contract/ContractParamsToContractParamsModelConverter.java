@@ -6,7 +6,8 @@ import com.rbkmoney.damsel.claim_management.ContractParams;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractParamsToContractParamsModelConverter implements ClaimConverter<ContractParams, ContractParamsModel> {
+public class ContractParamsToContractParamsModelConverter
+        implements ClaimConverter<ContractParams, ContractParamsModel> {
     @Override
     public ContractParamsModel convert(ContractParams contractParams) {
         ContractParamsModel contractParamsModel = new ContractParamsModel();

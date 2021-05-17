@@ -7,10 +7,12 @@ import com.rbkmoney.damsel.domain.ContractorIdentificationLevel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractorIdentificationLevelModificationModelToContractorModificationConverter implements ClaimConverter<ContractorIdentificationLevelModificationModel, ContractorModification> {
+public class ContractorIdentificationLevelModificationModelToContractorModificationConverter
+        implements ClaimConverter<ContractorIdentificationLevelModificationModel, ContractorModification> {
 
     @Override
-    public ContractorModification convert(ContractorIdentificationLevelModificationModel contractorIdentificationLevelModificationModel) {
+    public ContractorModification convert(
+            ContractorIdentificationLevelModificationModel contractorIdentificationLevelModificationModel) {
         return ContractorModification.identification_level_modification(
                 ContractorIdentificationLevel.findByValue(
                         contractorIdentificationLevelModificationModel

@@ -11,13 +11,16 @@ import java.io.IOException;
 import java.util.Map;
 
 @Component
-public class CashRegisterParamsModelToCashRegisterParamsConverter implements ClaimConverter<CashRegisterParamsModel, CashRegisterParams> {
+public class CashRegisterParamsModelToCashRegisterParamsConverter
+        implements ClaimConverter<CashRegisterParamsModel, CashRegisterParams> {
 
     @Override
     public CashRegisterParams convert(CashRegisterParamsModel cashRegisterParamsModel) {
         try {
-            Map<String, String> providerParamsMap = new ObjectMapper().readValue(cashRegisterParamsModel.getProviderParams(),
-                    new TypeReference<Map<String, String>>() {});
+            Map<String, String> providerParamsMap =
+                    new ObjectMapper().readValue(cashRegisterParamsModel.getProviderParams(),
+                            new TypeReference<Map<String, String>>() {
+                            });
 
             return new CashRegisterParams()
                     .setCashRegisterProviderId(cashRegisterParamsModel.getProviderId())

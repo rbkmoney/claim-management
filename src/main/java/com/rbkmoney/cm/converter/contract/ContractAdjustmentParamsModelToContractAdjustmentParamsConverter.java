@@ -7,7 +7,8 @@ import com.rbkmoney.damsel.domain.ContractTemplateRef;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractAdjustmentParamsModelToContractAdjustmentParamsConverter implements ClaimConverter<ContractAdjustmentParamsModel, ContractAdjustmentParams> {
+public class ContractAdjustmentParamsModelToContractAdjustmentParamsConverter
+        implements ClaimConverter<ContractAdjustmentParamsModel, ContractAdjustmentParams> {
     @Override
     public ContractAdjustmentParams convert(ContractAdjustmentParamsModel contractAdjustmentParamsModel) {
         return new ContractAdjustmentParams()

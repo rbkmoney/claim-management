@@ -1,7 +1,6 @@
 package com.rbkmoney.cm.search;
 
 import com.rbkmoney.cm.model.ClaimModel;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

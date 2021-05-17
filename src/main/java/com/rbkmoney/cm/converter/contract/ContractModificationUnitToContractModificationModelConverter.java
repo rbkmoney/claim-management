@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractModificationUnitToContractModificationModelConverter implements ClaimConverter<ContractModificationUnit, ContractModificationModel> {
+public class ContractModificationUnitToContractModificationModelConverter
+        implements ClaimConverter<ContractModificationUnit, ContractModificationModel> {
 
     @Lazy
     @Autowired
@@ -19,7 +20,8 @@ public class ContractModificationUnitToContractModificationModelConverter implem
     @Override
     public ContractModificationModel convert(ContractModificationUnit contractModificationUnit) {
         ContractModification contractModification = contractModificationUnit.getModification();
-        ContractModificationModel contractModificationModel = conversionService.convert(contractModification, ContractModificationModel.class);
+        ContractModificationModel contractModificationModel =
+                conversionService.convert(contractModification, ContractModificationModel.class);
         contractModificationModel.setContractId(contractModificationUnit.getId());
         return contractModificationModel;
     }

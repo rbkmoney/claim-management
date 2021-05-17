@@ -17,7 +17,8 @@ public class ClaimNotFoundException extends RuntimeException {
         super(cause);
     }
 
-    public ClaimNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ClaimNotFoundException(String message, Throwable cause, boolean enableSuppression,
+                                  boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

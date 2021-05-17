@@ -27,7 +27,8 @@ public class ClaimEventFactory {
                 .setUserInfo(getUserInfo());
     }
 
-    public Event createUpdateClaimEvent(String partyId, long claimId, int revision, List<Modification> changeset, Instant updatedAt) {
+    public Event createUpdateClaimEvent(String partyId, long claimId, int revision, List<Modification> changeset,
+                                        Instant updatedAt) {
         Change change = new Change();
         change.setUpdated(
                 new ClaimUpdated()
@@ -43,7 +44,8 @@ public class ClaimEventFactory {
                 .setUserInfo(getUserInfo());
     }
 
-    public Event createChangeStatusEvent(String partyId, long claimId, int revision, ClaimStatus claimStatus, Instant updatedAt) {
+    public Event createChangeStatusEvent(String partyId, long claimId, int revision, ClaimStatus claimStatus,
+                                         Instant updatedAt) {
         Change change = new Change();
         change.setStatusChanged(
                 new ClaimStatusChanged()

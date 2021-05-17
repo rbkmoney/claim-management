@@ -21,23 +21,33 @@ public class ServiceUtils {
 
     public static final String EMAIL = "user_id@users";
 
-    public static List<Claim> createClaims(ClaimManagementSrv.Iface client, ConversionWrapperService conversionWrapperService, String partyId, int claimCount, int modificationCountPerClaim) {
+    public static List<Claim> createClaims(ClaimManagementSrv.Iface client,
+                                           ConversionWrapperService conversionWrapperService, String partyId,
+                                           int claimCount, int modificationCountPerClaim) {
         return IntStream.rangeClosed(1, claimCount)
                 .mapToObj(value -> createClaim(client, conversionWrapperService, partyId, modificationCountPerClaim))
                 .collect(Collectors.toList());
     }
 
-    public static Claim createClaim(ClaimManagementSrv.Iface client, ConversionWrapperService conversionWrapperService, String partyId, int modificationCount) {
+    public static Claim createClaim(ClaimManagementSrv.Iface client, ConversionWrapperService conversionWrapperService,
+                                    String partyId, int modificationCount) {
         List<Modification> modification = generateModifications(conversionWrapperService, modificationCount);
 
         return createClaim(client, partyId, modification);
     }
 
-    public static List<Modification> generateModifications(ConversionWrapperService conversionWrapperService, int modificationCount) {
-        return generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.class, modificationCount));
+    public static Claim createClaim(ClaimManagementSrv.Iface client, String partyId, List<Modification> modification) {
+        return callService(() -> client.createClaim(partyId, modification));
     }
 
-    public static List<Modification> generateModifications(ConversionWrapperService conversionWrapperService, Supplier<List<Modification>> supplier) {
+    public static List<Modification> generateModifications(ConversionWrapperService conversionWrapperService,
+                                                           int modificationCount) {
+        return generateModifications(conversionWrapperService,
+                () -> MockUtil.generateTBaseList(Modification.class, modificationCount));
+    }
+
+    public static List<Modification> generateModifications(ConversionWrapperService conversionWrapperService,
+                                                           Supplier<List<Modification>> supplier) {
         boolean flag = true;
 
         List<Modification> modification = new ArrayList<>();
@@ -61,16 +71,8 @@ public class ServiceUtils {
         return modification;
     }
 
-    public static Claim createClaim(ClaimManagementSrv.Iface client, String partyId, List<Modification> modification) {
-        return callService(() -> client.createClaim(partyId, modification));
-    }
-
     public static <T> T callService(Callable<T> callable) {
         return callService(callable, buildDefaultUserInfo());
-    }
-
-    public static void runService(ThrowableRunnable runnable) {
-        runService(runnable, buildDefaultUserInfo());
     }
 
     @SneakyThrows
@@ -80,6 +82,10 @@ public class ServiceUtils {
                     ContextUtil.addUserInfoToContext(userInfoModel);
                     return callable.call();
                 }).call();
+    }
+
+    public static void runService(ThrowableRunnable runnable) {
+        runService(runnable, buildDefaultUserInfo());
     }
 
     @SneakyThrows

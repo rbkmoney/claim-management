@@ -5,7 +5,8 @@ import com.rbkmoney.damsel.domain.InternationalBankDetails;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InternationalBankDetailsToInternationalBankDetailsModelConverter implements ClaimConverter<InternationalBankDetails, InternationalBankDetailsModel> {
+public class InternationalBankDetailsToInternationalBankDetailsModelConverter
+        implements ClaimConverter<InternationalBankDetails, InternationalBankDetailsModel> {
 
     @Override
     public InternationalBankDetailsModel convert(InternationalBankDetails internationalBankDetails) {

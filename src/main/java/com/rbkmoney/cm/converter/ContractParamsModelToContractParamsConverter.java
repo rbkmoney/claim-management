@@ -9,7 +9,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class ContractParamsModelToContractParamsConverter implements ClaimConverter<ContractParamsModel, ContractParams> {
+public class ContractParamsModelToContractParamsConverter
+        implements ClaimConverter<ContractParamsModel, ContractParams> {
     @Override
     public ContractParams convert(ContractParamsModel contractParamsModel) {
         return new ContractParams()

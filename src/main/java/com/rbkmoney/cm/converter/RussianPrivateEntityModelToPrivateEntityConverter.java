@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RussianPrivateEntityModelToPrivateEntityConverter implements ClaimConverter<RussianPrivateEntityModel, PrivateEntity> {
+public class RussianPrivateEntityModelToPrivateEntityConverter
+        implements ClaimConverter<RussianPrivateEntityModel, PrivateEntity> {
 
     @Lazy
     @Autowired

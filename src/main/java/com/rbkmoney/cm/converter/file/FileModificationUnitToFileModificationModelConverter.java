@@ -8,7 +8,8 @@ import com.rbkmoney.geck.common.util.TBaseUtil;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FileModificationUnitToFileModificationModelConverter implements ClaimConverter<FileModificationUnit, FileModificationModel> {
+public class FileModificationUnitToFileModificationModelConverter
+        implements ClaimConverter<FileModificationUnit, FileModificationModel> {
 
     @Override
     public FileModificationModel convert(FileModificationUnit fileModificationUnit) {

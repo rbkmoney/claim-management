@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RepresentativeModelToRepresentativeConverter implements ClaimConverter<RepresentativeModel, Representative> {
+public class RepresentativeModelToRepresentativeConverter
+        implements ClaimConverter<RepresentativeModel, Representative> {
 
     @Lazy
     @Autowired
@@ -20,6 +21,7 @@ public class RepresentativeModelToRepresentativeConverter implements ClaimConver
         return new Representative()
                 .setFullName(representativeModel.getFullName())
                 .setPosition(representativeModel.getPosition())
-                .setDocument(conversionService.convert(representativeModel.getDocument(), RepresentativeDocument.class));
+                .setDocument(
+                        conversionService.convert(representativeModel.getDocument(), RepresentativeDocument.class));
     }
 }

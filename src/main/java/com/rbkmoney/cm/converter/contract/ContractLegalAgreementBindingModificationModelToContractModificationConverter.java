@@ -10,14 +10,16 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractLegalAgreementBindingModificationModelToContractModificationConverter implements ClaimConverter<ContractLegalAgreementBindingModificationModel, ContractModification> {
+public class ContractLegalAgreementBindingModificationModelToContractModificationConverter
+        implements ClaimConverter<ContractLegalAgreementBindingModificationModel, ContractModification> {
 
     @Lazy
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public ContractModification convert(ContractLegalAgreementBindingModificationModel contractLegalAgreementBindingModificationModel) {
+    public ContractModification convert(
+            ContractLegalAgreementBindingModificationModel contractLegalAgreementBindingModificationModel) {
         return ContractModification.legal_agreement_binding(
                 conversionService.convert(
                         contractLegalAgreementBindingModificationModel.getLegalAgreement(),

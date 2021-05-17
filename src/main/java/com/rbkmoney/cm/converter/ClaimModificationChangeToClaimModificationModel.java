@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ClaimModificationChangeToClaimModificationModel implements ClaimConverter<ClaimModificationChange, ClaimModificationModel> {
+public class ClaimModificationChangeToClaimModificationModel
+        implements ClaimConverter<ClaimModificationChange, ClaimModificationModel> {
 
     @Lazy
     @Autowired
@@ -21,13 +22,17 @@ public class ClaimModificationChangeToClaimModificationModel implements ClaimCon
     public ClaimModificationModel convert(ClaimModificationChange claimModificationChange) {
         switch (claimModificationChange.getSetField()) {
             case FILE_MODIFICATION:
-                return conversionService.convert(claimModificationChange.getFileModification(), FileModificationModel.class);
+                return conversionService
+                        .convert(claimModificationChange.getFileModification(), FileModificationModel.class);
             case COMMENT_MODIFICATION:
-                return conversionService.convert(claimModificationChange.getCommentModification(), CommentModificationModel.class);
+                return conversionService
+                        .convert(claimModificationChange.getCommentModification(), CommentModificationModel.class);
             case DOCUMENT_MODIFICATION:
-                return conversionService.convert(claimModificationChange.getDocumentModification(), DocumentModificationModel.class);
+                return conversionService
+                        .convert(claimModificationChange.getDocumentModification(), DocumentModificationModel.class);
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", claimModificationChange.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", claimModificationChange.getSetField()));
         }
     }
 }

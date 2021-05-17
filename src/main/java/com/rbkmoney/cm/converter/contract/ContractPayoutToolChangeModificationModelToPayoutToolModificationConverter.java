@@ -10,16 +10,19 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractPayoutToolChangeModificationModelToPayoutToolModificationConverter implements ClaimConverter<ContractPayoutToolChangeModificationModel, PayoutToolModification> {
+public class ContractPayoutToolChangeModificationModelToPayoutToolModificationConverter
+        implements ClaimConverter<ContractPayoutToolChangeModificationModel, PayoutToolModification> {
 
     @Lazy
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public PayoutToolModification convert(ContractPayoutToolChangeModificationModel contractPayoutToolChangeModificationModel) {
+    public PayoutToolModification convert(
+            ContractPayoutToolChangeModificationModel contractPayoutToolChangeModificationModel) {
         return PayoutToolModification.info_modification(
-                conversionService.convert(contractPayoutToolChangeModificationModel.getPayoutToolInfoModel(), PayoutToolInfo.class)
+                conversionService.convert(contractPayoutToolChangeModificationModel.getPayoutToolInfoModel(),
+                        PayoutToolInfo.class)
         );
     }
 }

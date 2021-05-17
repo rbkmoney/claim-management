@@ -36,11 +36,14 @@ public interface ClaimManagementService {
 
     ClaimModel requestClaimChanges(String partyId, long claimId, int revision);
 
-    ClaimModel changeStatus(String partyId, long claimId, int revision, ClaimStatusModel targetClaimStatus, List<ClaimStatusEnum> expectedStatuses);
+    ClaimModel changeStatus(String partyId, long claimId, int revision, ClaimStatusModel targetClaimStatus,
+                            List<ClaimStatusEnum> expectedStatuses);
 
-    ClaimPageSearchResponse searchClaims(ClaimPageSearchRequest claimSearchRequest, String continuationToken, int limit);
+    ClaimPageSearchResponse searchClaims(ClaimPageSearchRequest claimSearchRequest, String continuationToken,
+                                         int limit);
 
-    Page<ClaimModel> searchClaims(ClaimPageSearchRequest claimSearchRequest, ClaimPageSearchParameters claimSearchParameters);
+    Page<ClaimModel> searchClaims(ClaimPageSearchRequest claimSearchRequest,
+                                  ClaimPageSearchParameters claimSearchParameters);
 
     MetadataModel getMetadata(String partyId, long claimId, String key);
 
@@ -48,7 +51,8 @@ public interface ClaimManagementService {
 
     void removeMetadata(String partyId, long claimId, String key);
 
-    void updateModification(String partyId, long id, int revision, long modificationId, ModificationChange modificationChange);
+    void updateModification(String partyId, long id, int revision, long modificationId,
+                            ModificationChange modificationChange);
 
     void removeModification(String partyId, long id, int revision, long modificationId);
 }

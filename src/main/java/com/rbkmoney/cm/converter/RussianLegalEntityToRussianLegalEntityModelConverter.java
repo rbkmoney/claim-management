@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RussianLegalEntityToRussianLegalEntityModelConverter implements ClaimConverter<RussianLegalEntity, RussianLegalEntityModel> {
+public class RussianLegalEntityToRussianLegalEntityModelConverter
+        implements ClaimConverter<RussianLegalEntity, RussianLegalEntityModel> {
 
     @Lazy
     @Autowired
@@ -26,7 +27,8 @@ public class RussianLegalEntityToRussianLegalEntityModelConverter implements Cla
         russianLegalEntityModel.setRepresentativeDocument(russianLegalEntity.getRepresentativeDocument());
         russianLegalEntityModel.setRepresentativeFullName(russianLegalEntity.getRepresentativeFullName());
         russianLegalEntityModel.setRepresentativePosition(russianLegalEntity.getRepresentativePosition());
-        russianLegalEntityModel.setRussianBankAccount(conversionService.convert(russianLegalEntity.getRussianBankAccount(), RussianBankAccountModel.class));
+        russianLegalEntityModel.setRussianBankAccount(
+                conversionService.convert(russianLegalEntity.getRussianBankAccount(), RussianBankAccountModel.class));
         return russianLegalEntityModel;
     }
 }

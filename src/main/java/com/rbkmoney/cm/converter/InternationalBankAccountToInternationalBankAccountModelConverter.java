@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InternationalBankAccountToInternationalBankAccountModelConverter implements ClaimConverter<InternationalBankAccount, InternationalBankAccountModel> {
+public class InternationalBankAccountToInternationalBankAccountModelConverter
+        implements ClaimConverter<InternationalBankAccount, InternationalBankAccountModel> {
 
     @Lazy
     @Autowired
@@ -22,10 +23,12 @@ public class InternationalBankAccountToInternationalBankAccountModelConverter im
         internationalBankAccountModel.setIban(internationalBankAccount.getIban());
         internationalBankAccountModel.setNumber(internationalBankAccount.getNumber());
         if (internationalBankAccount.isSetBank()) {
-            internationalBankAccountModel.setInternationalBankDetails(conversionService.convert(internationalBankAccount.getBank(), InternationalBankDetailsModel.class));
+            internationalBankAccountModel.setInternationalBankDetails(
+                    conversionService.convert(internationalBankAccount.getBank(), InternationalBankDetailsModel.class));
         }
         if (internationalBankAccount.isSetCorrespondentAccount()) {
-            internationalBankAccountModel.setCorrespondentAccount(conversionService.convert(internationalBankAccount.getCorrespondentAccount(), InternationalBankAccountModel.class));
+            internationalBankAccountModel.setCorrespondentAccount(conversionService
+                    .convert(internationalBankAccount.getCorrespondentAccount(), InternationalBankAccountModel.class));
         }
         return internationalBankAccountModel;
     }

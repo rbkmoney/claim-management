@@ -9,25 +9,21 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class UserInfoModel {
 
-    @Id
-    @GeneratedValue
-    private long id;
-
     @NotNull
     @Column(nullable = false)
     public String userId;
-
     @NotNull
     @Column(nullable = false)
     public String email;
-
     @NotNull
     @Column(nullable = false)
     public String username;
-
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     public UserTypeEnum type;
+    @Id
+    @GeneratedValue
+    private long id;
 
 }

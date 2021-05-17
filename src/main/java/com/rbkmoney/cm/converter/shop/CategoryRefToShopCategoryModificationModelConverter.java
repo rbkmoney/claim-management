@@ -6,7 +6,8 @@ import com.rbkmoney.damsel.domain.CategoryRef;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CategoryRefToShopCategoryModificationModelConverter implements ClaimConverter<CategoryRef, ShopCategoryModificationModel> {
+public class CategoryRefToShopCategoryModificationModelConverter
+        implements ClaimConverter<CategoryRef, ShopCategoryModificationModel> {
     @Override
     public ShopCategoryModificationModel convert(CategoryRef categoryRef) {
         ShopCategoryModificationModel shopCategoryModificationModel = new ShopCategoryModificationModel();

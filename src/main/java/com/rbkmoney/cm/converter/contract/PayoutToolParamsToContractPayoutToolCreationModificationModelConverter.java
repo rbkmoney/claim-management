@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayoutToolParamsToContractPayoutToolCreationModificationModelConverter implements ClaimConverter<PayoutToolParams, ContractPayoutToolCreationModificationModel> {
+public class PayoutToolParamsToContractPayoutToolCreationModificationModelConverter
+        implements ClaimConverter<PayoutToolParams, ContractPayoutToolCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,8 +19,10 @@ public class PayoutToolParamsToContractPayoutToolCreationModificationModelConver
 
     @Override
     public ContractPayoutToolCreationModificationModel convert(PayoutToolParams payoutToolParams) {
-        ContractPayoutToolCreationModificationModel payoutToolCreationModificationModel = new ContractPayoutToolCreationModificationModel();
-        payoutToolCreationModificationModel.setPayoutToolParams(conversionService.convert(payoutToolParams, PayoutToolParamsModel.class));
+        ContractPayoutToolCreationModificationModel payoutToolCreationModificationModel =
+                new ContractPayoutToolCreationModificationModel();
+        payoutToolCreationModificationModel
+                .setPayoutToolParams(conversionService.convert(payoutToolParams, PayoutToolParamsModel.class));
         return payoutToolCreationModificationModel;
     }
 }

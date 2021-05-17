@@ -5,7 +5,8 @@ import com.rbkmoney.damsel.domain.InternationalLegalEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InternationalLegalEntityModelToInternationalLegalEntityConverter implements ClaimConverter<InternationalLegalEntityModel, InternationalLegalEntity> {
+public class InternationalLegalEntityModelToInternationalLegalEntityConverter
+        implements ClaimConverter<InternationalLegalEntityModel, InternationalLegalEntity> {
     @Override
     public InternationalLegalEntity convert(InternationalLegalEntityModel internationalLegalEntityModel) {
         return new InternationalLegalEntity()

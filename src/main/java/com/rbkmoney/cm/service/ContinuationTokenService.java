@@ -33,7 +33,8 @@ public class ContinuationTokenService {
 
     public <T> T validateAndGet(String token, Class<T> type, List<Object> parameters) {
         try {
-            JsonNode tokenNode = objectMapper.readTree(Base64.getUrlDecoder().decode(token.getBytes(StandardCharsets.UTF_8)));
+            JsonNode tokenNode =
+                    objectMapper.readTree(Base64.getUrlDecoder().decode(token.getBytes(StandardCharsets.UTF_8)));
             validateParameters(tokenNode.get(TOKEN_FIELD).asText(), parameters);
             return objectMapper.readValue(tokenNode.get(CONTINUATION_DATA_FIELD).binaryValue(), type);
         } catch (Exception ex) {

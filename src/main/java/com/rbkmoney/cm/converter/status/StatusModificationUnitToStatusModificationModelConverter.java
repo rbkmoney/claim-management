@@ -12,7 +12,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatusModificationUnitToStatusModificationModelConverter implements ClaimConverter<StatusModificationUnit, StatusModificationModel> {
+public class StatusModificationUnitToStatusModificationModelConverter
+        implements ClaimConverter<StatusModificationUnit, StatusModificationModel> {
 
     @Lazy
     @Autowired

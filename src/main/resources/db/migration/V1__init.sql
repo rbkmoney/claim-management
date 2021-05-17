@@ -3,12 +3,12 @@ create sequence cm.hibernate_sequence start 1 increment 1;
 
 create table cm.claim_model
 (
-    id                  int8                        not null,
-    party_id            character varying           not null,
-    claim_status        character varying           not null,
+    id                  int8              not null,
+    party_id            character varying not null,
+    claim_status        character varying not null,
     claim_status_reason character varying,
     created_at          timestamp without time zone not null,
-    revision            int4                        not null,
+    revision            int4              not null,
     updated_at          timestamp without time zone,
     primary key (id)
 );
@@ -27,10 +27,10 @@ alter table if exists cm.metadata_model
 
 create table cm.modification_model
 (
-    id           int8                        not null,
+    id           int8 not null,
     created_at   timestamp without time zone not null,
-    claim_id     int8                        not null,
-    user_info_id int8                        not null,
+    claim_id     int8 not null,
+    user_info_id int8 not null,
     primary key (id)
 );
 
@@ -515,8 +515,8 @@ alter table if exists cm.international_bank_account_model
 
 create table cm.legal_agreement_model
 (
-    id                 int8                        not null,
-    legal_agreement_id character varying           not null,
+    id                 int8              not null,
+    legal_agreement_id character varying not null,
     signed_at          timestamp without time zone not null,
     valid_until        timestamp without time zone,
     primary key (id)

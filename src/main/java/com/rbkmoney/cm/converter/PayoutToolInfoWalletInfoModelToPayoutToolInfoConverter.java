@@ -6,7 +6,8 @@ import com.rbkmoney.damsel.domain.WalletInfo;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayoutToolInfoWalletInfoModelToPayoutToolInfoConverter implements ClaimConverter<PayoutToolInfoWalletInfoModel, PayoutToolInfo> {
+public class PayoutToolInfoWalletInfoModelToPayoutToolInfoConverter
+        implements ClaimConverter<PayoutToolInfoWalletInfoModel, PayoutToolInfo> {
 
     @Override
     public PayoutToolInfo convert(PayoutToolInfoWalletInfoModel payoutToolInfoWalletInfoModel) {

@@ -6,7 +6,8 @@ import com.rbkmoney.damsel.claim_management.ShopAccountParams;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopAccountParamsToShopAccountParamsModelConverter implements ClaimConverter<ShopAccountParams, ShopAccountParamsModel> {
+public class ShopAccountParamsToShopAccountParamsModelConverter
+        implements ClaimConverter<ShopAccountParams, ShopAccountParamsModel> {
     @Override
     public ShopAccountParamsModel convert(ShopAccountParams shopAccountParams) {
         ShopAccountParamsModel shopAccountParamsModel = new ShopAccountParamsModel();

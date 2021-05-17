@@ -10,13 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class MetadataModelToValueConverter implements ClaimConverter<MetadataModel, Value> {
 
-    ThreadLocal<TDeserializer> tDeserializerThreadLocal = ThreadLocal.withInitial(() -> new TDeserializer(new TBinaryProtocol.Factory()));
+    ThreadLocal<TDeserializer> thtiftDeserializerThreadLocal =
+            ThreadLocal.withInitial(() -> new TDeserializer(new TBinaryProtocol.Factory()));
 
     @Override
     @SneakyThrows
     public Value convert(MetadataModel metadataModel) {
         Value value = new Value();
-        tDeserializerThreadLocal.get().deserialize(value, metadataModel.getValue());
+        thtiftDeserializerThreadLocal.get().deserialize(value, metadataModel.getValue());
         return value;
     }
 }

@@ -6,7 +6,8 @@ import com.rbkmoney.damsel.claim_management.ShopContractModification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopContractModificationToShopContractModificationModelConverter implements ClaimConverter<ShopContractModification, ShopContractModificationModel> {
+public class ShopContractModificationToShopContractModificationModelConverter
+        implements ClaimConverter<ShopContractModification, ShopContractModificationModel> {
     @Override
     public ShopContractModificationModel convert(ShopContractModification shopContractModification) {
         ShopContractModificationModel shopContractModificationModel = new ShopContractModificationModel();

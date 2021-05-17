@@ -22,7 +22,8 @@ public class LegalEntityToLegalEntityModelConverter implements ClaimConverter<Le
             case RUSSIAN_LEGAL_ENTITY:
                 return conversionService.convert(legalEntity.getRussianLegalEntity(), RussianLegalEntityModel.class);
             case INTERNATIONAL_LEGAL_ENTITY:
-                return conversionService.convert(legalEntity.getInternationalLegalEntity(), InternationalLegalEntityModel.class);
+                return conversionService
+                        .convert(legalEntity.getInternationalLegalEntity(), InternationalLegalEntityModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", legalEntity.getSetField()));
         }

@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModificationChangeToModificationModelConverter implements ClaimConverter<ModificationChange, ModificationModel> {
+public class ModificationChangeToModificationModelConverter
+        implements ClaimConverter<ModificationChange, ModificationModel> {
 
     @Lazy
     @Autowired
@@ -20,11 +21,14 @@ public class ModificationChangeToModificationModelConverter implements ClaimConv
     public ModificationModel convert(ModificationChange modificationChange) {
         switch (modificationChange.getSetField()) {
             case CLAIM_MODIFICATION:
-                return conversionService.convert(modificationChange.getClaimModification(), ClaimModificationModel.class);
+                return conversionService
+                        .convert(modificationChange.getClaimModification(), ClaimModificationModel.class);
             case PARTY_MODIFICATION:
-                return conversionService.convert(modificationChange.getPartyModification(), PartyModificationModel.class);
+                return conversionService
+                        .convert(modificationChange.getPartyModification(), PartyModificationModel.class);
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", modificationChange.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", modificationChange.getSetField()));
         }
     }
 }

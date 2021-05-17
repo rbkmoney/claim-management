@@ -18,10 +18,14 @@ public class ContextUtil {
 
     public static UserInfoModel getUserInfoFromContext() {
         UserInfoModel userInfoModel = new UserInfoModel();
-        userInfoModel.setUserId(ContextUtils.getCustomMetadataValue(UserIdentityIdExtensionKit.INSTANCE.getExtension()));
-        userInfoModel.setUsername(ContextUtils.getCustomMetadataValue(UserIdentityUsernameExtensionKit.INSTANCE.getExtension()));
-        userInfoModel.setEmail(ContextUtils.getCustomMetadataValue(UserIdentityEmailExtensionKit.INSTANCE.getExtension()));
-        userInfoModel.setType(ContextUtils.getCustomMetadataValue(UserIdentityRealmExtensionKit.INSTANCE.getExtension()));
+        userInfoModel
+                .setUserId(ContextUtils.getCustomMetadataValue(UserIdentityIdExtensionKit.INSTANCE.getExtension()));
+        userInfoModel.setUsername(
+                ContextUtils.getCustomMetadataValue(UserIdentityUsernameExtensionKit.INSTANCE.getExtension()));
+        userInfoModel
+                .setEmail(ContextUtils.getCustomMetadataValue(UserIdentityEmailExtensionKit.INSTANCE.getExtension()));
+        userInfoModel
+                .setType(ContextUtils.getCustomMetadataValue(UserIdentityRealmExtensionKit.INSTANCE.getExtension()));
         return userInfoModel;
     }
 
@@ -29,7 +33,8 @@ public class ContextUtil {
         return new UserInfo()
                 .setId(ContextUtils.getCustomMetadataValue(UserIdentityIdExtensionKit.INSTANCE.getExtension()))
                 .setEmail(ContextUtils.getCustomMetadataValue(UserIdentityEmailExtensionKit.INSTANCE.getExtension()))
-                .setUsername(ContextUtils.getCustomMetadataValue(UserIdentityUsernameExtensionKit.INSTANCE.getExtension()))
+                .setUsername(
+                        ContextUtils.getCustomMetadataValue(UserIdentityUsernameExtensionKit.INSTANCE.getExtension()))
                 .setType(getUserType());
     }
 

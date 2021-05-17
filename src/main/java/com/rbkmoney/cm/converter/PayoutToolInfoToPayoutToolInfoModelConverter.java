@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayoutToolInfoToPayoutToolInfoModelConverter implements ClaimConverter<PayoutToolInfo, PayoutToolInfoModel> {
+public class PayoutToolInfoToPayoutToolInfoModelConverter
+        implements ClaimConverter<PayoutToolInfo, PayoutToolInfoModel> {
 
     @Lazy
     @Autowired
@@ -21,9 +22,11 @@ public class PayoutToolInfoToPayoutToolInfoModelConverter implements ClaimConver
     public PayoutToolInfoModel convert(PayoutToolInfo payoutToolInfo) {
         switch (payoutToolInfo.getSetField()) {
             case RUSSIAN_BANK_ACCOUNT:
-                return conversionService.convert(payoutToolInfo.getRussianBankAccount(), PayoutToolInfoRussianBankAccountModel.class);
+                return conversionService
+                        .convert(payoutToolInfo.getRussianBankAccount(), PayoutToolInfoRussianBankAccountModel.class);
             case INTERNATIONAL_BANK_ACCOUNT:
-                return conversionService.convert(payoutToolInfo.getInternationalBankAccount(), PayoutToolInfoInternationalBankAccountModel.class);
+                return conversionService.convert(payoutToolInfo.getInternationalBankAccount(),
+                        PayoutToolInfoInternationalBankAccountModel.class);
             case WALLET_INFO:
                 return conversionService.convert(payoutToolInfo.getWalletInfo(), PayoutToolInfoWalletInfoModel.class);
             default:

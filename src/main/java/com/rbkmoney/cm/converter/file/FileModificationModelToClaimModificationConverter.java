@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FileModificationModelToClaimModificationConverter implements ClaimConverter<FileModificationModel, ClaimModification> {
+public class FileModificationModelToClaimModificationConverter
+        implements ClaimConverter<FileModificationModel, ClaimModification> {
 
     @Lazy
     @Autowired

@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class InternationalBankDetailsModelToInternationalBankDetailsConverter implements ClaimConverter<InternationalBankDetailsModel, InternationalBankDetails> {
+public class InternationalBankDetailsModelToInternationalBankDetailsConverter
+        implements ClaimConverter<InternationalBankDetailsModel, InternationalBankDetails> {
 
     @Override
     public InternationalBankDetails convert(InternationalBankDetailsModel internationalBankDetailsModel) {

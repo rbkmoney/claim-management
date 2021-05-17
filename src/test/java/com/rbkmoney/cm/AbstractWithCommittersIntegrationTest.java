@@ -3,7 +3,6 @@ package com.rbkmoney.cm;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.ClaimCommitterSrv;
 import com.rbkmoney.damsel.claim_management.InvalidChangeset;
-import com.rbkmoney.damsel.claim_management.PartyNotFound;
 import com.rbkmoney.woody.thrift.impl.http.THServiceBuilder;
 import org.apache.thrift.TException;
 import org.eclipse.jetty.server.Server;
@@ -15,6 +14,7 @@ import org.junit.Before;
 import org.springframework.test.context.TestPropertySource;
 
 import javax.servlet.Servlet;
+
 import java.util.List;
 
 @TestPropertySource(properties = {
@@ -24,9 +24,9 @@ import java.util.List;
 })
 public abstract class AbstractWithCommittersIntegrationTest extends AbstractIntegrationTest {
 
-    private HandlerCollection handlerCollection;
     protected Server server;
     protected int serverPort = 8032;
+    private HandlerCollection handlerCollection;
 
     @Before
     public void startJetty() throws Exception {
@@ -48,7 +48,7 @@ public abstract class AbstractWithCommittersIntegrationTest extends AbstractInte
         }
     }
 
-    protected <T> Servlet createThriftRPCService(Class<T> iface, T handler) {
+    protected <T> Servlet createThriftRpcService(Class<T> iface, T handler) {
         THServiceBuilder serviceBuilder = new THServiceBuilder();
         return serviceBuilder.build(iface, handler);
     }
@@ -66,42 +66,42 @@ public abstract class AbstractWithCommittersIntegrationTest extends AbstractInte
     }
 
     protected void startSimpleCommitter() {
-        addServlet(createThriftRPCService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
+        addServlet(createThriftRpcService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
             @Override
-            public void accept(String party_id, Claim claim) throws PartyNotFound, InvalidChangeset, TException {
+            public void accept(String partyId, Claim claim) throws TException {
                 //do nothing
             }
 
             @Override
-            public void commit(String party_id, Claim claim) throws TException {
+            public void commit(String partyId, Claim claim) throws TException {
                 //do nothing
             }
         }), "/committer");
     }
 
     protected void startCommitterWithInvalidChangeset() {
-        addServlet(createThriftRPCService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
+        addServlet(createThriftRpcService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
             @Override
-            public void accept(String party_id, Claim claim) throws PartyNotFound, InvalidChangeset, TException {
+            public void accept(String partyId, Claim claim) throws TException {
                 throw new InvalidChangeset("invalid changeset", List.of());
             }
 
             @Override
-            public void commit(String party_id, Claim claim) throws TException {
+            public void commit(String partyId, Claim claim) throws TException {
                 //do nothing
             }
         }), "/committer");
     }
 
     protected void startCommitterWithUnexpectedErrorWhenAccept() {
-        addServlet(createThriftRPCService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
+        addServlet(createThriftRpcService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
             @Override
-            public void accept(String party_id, Claim claim) throws PartyNotFound, InvalidChangeset, TException {
+            public void accept(String partyId, Claim claim) throws TException {
                 throw new RuntimeException();
             }
 
             @Override
-            public void commit(String party_id, Claim claim) throws TException {
+            public void commit(String partyId, Claim claim) throws TException {
                 //do nothing
             }
         }), "/committer");
@@ -109,14 +109,14 @@ public abstract class AbstractWithCommittersIntegrationTest extends AbstractInte
 
 
     protected void startCommitterWithUnexpectedErrorWhenCommit() {
-        addServlet(createThriftRPCService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
+        addServlet(createThriftRpcService(ClaimCommitterSrv.Iface.class, new ClaimCommitterSrv.Iface() {
             @Override
-            public void accept(String party_id, Claim claim) throws PartyNotFound, InvalidChangeset, TException {
+            public void accept(String partyId, Claim claim) throws TException {
                 // do nothing
             }
 
             @Override
-            public void commit(String party_id, Claim claim) throws TException {
+            public void commit(String partyId, Claim claim) throws TException {
                 throw new RuntimeException();
             }
         }), "/committer");

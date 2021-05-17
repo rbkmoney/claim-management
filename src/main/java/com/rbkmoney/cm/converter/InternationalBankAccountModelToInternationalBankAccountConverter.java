@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class InternationalBankAccountModelToInternationalBankAccountConverter implements ClaimConverter<InternationalBankAccountModel, InternationalBankAccount> {
+public class InternationalBankAccountModelToInternationalBankAccountConverter
+        implements ClaimConverter<InternationalBankAccountModel, InternationalBankAccount> {
 
     @Lazy
     @Autowired
@@ -25,12 +26,14 @@ public class InternationalBankAccountModelToInternationalBankAccountConverter im
                 .setAccountHolder(internationalBankAccountModel.getAccountHolder())
                 .setBank(
                         Optional.ofNullable(internationalBankAccountModel.getInternationalBankDetails())
-                                .map(internationalBankDetailsModel -> conversionService.convert(internationalBankDetailsModel, InternationalBankDetails.class))
+                                .map(internationalBankDetailsModel -> conversionService
+                                        .convert(internationalBankDetailsModel, InternationalBankDetails.class))
                                 .orElse(null)
                 )
                 .setCorrespondentAccount(
                         Optional.ofNullable(internationalBankAccountModel.getCorrespondentAccount())
-                                .map(correspondentAccount -> conversionService.convert(correspondentAccount, InternationalBankAccount.class))
+                                .map(correspondentAccount -> conversionService
+                                        .convert(correspondentAccount, InternationalBankAccount.class))
                                 .orElse(null)
                 );
     }

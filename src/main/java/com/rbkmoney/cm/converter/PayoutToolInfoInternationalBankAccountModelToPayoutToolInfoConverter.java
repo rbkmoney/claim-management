@@ -9,16 +9,20 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayoutToolInfoInternationalBankAccountModelToPayoutToolInfoConverter implements ClaimConverter<PayoutToolInfoInternationalBankAccountModel, PayoutToolInfo> {
+public class PayoutToolInfoInternationalBankAccountModelToPayoutToolInfoConverter
+        implements ClaimConverter<PayoutToolInfoInternationalBankAccountModel, PayoutToolInfo> {
 
     @Lazy
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public PayoutToolInfo convert(PayoutToolInfoInternationalBankAccountModel payoutToolInfoInternationalBankAccountModel) {
+    public PayoutToolInfo convert(
+            PayoutToolInfoInternationalBankAccountModel payoutToolInfoInternationalBankAccountModel) {
         return PayoutToolInfo.international_bank_account(
-                conversionService.convert(payoutToolInfoInternationalBankAccountModel.getInternationalBankAccountModel(), InternationalBankAccount.class)
+                conversionService
+                        .convert(payoutToolInfoInternationalBankAccountModel.getInternationalBankAccountModel(),
+                                InternationalBankAccount.class)
         );
     }
 }

@@ -38,7 +38,8 @@ public class ClaimModelToClaimConverter implements ClaimConverter<ClaimModel, Cl
                 .setRevision(claimModel.getRevision())
                 .setChangeset(
                         claimModel.getModifications().stream()
-                                .map(modificationModel -> conversionService.convert(modificationModel, ModificationUnit.class))
+                                .map(modificationModel -> conversionService
+                                        .convert(modificationModel, ModificationUnit.class))
                                 .collect(Collectors.toList())
                 ).setMetadata(
                         Optional.ofNullable(claimModel.getMetadata())
@@ -48,7 +49,8 @@ public class ClaimModelToClaimConverter implements ClaimConverter<ClaimModel, Cl
                                                 .collect(
                                                         Collectors.toMap(
                                                                 MetadataModel::getKey,
-                                                                metadataModel -> conversionService.convert(metadataModel, Value.class)
+                                                                metadataModel -> conversionService
+                                                                        .convert(metadataModel, Value.class)
                                                         )
                                                 )
                                 )

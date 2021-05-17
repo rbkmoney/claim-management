@@ -28,7 +28,7 @@ import static com.rbkmoney.cm.model.ClaimStatusEnum.pending;
 import static com.rbkmoney.cm.util.ServiceUtils.createClaim;
 import static com.rbkmoney.cm.util.ServiceUtils.runService;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 
 public class ClaimCommitterServiceTest extends AbstractWithCommittersIntegrationTest {
 
@@ -81,7 +81,8 @@ public class ClaimCommitterServiceTest extends AbstractWithCommittersIntegration
 
         ClaimModel claimModel = createClaimWithPendingAcceptance("party_id");
         try {
-            claimCommitterService.doCommitClaim(claimModel.getPartyId(), claimModel.getId(), claimModel.getRevision() + 1);
+            claimCommitterService
+                    .doCommitClaim(claimModel.getPartyId(), claimModel.getId(), claimModel.getRevision() + 1);
             fail();
         } catch (InvalidRevisionException ex) {
             //do nothing

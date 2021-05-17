@@ -10,14 +10,16 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractorPrivateEntityCreationModificationModelToContractorConverter implements ClaimConverter<ContractorPrivateEntityCreationModificationModel, Contractor> {
+public class ContractorPrivateEntityCreationModificationModelToContractorConverter
+        implements ClaimConverter<ContractorPrivateEntityCreationModificationModel, Contractor> {
 
     @Lazy
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public Contractor convert(ContractorPrivateEntityCreationModificationModel contractorPrivateEntityCreationModificationModel) {
+    public Contractor convert(
+            ContractorPrivateEntityCreationModificationModel contractorPrivateEntityCreationModificationModel) {
         return Contractor.private_entity(
                 conversionService.convert(
                         contractorPrivateEntityCreationModificationModel.getPrivateEntity(),

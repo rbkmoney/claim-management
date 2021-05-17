@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PartyModificationToPartyModificationModelConverter implements ClaimConverter<PartyModification, PartyModificationModel> {
+public class PartyModificationToPartyModificationModelConverter
+        implements ClaimConverter<PartyModification, PartyModificationModel> {
 
     @Lazy
     @Autowired
@@ -23,9 +24,11 @@ public class PartyModificationToPartyModificationModelConverter implements Claim
             case SHOP_MODIFICATION:
                 return conversionService.convert(partyModification.getShopModification(), ShopModificationModel.class);
             case CONTRACT_MODIFICATION:
-                return conversionService.convert(partyModification.getContractModification(), ContractModificationModel.class);
+                return conversionService
+                        .convert(partyModification.getContractModification(), ContractModificationModel.class);
             case CONTRACTOR_MODIFICATION:
-                return conversionService.convert(partyModification.getContractorModification(), ContractorModificationModel.class);
+                return conversionService
+                        .convert(partyModification.getContractorModification(), ContractorModificationModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", partyModification.getSetField()));
         }

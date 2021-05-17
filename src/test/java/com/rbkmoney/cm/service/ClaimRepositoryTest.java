@@ -14,6 +14,7 @@ import org.springframework.transaction.TransactionSystemException;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class ClaimRepositoryTest extends AbstractIntegrationTest {
         userInfoModel.setType(UserTypeEnum.external);
         shopLocationModificationModel.setUserInfo(userInfoModel);
         //require non null here
-        shopLocationModificationModel.setLocation( new ShopUrlLocationModel());
+        shopLocationModificationModel.setLocation(new ShopUrlLocationModel());
 
         claimModel.setModifications(List.of(shopLocationModificationModel));
 
@@ -94,7 +95,8 @@ public class ClaimRepositoryTest extends AbstractIntegrationTest {
         claimModel.setModifications(Arrays.asList(commentModificationModel, secondCommentModificationModel));
         claimRepository.save(claimModel);
 
-        List<ClaimModel> claimModels = claimRepository.findAll(ClaimSpecifications.equalsByEmail(userInfoModel.getEmail()));
+        List<ClaimModel> claimModels =
+                claimRepository.findAll(ClaimSpecifications.equalsByEmail(userInfoModel.getEmail()));
         assertEquals(1L, claimModels.size());
         assertEquals(userInfoModel.getEmail(), claimModels.get(0).getModifications().get(0).getUserInfo().getEmail());
 

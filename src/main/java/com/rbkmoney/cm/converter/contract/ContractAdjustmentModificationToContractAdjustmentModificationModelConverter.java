@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractAdjustmentModificationToContractAdjustmentModificationModelConverter implements ClaimConverter<ContractAdjustmentModification, ContractAdjustmentModificationModel> {
+public class ContractAdjustmentModificationToContractAdjustmentModificationModelConverter
+        implements ClaimConverter<ContractAdjustmentModification, ContractAdjustmentModificationModel> {
 
     @Lazy
     @Autowired
@@ -20,9 +21,11 @@ public class ContractAdjustmentModificationToContractAdjustmentModificationModel
     public ContractAdjustmentModificationModel convert(ContractAdjustmentModification contractAdjustmentModification) {
         switch (contractAdjustmentModification.getSetField()) {
             case CREATION:
-                return conversionService.convert(contractAdjustmentModification.getCreation(), ContractAdjustmentCreationModificationModel.class);
+                return conversionService.convert(contractAdjustmentModification.getCreation(),
+                        ContractAdjustmentCreationModificationModel.class);
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", contractAdjustmentModification.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", contractAdjustmentModification.getSetField()));
         }
     }
 }

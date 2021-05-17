@@ -42,7 +42,9 @@ public class ClaimSpecifications {
         };
     }
 
-    public static Specification<ClaimModel> equalsByPartyIdClaimIdEmailAndStatusIn(String partyId, Long claimId, String email, List<ClaimStatusEnum> statuses) {
+    public static Specification<ClaimModel> equalsByPartyIdClaimIdEmailAndStatusIn(String partyId, Long claimId,
+                                                                                   String email,
+                                                                                   List<ClaimStatusEnum> statuses) {
         return equalsByPartyId(partyId).and(equalsByClaimId(claimId)).and(equalsByEmail(email)).and(statusIn(statuses));
     }
 

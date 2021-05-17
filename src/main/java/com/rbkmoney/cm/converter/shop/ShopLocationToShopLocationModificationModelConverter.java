@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopLocationToShopLocationModificationModelConverter implements ClaimConverter<ShopLocation, ShopLocationModificationModel> {
+public class ShopLocationToShopLocationModificationModelConverter
+        implements ClaimConverter<ShopLocation, ShopLocationModificationModel> {
 
     @Lazy
     @Autowired

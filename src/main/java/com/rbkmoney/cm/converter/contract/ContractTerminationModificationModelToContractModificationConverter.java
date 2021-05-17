@@ -7,7 +7,8 @@ import com.rbkmoney.damsel.claim_management.ContractTermination;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractTerminationModificationModelToContractModificationConverter implements ClaimConverter<ContractTerminationModificationModel, ContractModification> {
+public class ContractTerminationModificationModelToContractModificationConverter
+        implements ClaimConverter<ContractTerminationModificationModel, ContractModification> {
     @Override
     public ContractModification convert(ContractTerminationModificationModel contractTerminationModificationModel) {
         return ContractModification.termination(

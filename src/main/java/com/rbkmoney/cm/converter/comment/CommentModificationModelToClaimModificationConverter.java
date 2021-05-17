@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentModificationModelToClaimModificationConverter implements ClaimConverter<CommentModificationModel, ClaimModification> {
+public class CommentModificationModelToClaimModificationConverter
+        implements ClaimConverter<CommentModificationModel, ClaimModification> {
 
     @Lazy
     @Autowired

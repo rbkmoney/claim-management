@@ -9,17 +9,21 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ServiceAcceptanceActPreferencesToServiceAcceptanceActPreferencesModelConverter implements ClaimConverter<ServiceAcceptanceActPreferences, ServiceAcceptanceActPreferencesModel> {
+public class ServiceAcceptanceActPreferencesToServiceAcceptanceActPreferencesModelConverter
+        implements ClaimConverter<ServiceAcceptanceActPreferences, ServiceAcceptanceActPreferencesModel> {
 
     @Lazy
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public ServiceAcceptanceActPreferencesModel convert(ServiceAcceptanceActPreferences serviceAcceptanceActPreferences) {
-        ServiceAcceptanceActPreferencesModel serviceAcceptanceActPreferencesModel = new ServiceAcceptanceActPreferencesModel();
+    public ServiceAcceptanceActPreferencesModel convert(
+            ServiceAcceptanceActPreferences serviceAcceptanceActPreferences) {
+        ServiceAcceptanceActPreferencesModel serviceAcceptanceActPreferencesModel =
+                new ServiceAcceptanceActPreferencesModel();
         serviceAcceptanceActPreferencesModel.setSchedulerId(serviceAcceptanceActPreferences.getSchedule().getId());
-        serviceAcceptanceActPreferencesModel.setSigner(conversionService.convert(serviceAcceptanceActPreferences.getSigner(), RepresentativeModel.class));
+        serviceAcceptanceActPreferencesModel.setSigner(
+                conversionService.convert(serviceAcceptanceActPreferences.getSigner(), RepresentativeModel.class));
         return serviceAcceptanceActPreferencesModel;
     }
 }

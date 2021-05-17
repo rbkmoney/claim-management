@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RepresentativeDocumentToRepresentativeDocumentModelConverter implements ClaimConverter<RepresentativeDocument, RepresentativeDocumentModel> {
+public class RepresentativeDocumentToRepresentativeDocumentModelConverter
+        implements ClaimConverter<RepresentativeDocument, RepresentativeDocumentModel> {
 
     @Lazy
     @Autowired
@@ -20,11 +21,13 @@ public class RepresentativeDocumentToRepresentativeDocumentModelConverter implem
     public RepresentativeDocumentModel convert(RepresentativeDocument representativeDocument) {
         switch (representativeDocument.getSetField()) {
             case POWER_OF_ATTORNEY:
-                return conversionService.convert(representativeDocument.getPowerOfAttorney(), PowerOfAttorneyRepresentativeDocumentModel.class);
+                return conversionService.convert(representativeDocument.getPowerOfAttorney(),
+                        PowerOfAttorneyRepresentativeDocumentModel.class);
             case ARTICLES_OF_ASSOCIATION:
                 return new ArticlesOfAssociationRepresentativeDocumentModel();
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", representativeDocument.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", representativeDocument.getSetField()));
         }
     }
 }

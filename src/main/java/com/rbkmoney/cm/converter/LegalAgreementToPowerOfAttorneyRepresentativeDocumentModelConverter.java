@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LegalAgreementToPowerOfAttorneyRepresentativeDocumentModelConverter implements ClaimConverter<LegalAgreement, PowerOfAttorneyRepresentativeDocumentModel> {
+public class LegalAgreementToPowerOfAttorneyRepresentativeDocumentModelConverter
+        implements ClaimConverter<LegalAgreement, PowerOfAttorneyRepresentativeDocumentModel> {
 
     @Lazy
     @Autowired
@@ -17,8 +18,10 @@ public class LegalAgreementToPowerOfAttorneyRepresentativeDocumentModelConverter
 
     @Override
     public PowerOfAttorneyRepresentativeDocumentModel convert(LegalAgreement legalAgreement) {
-        PowerOfAttorneyRepresentativeDocumentModel representativePowerOfAttorneyDocumentModel = new PowerOfAttorneyRepresentativeDocumentModel();
-        representativePowerOfAttorneyDocumentModel.setLegalAgreement(conversionService.convert(legalAgreement, LegalAgreementModel.class));
+        PowerOfAttorneyRepresentativeDocumentModel representativePowerOfAttorneyDocumentModel =
+                new PowerOfAttorneyRepresentativeDocumentModel();
+        representativePowerOfAttorneyDocumentModel
+                .setLegalAgreement(conversionService.convert(legalAgreement, LegalAgreementModel.class));
         return representativePowerOfAttorneyDocumentModel;
     }
 }

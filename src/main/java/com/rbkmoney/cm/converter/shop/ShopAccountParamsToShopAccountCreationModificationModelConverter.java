@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopAccountParamsToShopAccountCreationModificationModelConverter implements ClaimConverter<ShopAccountParams, ShopAccountCreationModificationModel> {
+public class ShopAccountParamsToShopAccountCreationModificationModelConverter
+        implements ClaimConverter<ShopAccountParams, ShopAccountCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,8 +19,10 @@ public class ShopAccountParamsToShopAccountCreationModificationModelConverter im
 
     @Override
     public ShopAccountCreationModificationModel convert(ShopAccountParams shopAccountParams) {
-        ShopAccountCreationModificationModel shopAccountCreationModificationModel = new ShopAccountCreationModificationModel();
-        shopAccountCreationModificationModel.setShopAccountParams(conversionService.convert(shopAccountParams, ShopAccountParamsModel.class));
+        ShopAccountCreationModificationModel shopAccountCreationModificationModel =
+                new ShopAccountCreationModificationModel();
+        shopAccountCreationModificationModel
+                .setShopAccountParams(conversionService.convert(shopAccountParams, ShopAccountParamsModel.class));
         return shopAccountCreationModificationModel;
     }
 }

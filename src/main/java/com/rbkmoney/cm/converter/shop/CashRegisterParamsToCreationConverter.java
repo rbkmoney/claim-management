@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CashRegisterParamsToCreationConverter implements ClaimConverter<CashRegisterParams, ShopCashRegisterCreationModificationModel> {
+public class CashRegisterParamsToCreationConverter
+        implements ClaimConverter<CashRegisterParams, ShopCashRegisterCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -20,7 +21,8 @@ public class CashRegisterParamsToCreationConverter implements ClaimConverter<Cas
     public ShopCashRegisterCreationModificationModel convert(CashRegisterParams cashRegisterParams) {
         ShopCashRegisterCreationModificationModel shopCashRegisterCreationModificationModel =
                 new ShopCashRegisterCreationModificationModel();
-        CashRegisterParamsModel cashRegisterParamsModel = conversionService.convert(cashRegisterParams, CashRegisterParamsModel.class);
+        CashRegisterParamsModel cashRegisterParamsModel =
+                conversionService.convert(cashRegisterParams, CashRegisterParamsModel.class);
         shopCashRegisterCreationModificationModel.setCashRegisterParamsModel(cashRegisterParamsModel);
 
         return shopCashRegisterCreationModificationModel;

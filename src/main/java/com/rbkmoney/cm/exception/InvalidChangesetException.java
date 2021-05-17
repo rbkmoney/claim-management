@@ -29,7 +29,8 @@ public class InvalidChangesetException extends RuntimeException {
         this.modifications = modifications;
     }
 
-    public InvalidChangesetException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace, List<ModificationModel> modifications) {
+    public InvalidChangesetException(String message, Throwable cause, boolean enableSuppression,
+                                     boolean writableStackTrace, List<ModificationModel> modifications) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.modifications = modifications;
     }

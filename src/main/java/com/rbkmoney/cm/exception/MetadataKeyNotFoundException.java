@@ -17,7 +17,8 @@ public class MetadataKeyNotFoundException extends RuntimeException {
         super(cause);
     }
 
-    public MetadataKeyNotFoundException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public MetadataKeyNotFoundException(String message, Throwable cause, boolean enableSuppression,
+                                        boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

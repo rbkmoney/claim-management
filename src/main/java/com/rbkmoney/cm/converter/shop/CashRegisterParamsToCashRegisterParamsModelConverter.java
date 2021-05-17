@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class CashRegisterParamsToCashRegisterParamsModelConverter implements ClaimConverter<CashRegisterParams, CashRegisterParamsModel> {
+public class CashRegisterParamsToCashRegisterParamsModelConverter
+        implements ClaimConverter<CashRegisterParams, CashRegisterParamsModel> {
 
     @Override
     public CashRegisterParamsModel convert(CashRegisterParams cashRegisterParams) {
         try {
-            byte[] providerParams = new ObjectMapper().writeValueAsBytes(cashRegisterParams.getCashRegisterProviderParams());
+            byte[] providerParams =
+                    new ObjectMapper().writeValueAsBytes(cashRegisterParams.getCashRegisterProviderParams());
 
             CashRegisterParamsModel cashRegisterParamsModel = new CashRegisterParamsModel();
             cashRegisterParamsModel.setProviderId(cashRegisterParams.getCashRegisterProviderId());

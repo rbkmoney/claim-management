@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopModificationUnitToShopModificationModelConverter implements ClaimConverter<ShopModificationUnit, ShopModificationModel> {
+public class ShopModificationUnitToShopModificationModelConverter
+        implements ClaimConverter<ShopModificationUnit, ShopModificationModel> {
 
     @Lazy
     @Autowired
@@ -19,7 +20,8 @@ public class ShopModificationUnitToShopModificationModelConverter implements Cla
     @Override
     public ShopModificationModel convert(ShopModificationUnit shopModificationUnit) {
         ShopModification shopModification = shopModificationUnit.getModification();
-        ShopModificationModel shopModificationModel = conversionService.convert(shopModification, ShopModificationModel.class);
+        ShopModificationModel shopModificationModel =
+                conversionService.convert(shopModification, ShopModificationModel.class);
         shopModificationModel.setShopId(shopModificationUnit.getId());
         return shopModificationModel;
     }

@@ -13,18 +13,21 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class ContractReportPreferencesModificationModelToContractModificationConverter implements ClaimConverter<ContractReportPreferencesModificationModel, ContractModification> {
+public class ContractReportPreferencesModificationModelToContractModificationConverter
+        implements ClaimConverter<ContractReportPreferencesModificationModel, ContractModification> {
 
     @Lazy
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public ContractModification convert(ContractReportPreferencesModificationModel contractReportPreferencesModificationModel) {
+    public ContractModification convert(
+            ContractReportPreferencesModificationModel contractReportPreferencesModificationModel) {
         return ContractModification.report_preferences_modification(
                 new ReportPreferences()
                         .setServiceAcceptanceActPreferences(
-                                Optional.ofNullable(contractReportPreferencesModificationModel.getServiceAcceptanceActPreferences())
+                                Optional.ofNullable(
+                                        contractReportPreferencesModificationModel.getServiceAcceptanceActPreferences())
                                         .map(serviceAcceptanceActPreferencesModel -> conversionService.convert(
                                                 serviceAcceptanceActPreferencesModel,
                                                 ServiceAcceptanceActPreferences.class

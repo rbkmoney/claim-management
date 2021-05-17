@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractAdjustmentParamsToContractAdjustmentCreationModificationModelConverter implements ClaimConverter<ContractAdjustmentParams, ContractAdjustmentCreationModificationModel> {
+public class ContractAdjustmentParamsToContractAdjustmentCreationModificationModelConverter
+        implements ClaimConverter<ContractAdjustmentParams, ContractAdjustmentCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,8 +19,10 @@ public class ContractAdjustmentParamsToContractAdjustmentCreationModificationMod
 
     @Override
     public ContractAdjustmentCreationModificationModel convert(ContractAdjustmentParams contractAdjustmentParams) {
-        ContractAdjustmentCreationModificationModel contractAdjustmentCreationModificationModel = new ContractAdjustmentCreationModificationModel();
-        contractAdjustmentCreationModificationModel.setContractAdjustmentParams(conversionService.convert(contractAdjustmentParams, ContractAdjustmentParamsModel.class));
+        ContractAdjustmentCreationModificationModel contractAdjustmentCreationModificationModel =
+                new ContractAdjustmentCreationModificationModel();
+        contractAdjustmentCreationModificationModel.setContractAdjustmentParams(
+                conversionService.convert(contractAdjustmentParams, ContractAdjustmentParamsModel.class));
         return contractAdjustmentCreationModificationModel;
     }
 }

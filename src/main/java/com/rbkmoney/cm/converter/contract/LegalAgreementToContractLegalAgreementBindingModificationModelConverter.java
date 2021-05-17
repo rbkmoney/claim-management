@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LegalAgreementToContractLegalAgreementBindingModificationModelConverter implements ClaimConverter<LegalAgreement, ContractLegalAgreementBindingModificationModel> {
+public class LegalAgreementToContractLegalAgreementBindingModificationModelConverter
+        implements ClaimConverter<LegalAgreement, ContractLegalAgreementBindingModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,8 +19,10 @@ public class LegalAgreementToContractLegalAgreementBindingModificationModelConve
 
     @Override
     public ContractLegalAgreementBindingModificationModel convert(LegalAgreement legalAgreement) {
-        ContractLegalAgreementBindingModificationModel contractLegalAgreementBindingModificationModel = new ContractLegalAgreementBindingModificationModel();
-        contractLegalAgreementBindingModificationModel.setLegalAgreement(conversionService.convert(legalAgreement, LegalAgreementModel.class));
+        ContractLegalAgreementBindingModificationModel contractLegalAgreementBindingModificationModel =
+                new ContractLegalAgreementBindingModificationModel();
+        contractLegalAgreementBindingModificationModel
+                .setLegalAgreement(conversionService.convert(legalAgreement, LegalAgreementModel.class));
         return contractLegalAgreementBindingModificationModel;
     }
 }

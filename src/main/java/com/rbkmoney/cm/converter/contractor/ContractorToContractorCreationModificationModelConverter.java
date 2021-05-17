@@ -12,7 +12,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractorToContractorCreationModificationModelConverter implements ClaimConverter<Contractor, ContractorCreationModificationModel> {
+public class ContractorToContractorCreationModificationModelConverter
+        implements ClaimConverter<Contractor, ContractorCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -22,11 +23,14 @@ public class ContractorToContractorCreationModificationModelConverter implements
     public ContractorCreationModificationModel convert(Contractor contractor) {
         switch (contractor.getSetField()) {
             case LEGAL_ENTITY:
-                return conversionService.convert(contractor.getLegalEntity(), ContractorLegalEntityCreationModificationModel.class);
+                return conversionService
+                        .convert(contractor.getLegalEntity(), ContractorLegalEntityCreationModificationModel.class);
             case PRIVATE_ENTITY:
-                return conversionService.convert(contractor.getPrivateEntity(), ContractorPrivateEntityCreationModificationModel.class);
+                return conversionService
+                        .convert(contractor.getPrivateEntity(), ContractorPrivateEntityCreationModificationModel.class);
             case REGISTERED_USER:
-                return conversionService.convert(contractor.getRegisteredUser(), ContractorRegisteredUserCreationModificationModel.class);
+                return conversionService.convert(contractor.getRegisteredUser(),
+                        ContractorRegisteredUserCreationModificationModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", contractor.getSetField()));
         }

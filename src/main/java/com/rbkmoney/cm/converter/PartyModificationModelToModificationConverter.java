@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PartyModificationModelToModificationConverter implements ClaimConverter<PartyModificationModel, Modification> {
+public class PartyModificationModelToModificationConverter
+        implements ClaimConverter<PartyModificationModel, Modification> {
 
     @Lazy
     @Autowired

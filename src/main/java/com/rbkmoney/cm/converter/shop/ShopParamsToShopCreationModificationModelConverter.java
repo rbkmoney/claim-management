@@ -12,7 +12,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopParamsToShopCreationModificationModelConverter implements ClaimConverter<ShopParams, ShopCreationModificationModel> {
+public class ShopParamsToShopCreationModificationModelConverter
+        implements ClaimConverter<ShopParams, ShopCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -20,13 +21,13 @@ public class ShopParamsToShopCreationModificationModelConverter implements Claim
 
     @Override
     public ShopCreationModificationModel convert(ShopParams shopParams) {
-        ShopCreationModificationModel shopCreationModification = new ShopCreationModificationModel();
         ShopParamsModel shopParamsModel = new ShopParamsModel();
         shopParamsModel.setCategoryId(shopParams.getCategory().getId());
         shopParamsModel.setContractId(shopParams.getContractId());
         shopParamsModel.setPayoutToolId(shopParams.getPayoutToolId());
         shopParamsModel.setDetails(conversionService.convert(shopParams.getDetails(), ShopDetailsModel.class));
         shopParamsModel.setLocation(conversionService.convert(shopParams.getLocation(), ShopLocationModel.class));
+        ShopCreationModificationModel shopCreationModification = new ShopCreationModificationModel();
         shopCreationModification.setShopParams(shopParamsModel);
         return shopCreationModification;
     }

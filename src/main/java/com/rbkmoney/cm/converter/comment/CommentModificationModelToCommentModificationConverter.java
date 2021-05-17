@@ -9,7 +9,8 @@ import com.rbkmoney.damsel.claim_management.CommentModification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentModificationModelToCommentModificationConverter implements ClaimConverter<CommentModificationModel, CommentModification> {
+public class CommentModificationModelToCommentModificationConverter
+        implements ClaimConverter<CommentModificationModel, CommentModification> {
     @Override
     public CommentModification convert(CommentModificationModel commentModificationModel) {
         switch (commentModificationModel.getCommentModificationType()) {
@@ -20,7 +21,8 @@ public class CommentModificationModelToCommentModificationConverter implements C
             case changed:
                 return CommentModification.changed(new CommentChanged());
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", commentModificationModel.getCommentModificationType()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", commentModificationModel.getCommentModificationType()));
         }
     }
 }

@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractPayoutToolModificationModelToPayoutToolModificationConverter implements ClaimConverter<ContractPayoutToolModificationModel, PayoutToolModificationUnit> {
+public class ContractPayoutToolModificationModelToPayoutToolModificationConverter
+        implements ClaimConverter<ContractPayoutToolModificationModel, PayoutToolModificationUnit> {
 
     @Lazy
     @Autowired

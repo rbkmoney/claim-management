@@ -21,9 +21,11 @@ public class ShopCashRegisterModificationModelToShopCashRegisterModificationConv
     public ShopCashRegisterModificationModel convert(CashRegisterModification cashRegisterModification) {
         switch (cashRegisterModification.getSetField()) {
             case CREATION:
-                return conversionService.convert(cashRegisterModification.getCreation(), ShopCashRegisterCreationModificationModel.class);
+                return conversionService.convert(cashRegisterModification.getCreation(),
+                        ShopCashRegisterCreationModificationModel.class);
             default:
-                throw new IllegalArgumentException("Unknown cashRegisterModification type: " + cashRegisterModification.getSetField());
+                throw new IllegalArgumentException(
+                        "Unknown cashRegisterModification type: " + cashRegisterModification.getSetField());
         }
     }
 

@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractModificationToContractModificationModelConverter implements ClaimConverter<ContractModification, ContractModificationModel> {
+public class ContractModificationToContractModificationModelConverter
+        implements ClaimConverter<ContractModification, ContractModificationModel> {
 
     @Lazy
     @Autowired
@@ -19,21 +20,29 @@ public class ContractModificationToContractModificationModelConverter implements
     public ContractModificationModel convert(ContractModification contractModification) {
         switch (contractModification.getSetField()) {
             case CREATION:
-                return conversionService.convert(contractModification.getCreation(), ContractCreationModificationModel.class);
+                return conversionService
+                        .convert(contractModification.getCreation(), ContractCreationModificationModel.class);
             case TERMINATION:
-                return conversionService.convert(contractModification.getTermination(), ContractTerminationModificationModel.class);
+                return conversionService
+                        .convert(contractModification.getTermination(), ContractTerminationModificationModel.class);
             case PAYOUT_TOOL_MODIFICATION:
-                return conversionService.convert(contractModification.getPayoutToolModification(), ContractPayoutToolModificationModel.class);
+                return conversionService.convert(contractModification.getPayoutToolModification(),
+                        ContractPayoutToolModificationModel.class);
             case ADJUSTMENT_MODIFICATION:
-                return conversionService.convert(contractModification.getAdjustmentModification(), ContractAdjustmentModificationModel.class);
+                return conversionService.convert(contractModification.getAdjustmentModification(),
+                        ContractAdjustmentModificationModel.class);
             case CONTRACTOR_MODIFICATION:
-                return conversionService.convert(contractModification.getContractorModification(), ContractContractorChangeModificationModel.class);
+                return conversionService.convert(contractModification.getContractorModification(),
+                        ContractContractorChangeModificationModel.class);
             case LEGAL_AGREEMENT_BINDING:
-                return conversionService.convert(contractModification.getLegalAgreementBinding(), ContractLegalAgreementBindingModificationModel.class);
+                return conversionService.convert(contractModification.getLegalAgreementBinding(),
+                        ContractLegalAgreementBindingModificationModel.class);
             case REPORT_PREFERENCES_MODIFICATION:
-                return conversionService.convert(contractModification.getReportPreferencesModification(), ContractReportPreferencesModificationModel.class);
+                return conversionService.convert(contractModification.getReportPreferencesModification(),
+                        ContractReportPreferencesModificationModel.class);
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", contractModification.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", contractModification.getSetField()));
         }
     }
 }

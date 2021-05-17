@@ -12,7 +12,7 @@ import static com.rbkmoney.cm.model.ClaimStatusEnum.pending;
 
 public class ContinuationTokenServiceTest {
 
-    private ContinuationTokenService continuationTokenService = new ContinuationTokenService("123", new ObjectMapper());
+    private final ContinuationTokenService continuationTokenService = new ContinuationTokenService("123", new ObjectMapper());
 
     @Test
     public void testBuildAndValidateToken() {
@@ -38,7 +38,11 @@ public class ContinuationTokenServiceTest {
     public void testValidateWrongToken() {
         continuationTokenService.validateAndGet("kek", Integer.class, Arrays.asList());
         continuationTokenService.validateAndGet("kasddsdfsgsdgdgek", Integer.class, Arrays.asList());
-        continuationTokenService.validateAndGet("eyJ0b2tlbiI6ImtkR0h2QWI0LW5EMUh0c2djSWxJODA0QUNjUXZhdjFya1lncXBScE1VYlEiLCJjb250aW51YXRpb25fZGF0YSI6InJPMEFCWE55QUJGcVlYWmhMbXhoYm1jdVNXNTBaV2RsY2hMaW9LVDNnWWM0QWdBQlNRQUZkbUZzZFdWNGNVFhbUYyWVM1c1lXNW5MazUxYldKbGNvYXNsUjBMbE9DTEFnQUFlSEFBQUFCNyJ9", Integer.class, Arrays.asList());
+        continuationTokenService.validateAndGet(
+                "eyJ0b2tlbiI6ImtkR0h2QWI0LW5EMUh0c2djSWxJODA0QUNjUXZhdjFya1lncXBScE1VYlEiLCJjb250aW51YXRpb" +
+                        "25fZGF0YSI6InJPMEFCWE55QUJGcVlYWmhMbXhoYm1jdVNXNTBaV2RsY2hMaW9LVDNnWWM0QWdBQlNRQUZkbUZzZF" +
+                        "dWNGNVFhbUYyWVM1c1lXNW5MazUxYldKbGNvYXNsUjBMbE9DTEFnQUFlSEFBQUFCNyJ9",
+                Integer.class, Arrays.asList());
     }
 
 }

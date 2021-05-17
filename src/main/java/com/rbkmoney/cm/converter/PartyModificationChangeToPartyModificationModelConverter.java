@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PartyModificationChangeToPartyModificationModelConverter implements ClaimConverter<PartyModificationChange, PartyModificationModel> {
+public class PartyModificationChangeToPartyModificationModelConverter
+        implements ClaimConverter<PartyModificationChange, PartyModificationModel> {
 
     @Lazy
     @Autowired
@@ -21,13 +22,17 @@ public class PartyModificationChangeToPartyModificationModelConverter implements
     public PartyModificationModel convert(PartyModificationChange partyModificationChange) {
         switch (partyModificationChange.getSetField()) {
             case SHOP_MODIFICATION:
-                return conversionService.convert(partyModificationChange.getShopModification(), ShopModificationModel.class);
+                return conversionService
+                        .convert(partyModificationChange.getShopModification(), ShopModificationModel.class);
             case CONTRACT_MODIFICATION:
-                return conversionService.convert(partyModificationChange.getContractModification(), ContractModificationModel.class);
+                return conversionService
+                        .convert(partyModificationChange.getContractModification(), ContractModificationModel.class);
             case CONTRACTOR_MODIFICATION:
-                return conversionService.convert(partyModificationChange.getContractorModification(), ContractorModificationModel.class);
+                return conversionService.convert(partyModificationChange.getContractorModification(),
+                        ContractorModificationModel.class);
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", partyModificationChange.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", partyModificationChange.getSetField()));
         }
     }
 }

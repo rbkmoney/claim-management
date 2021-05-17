@@ -12,7 +12,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatusModificationModelToClaimModificationConverter implements ClaimConverter<StatusModificationModel, ClaimModification> {
+public class StatusModificationModelToClaimModificationConverter
+        implements ClaimConverter<StatusModificationModel, ClaimModification> {
 
     @Lazy
     @Autowired
@@ -20,8 +21,10 @@ public class StatusModificationModelToClaimModificationConverter implements Clai
 
     @Override
     public ClaimModification convert(StatusModificationModel statusModificationModel) {
-        ClaimStatus claimStatus = conversionService.convert(statusModificationModel.getClaimStatus(), ClaimStatus.class);
-        StatusModification statusModification = conversionService.convert(statusModificationModel, StatusModification.class);
+        ClaimStatus claimStatus =
+                conversionService.convert(statusModificationModel.getClaimStatus(), ClaimStatus.class);
+        StatusModification statusModification =
+                conversionService.convert(statusModificationModel, StatusModification.class);
         return ClaimModification.status_modification(
                 new StatusModificationUnit()
                         .setStatus(claimStatus)

@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 public class MockUtil {
 
     private static final Map.Entry<String[], FieldHandler> accountFields = Map.entry(
-            new String[]{"correspondent_account"},
+            new String[] {"correspondent_account"},
             structHandler -> {
                 structHandler.beginStruct(3);
                 structHandler.name("number");
@@ -31,23 +31,26 @@ public class MockUtil {
     );
 
     private static final Map.Entry<String[], FieldHandler> timeFields = Map.entry(
-            new String[]{"created_at", "updated_at", "signed_at", "valid_until"},
+            new String[] {"created_at", "updated_at", "signed_at", "valid_until"},
             structHandler -> structHandler.value(Instant.now().toString())
     );
 
-    public static <T extends TBase> List<T> generateTBaseList(T tBase, int count) {
-        return generateTBaseList(tBase, count, timeFields, accountFields);
+    public static <T extends TBase> List<T> generateTBaseList(T thriftBase, int count) {
+        return generateTBaseList(thriftBase, count, timeFields, accountFields);
     }
 
     public static <T extends TBase> List<T> generateTBaseList(Class<T> clazz, int count) {
         return generateTBaseList(clazz, count, timeFields, accountFields);
     }
 
-    public static <T extends TBase> List<T> generateTBaseList(T tBase, int count, Map.Entry<String[], FieldHandler>... fieldHandlers) {
-        return Stream.generate(() -> generateTBase(tBase, fieldHandlers)).limit(count).collect(Collectors.toList());
+    public static <T extends TBase> List<T> generateTBaseList(T thriftBase, int count,
+                                                              Map.Entry<String[], FieldHandler>... fieldHandlers) {
+        return Stream.generate(() ->
+                generateTBase(thriftBase, fieldHandlers)).limit(count).collect(Collectors.toList());
     }
 
-    public static <T extends TBase> List<T> generateTBaseList(Class<T> clazz, int count, Map.Entry<String[], FieldHandler>... fieldHandlers) {
+    public static <T extends TBase> List<T> generateTBaseList(Class<T> clazz, int count,
+                                                              Map.Entry<String[], FieldHandler>... fieldHandlers) {
         return Stream.generate(() -> generateTBase(clazz, fieldHandlers)).limit(count).collect(Collectors.toList());
     }
 
@@ -56,22 +59,27 @@ public class MockUtil {
     }
 
     @SneakyThrows
-    public static <T extends TBase> T generateTBase(Class<T> clazz, Map.Entry<String[], FieldHandler>... fieldHandlers) {
+    public static <T extends TBase> T generateTBase(Class<T> clazz,
+                                                    Map.Entry<String[], FieldHandler>... fieldHandlers) {
         return generateTBase(clazz.getDeclaredConstructor().newInstance(), fieldHandlers);
     }
 
-    public static <T extends TBase> T generateTBase(T tBaseObject) {
-        return generateTBase(tBaseObject, timeFields, accountFields);
+    public static <T extends TBase> T generateTBase(T thriftBaseObject) {
+        return generateTBase(thriftBaseObject, timeFields, accountFields);
     }
 
     @SneakyThrows
-    public static <T extends TBase> T generateTBase(T tBaseObject, Map.Entry<String[], FieldHandler>... fieldHandlers) {
-        return buildMockTBaseProcessor(fieldHandlers).process(tBaseObject, new TBaseHandler<>((Class<T>) tBaseObject.getClass()));
+    public static <T extends TBase> T generateTBase(T thriftBaseObject,
+                                                    Map.Entry<String[],
+                                                            FieldHandler>... fieldHandlers) {
+        return buildMockTBaseProcessor(fieldHandlers)
+                .process(thriftBaseObject, new TBaseHandler<>((Class<T>) thriftBaseObject.getClass()));
     }
 
     public static MockTBaseProcessor buildMockTBaseProcessor(Map.Entry<String[], FieldHandler>... fieldHandlers) {
         MockTBaseProcessor mockTBaseProcessor = new MockTBaseProcessor(MockMode.RANDOM, 10, 5);
-        Arrays.stream(fieldHandlers).forEach(entry -> mockTBaseProcessor.addFieldHandler(entry.getValue(), entry.getKey()));
+        Arrays.stream(fieldHandlers)
+                .forEach(entry -> mockTBaseProcessor.addFieldHandler(entry.getValue(), entry.getKey()));
         return mockTBaseProcessor;
     }
 

@@ -7,10 +7,13 @@ import com.rbkmoney.geck.common.util.TypeUtil;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractorIdentificationLevelToContractorIdentificationLevelModificationModelConverter implements ClaimConverter<ContractorIdentificationLevel, ContractorIdentificationLevelModificationModel> {
+public class ContractorIdentificationLevelToContractorIdentificationLevelModificationModelConverter
+        implements ClaimConverter<ContractorIdentificationLevel, ContractorIdentificationLevelModificationModel> {
     @Override
-    public ContractorIdentificationLevelModificationModel convert(ContractorIdentificationLevel contractorIdentificationLevel) {
-        ContractorIdentificationLevelModificationModel contractorIdentificationLevelModificationModel = new ContractorIdentificationLevelModificationModel();
+    public ContractorIdentificationLevelModificationModel convert(
+            ContractorIdentificationLevel contractorIdentificationLevel) {
+        ContractorIdentificationLevelModificationModel contractorIdentificationLevelModificationModel =
+                new ContractorIdentificationLevelModificationModel();
         contractorIdentificationLevelModificationModel.setContractorIdentificationLevel(
                 TypeUtil.toEnumField(
                         contractorIdentificationLevel.name(),

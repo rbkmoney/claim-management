@@ -5,7 +5,8 @@ import com.rbkmoney.damsel.domain.RussianBankAccount;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RussianBankAccountToRussianBankAccountModelConverter implements ClaimConverter<RussianBankAccount, RussianBankAccountModel> {
+public class RussianBankAccountToRussianBankAccountModelConverter
+        implements ClaimConverter<RussianBankAccount, RussianBankAccountModel> {
     @Override
     public RussianBankAccountModel convert(RussianBankAccount russianBankAccount) {
         RussianBankAccountModel russianBankAccountModel = new RussianBankAccountModel();

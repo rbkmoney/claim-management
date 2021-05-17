@@ -28,7 +28,8 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
 
     @Test
     public void testCreateClaimAndGet() {
-        Claim claim = createClaim(client, PARTY_ID_2, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
+        Claim claim = createClaim(client, PARTY_ID_2, generateModifications(conversionWrapperService,
+                () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
 
         Consumer<String, Event> consumer = createConsumer(ClaimManagementEventDeserializer.class);
         consumer.subscribe(List.of(Initializer.CLAIM_EVENT_SINK));
@@ -42,7 +43,9 @@ public class ClaimHandlerEventSinkDecoratorTest extends AbstractKafkaIntegration
                     assertEquals(5, value.getChange().getCreated().getChangesetSize());
                 });
 
-        runService(() -> client.updateClaim(PARTY_ID_2, claim.getId(), 0, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
+        runService(() -> client.updateClaim(PARTY_ID_2, claim.getId(), 0,
+                generateModifications(conversionWrapperService, () -> MockUtil
+                        .generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
 
         consumer.poll(Duration.ofSeconds(5))
                 .forEach(event -> {

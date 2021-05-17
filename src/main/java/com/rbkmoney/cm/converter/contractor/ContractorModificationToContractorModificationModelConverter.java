@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractorModificationToContractorModificationModelConverter implements ClaimConverter<ContractorModification, ContractorModificationModel> {
+public class ContractorModificationToContractorModificationModelConverter
+        implements ClaimConverter<ContractorModification, ContractorModificationModel> {
 
     @Lazy
     @Autowired
@@ -21,11 +22,14 @@ public class ContractorModificationToContractorModificationModelConverter implem
     public ContractorModificationModel convert(ContractorModification contractorModification) {
         switch (contractorModification.getSetField()) {
             case CREATION:
-                return conversionService.convert(contractorModification.getCreation(), ContractorCreationModificationModel.class);
+                return conversionService
+                        .convert(contractorModification.getCreation(), ContractorCreationModificationModel.class);
             case IDENTIFICATION_LEVEL_MODIFICATION:
-                return conversionService.convert(contractorModification.getIdentificationLevelModification(), ContractorIdentificationLevelModificationModel.class);
+                return conversionService.convert(contractorModification.getIdentificationLevelModification(),
+                        ContractorIdentificationLevelModificationModel.class);
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", contractorModification.getSetField()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", contractorModification.getSetField()));
         }
     }
 }

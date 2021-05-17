@@ -7,7 +7,8 @@ import com.rbkmoney.damsel.domain.CategoryRef;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopCategoryModificationModelToShopModificationConverter implements ClaimConverter<ShopCategoryModificationModel, ShopModification> {
+public class ShopCategoryModificationModelToShopModificationConverter
+        implements ClaimConverter<ShopCategoryModificationModel, ShopModification> {
     @Override
     public ShopModification convert(ShopCategoryModificationModel shopCategoryModificationModel) {
         return ShopModification.category_modification(

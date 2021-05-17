@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PayoutToolParamsModelToPayoutToolParamsConverter implements ClaimConverter<PayoutToolParamsModel, PayoutToolParams> {
+public class PayoutToolParamsModelToPayoutToolParamsConverter
+        implements ClaimConverter<PayoutToolParamsModel, PayoutToolParams> {
 
     @Lazy
     @Autowired
@@ -20,6 +21,7 @@ public class PayoutToolParamsModelToPayoutToolParamsConverter implements ClaimCo
     public PayoutToolParams convert(PayoutToolParamsModel payoutToolParamsModel) {
         return new PayoutToolParams()
                 .setCurrency(new CurrencyRef(payoutToolParamsModel.getCurrencySymbolicCode()))
-                .setToolInfo(conversionService.convert(payoutToolParamsModel.getPayoutToolInfo(), PayoutToolInfo.class));
+                .setToolInfo(
+                        conversionService.convert(payoutToolParamsModel.getPayoutToolInfo(), PayoutToolInfo.class));
     }
 }

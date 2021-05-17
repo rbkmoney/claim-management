@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InternationalBankAccountToPayoutToolInfoInternationalBankAccountModelConverter implements ClaimConverter<InternationalBankAccount, PayoutToolInfoInternationalBankAccountModel> {
+public class InternationalBankAccountToPayoutToolInfoInternationalBankAccountModelConverter
+        implements ClaimConverter<InternationalBankAccount, PayoutToolInfoInternationalBankAccountModel> {
 
     @Lazy
     @Autowired
@@ -17,8 +18,10 @@ public class InternationalBankAccountToPayoutToolInfoInternationalBankAccountMod
 
     @Override
     public PayoutToolInfoInternationalBankAccountModel convert(InternationalBankAccount internationalBankAccount) {
-        PayoutToolInfoInternationalBankAccountModel payoutToolInfoInternationalBankAccountModel = new PayoutToolInfoInternationalBankAccountModel();
-        payoutToolInfoInternationalBankAccountModel.setInternationalBankAccountModel(conversionService.convert(internationalBankAccount, InternationalBankAccountModel.class));
+        PayoutToolInfoInternationalBankAccountModel payoutToolInfoInternationalBankAccountModel =
+                new PayoutToolInfoInternationalBankAccountModel();
+        payoutToolInfoInternationalBankAccountModel.setInternationalBankAccountModel(
+                conversionService.convert(internationalBankAccount, InternationalBankAccountModel.class));
         return payoutToolInfoInternationalBankAccountModel;
     }
 }

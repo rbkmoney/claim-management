@@ -11,7 +11,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModificationModelToModificationUnitConverter implements ClaimConverter<ModificationModel, ModificationUnit> {
+public class ModificationModelToModificationUnitConverter
+        implements ClaimConverter<ModificationModel, ModificationUnit> {
 
     @Lazy
     @Autowired
@@ -24,10 +25,10 @@ public class ModificationModelToModificationUnitConverter implements ClaimConver
         return new ModificationUnit()
                 .setModificationId(modificationModel.getId())
                 .setCreatedAt(TypeUtil.temporalToString(modificationModel.getCreatedAt()))
-                .setChangedAt(modificationModel.getChangedAt() != null ?
-                        TypeUtil.temporalToString(modificationModel.getChangedAt()) : null)
-                .setRemovedAt(modificationModel.getRemovedAt() != null ?
-                        TypeUtil.temporalToString(modificationModel.getRemovedAt()) : null)
+                .setChangedAt(modificationModel.getChangedAt() != null
+                        ? TypeUtil.temporalToString(modificationModel.getChangedAt()) : null)
+                .setRemovedAt(modificationModel.getRemovedAt() != null
+                        ? TypeUtil.temporalToString(modificationModel.getRemovedAt()) : null)
                 .setUserInfo(userInfo)
                 .setModification(modification);
     }

@@ -17,7 +17,8 @@ public class InvalidRevisionException extends RuntimeException {
         super(cause);
     }
 
-    public InvalidRevisionException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public InvalidRevisionException(String message, Throwable cause, boolean enableSuppression,
+                                    boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

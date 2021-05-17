@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ModificationUnitToModificationModelConverter implements ClaimConverter<ModificationUnit, ModificationModel> {
+public class ModificationUnitToModificationModelConverter
+        implements ClaimConverter<ModificationUnit, ModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,14 +19,15 @@ public class ModificationUnitToModificationModelConverter implements ClaimConver
 
     @Override
     public ModificationModel convert(ModificationUnit modificationUnit) {
-        ModificationModel modificationModel = conversionService.convert(modificationUnit.getModification(), ModificationModel.class);
+        ModificationModel modificationModel =
+                conversionService.convert(modificationUnit.getModification(), ModificationModel.class);
         UserInfoModel userInfoModel = conversionService.convert(modificationUnit.getUserInfo(), UserInfoModel.class);
         modificationModel.setId(modificationUnit.getModificationId());
         modificationModel.setCreatedAt(TypeUtil.stringToInstant(modificationUnit.getCreatedAt()));
-        modificationModel.setChangedAt(modificationUnit.getChangedAt() != null ?
-                TypeUtil.stringToInstant(modificationUnit.getChangedAt()) : null);
-        modificationModel.setRemovedAt(modificationUnit.getRemovedAt() != null ?
-                TypeUtil.stringToInstant(modificationUnit.getRemovedAt()) : null);
+        modificationModel.setChangedAt(modificationUnit.getChangedAt() != null
+                ? TypeUtil.stringToInstant(modificationUnit.getChangedAt()) : null);
+        modificationModel.setRemovedAt(modificationUnit.getRemovedAt() != null
+                ? TypeUtil.stringToInstant(modificationUnit.getRemovedAt()) : null);
         modificationModel.setUserInfo(userInfoModel);
         return modificationModel;
     }

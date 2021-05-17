@@ -16,7 +16,8 @@ public class LimitExceededException extends RuntimeException {
         super(cause);
     }
 
-    public LimitExceededException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public LimitExceededException(String message, Throwable cause, boolean enableSuppression,
+                                  boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

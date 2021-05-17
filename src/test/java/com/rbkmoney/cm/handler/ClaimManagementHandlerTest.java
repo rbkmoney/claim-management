@@ -71,9 +71,12 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void testCreateClaimAndUpdate() {
-        Claim claim = createClaim(client, "party_id", generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
+        Claim claim = createClaim(client, "party_id", generateModifications(conversionWrapperService,
+                () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
-        runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
+        runService(() -> client.updateClaim("party_id", claim.getId(), 0,
+                generateModifications(conversionWrapperService, () -> MockUtil
+                        .generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
     }
 
     @Test(expected = InvalidChangeset.class)
@@ -106,23 +109,27 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
     public void testCreateClaimAndAccept() {
         Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         runService(() -> client.acceptClaim("party_id", claim.getId(), 0));
-        assertEquals(ClaimStatus.pending_acceptance(new ClaimPendingAcceptance()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
+        assertEquals(ClaimStatus.pending_acceptance(new ClaimPendingAcceptance()),
+                callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
     }
 
     @Test
     public void testCreateClaimAndDeny() {
         Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         runService(() -> client.denyClaim("party_id", claim.getId(), 0, "kek"));
-        assertEquals(ClaimStatus.denied(new ClaimDenied().setReason("kek")), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
+        assertEquals(ClaimStatus.denied(new ClaimDenied().setReason("kek")),
+                callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
     }
 
     @Test
     public void testCreateRequestReviewAndRequestChanges() {
         Claim claim = createClaim(client, conversionWrapperService, "party_id", 5);
         runService(() -> client.requestClaimReview("party_id", claim.getId(), 0));
-        assertEquals(ClaimStatus.review(new ClaimReview()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
+        assertEquals(ClaimStatus.review(new ClaimReview()),
+                callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
         runService(() -> client.requestClaimChanges("party_id", claim.getId(), 1));
-        assertEquals(ClaimStatus.pending(new ClaimPending()), callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
+        assertEquals(ClaimStatus.pending(new ClaimPending()),
+                callService(() -> client.getClaim("party_id", claim.getId())).getStatus());
     }
 
     @Test
@@ -131,14 +138,20 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         claimSearchQuery.setPartyId("claim_search_party_id");
         claimSearchQuery.setLimit(20);
 
-        List<Claim> claims = createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(), claimSearchQuery.getLimit(), 5);
+        List<Claim> claims = createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(),
+                claimSearchQuery.getLimit(), 5);
         assertEquals(claims.size(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
 
         claimSearchQuery.setStatuses(Arrays.asList(ClaimStatus.pending(new ClaimPending())));
-        assertEquals(claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
+        assertEquals(
+                claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(),
+                callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
 
-        claimSearchQuery.setStatuses(Arrays.asList(ClaimStatus.review(new ClaimReview()), ClaimStatus.accepted(new ClaimAccepted())));
-        assertEquals(claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(), callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
+        claimSearchQuery.setStatuses(
+                Arrays.asList(ClaimStatus.review(new ClaimReview()), ClaimStatus.accepted(new ClaimAccepted())));
+        assertEquals(
+                claims.stream().filter(claim -> claimSearchQuery.getStatuses().contains(claim.getStatus())).count(),
+                callService(() -> client.searchClaims(claimSearchQuery)).getResult().size());
     }
 
     @Test
@@ -147,7 +160,8 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
         claimSearchQuery.setPartyId("claim_search_party_id_and_claim_id");
         claimSearchQuery.setLimit(1);
 
-        Claim claim = createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(), claimSearchQuery.getLimit(), 5).get(0);
+        Claim claim = createClaims(client, conversionWrapperService, claimSearchQuery.getPartyId(),
+                claimSearchQuery.getLimit(), 5).get(0);
         claimSearchQuery.setClaimId(claim.getId());
 
         assertEquals(claim, callService(() -> client.searchClaims(claimSearchQuery).getResult().get(0)));
@@ -169,12 +183,14 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
             searchedClaimList.addAll(claimSearchResponse.getResult());
             claimSearchQuery.setContinuationToken(claimSearchResponse.getContinuationToken());
         } while (claimSearchResponse.isSetContinuationToken());
-        assertEquals(callService(() -> client.searchClaims(claimSearchQuery.setLimit(20))).getResult(), searchedClaimList);
+        assertEquals(callService(() -> client.searchClaims(claimSearchQuery.setLimit(20))).getResult(),
+                searchedClaimList);
     }
 
     @Test
     public void setAndGetMetadata() {
-        Claim claim = callService(() -> client.createClaim("party_id", generateModifications(conversionWrapperService, 5)));
+        Claim claim =
+                callService(() -> client.createClaim("party_id", generateModifications(conversionWrapperService, 5)));
 
         Value value = MockUtil.generateTBase(Value.class);
         runService(() -> client.setMetadata("party_id", claim.getId(), "key", value));
@@ -185,11 +201,14 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test
     public void setAndGetMetadataError() throws TException {
-        Claim claim = createClaim(client, "party_id", generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
+        Claim claim = createClaim(client, "party_id", generateModifications(conversionWrapperService,
+                () -> MockUtil.generateTBaseList(Modification.party_modification(new PartyModification()), 5)));
         assertEquals(claim, callService(() -> client.getClaim("party_id", claim.getId())));
         try {
             Mockito.when(kafkaTemplate.send(any(), any())).thenThrow(new RuntimeException());
-            runService(() -> client.updateClaim("party_id", claim.getId(), 0, generateModifications(conversionWrapperService, () -> MockUtil.generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
+            runService(() -> client.updateClaim("party_id", claim.getId(), 0,
+                    generateModifications(conversionWrapperService, () -> MockUtil
+                            .generateTBaseList(Modification.claim_modification(new ClaimModification()), 5))));
         } catch (Exception e) {
             assertEquals(5, callService(() -> client.getClaim("party_id", claim.getId())).getChangesetSize());
             Mockito.verify(kafkaTemplate, Mockito.times(4)).send(any(), any());
@@ -217,32 +236,15 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
 
     @Test(expected = ModificationWrongType.class)
     public void updateBadTypeModificationTest() {
-        Modification commentModification = buildCommentModification();
-        Claim claim = createClaim(
-                client,
-                "party_id",
-                generateModifications(
-                        conversionWrapperService,
-                        () -> MockUtil.generateTBaseList(commentModification, 1)
-                )
-        );
-        ModificationUnit modificationUnit = claim.changeset.get(0);
 
-        ClaimModificationChange claimModificationChange = new ClaimModificationChange();
         FileModificationUnit fileModificationUnit = new FileModificationUnit();
         fileModificationUnit.setId("testId");
         FileModification fileModification = new FileModification();
         fileModification.setChanged(new FileChanged());
         fileModificationUnit.setModification(fileModification);
+        ClaimModificationChange claimModificationChange = new ClaimModificationChange();
         claimModificationChange.setFileModification(fileModificationUnit);
 
-        ModificationChange modificationChange = ModificationChange.claim_modification(claimModificationChange);
-
-        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), modificationChange));
-    }
-
-    @Test
-    public void updateClaimModificationTest() {
         Modification commentModification = buildCommentModification();
         Claim claim = createClaim(
                 client,
@@ -253,28 +255,61 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
                 )
         );
         ModificationUnit modificationUnit = claim.changeset.get(0);
+        ModificationChange modificationChange = ModificationChange.claim_modification(claimModificationChange);
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(),
+                modificationUnit.getModificationId(), modificationChange));
+    }
 
-        ClaimModificationChange claimModificationChange = new ClaimModificationChange();
+    @Test
+    public void updateClaimModificationTest() {
+
         CommentModificationUnit commentModificationUnit = new CommentModificationUnit();
         commentModificationUnit.setId("testModId");
         CommentModification cmntModification = new CommentModification();
         cmntModification.setChanged(new CommentChanged());
         commentModificationUnit.setModification(cmntModification);
+        ClaimModificationChange claimModificationChange = new ClaimModificationChange();
         claimModificationChange.setCommentModification(commentModificationUnit);
 
         ModificationChange modificationChange = ModificationChange.claim_modification(claimModificationChange);
-        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), modificationChange));
+
+        Modification commentModification = buildCommentModification();
+        Claim claim = createClaim(
+                client,
+                "party_id",
+                generateModifications(
+                        conversionWrapperService,
+                        () -> MockUtil.generateTBaseList(commentModification, 1)
+                )
+        );
+        ModificationUnit modificationUnit = claim.changeset.get(0);
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(),
+                modificationUnit.getModificationId(), modificationChange));
 
         Claim modifiedClaim = callService(() -> client.getClaim("party_id", claim.getId()));
         ModificationUnit changedModificationUnit = modifiedClaim.getChangeset().get(0);
         Assert.assertEquals(commentModificationUnit.getId(),
                 changedModificationUnit.getModification().getClaimModification().getCommentModification().getId());
-        Assert.assertTrue(changedModificationUnit.getModification().getClaimModification().getCommentModification().getModification().isSetChanged());
+        Assert.assertTrue(changedModificationUnit.getModification().getClaimModification().getCommentModification()
+                .getModification().isSetChanged());
         Assert.assertNotNull(changedModificationUnit.getChangedAt());
     }
 
     @Test
     public void updateDocClaimModificationTest() {
+
+        DocumentModificationUnit documentModificationUnit = new DocumentModificationUnit();
+        documentModificationUnit.setId("testDocId");
+        DocumentModification documentModification = new DocumentModification();
+        DocumentChanged documentChanged = new DocumentChanged();
+        documentModification.setChanged(documentChanged);
+        documentModificationUnit.setModification(documentModification);
+        ClaimModificationChange documentClaimModificationChange = new ClaimModificationChange();
+        documentClaimModificationChange.setDocumentModification(documentModificationUnit);
+
+        ModificationChange docModificationChange =
+                ModificationChange.claim_modification(documentClaimModificationChange);
+
         Modification docModification = buildDocumentModification();
         Claim claim = createClaim(
                 client,
@@ -285,29 +320,35 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
                 )
         );
         ModificationUnit modificationUnit = claim.changeset.get(0);
-
-        ClaimModificationChange documentClaimModificationChange = new ClaimModificationChange();
-        DocumentModificationUnit documentModificationUnit = new DocumentModificationUnit();
-        documentModificationUnit.setId("testDocId");
-        DocumentModification documentModification = new DocumentModification();
-        DocumentChanged documentChanged = new DocumentChanged();
-        documentModification.setChanged(documentChanged);
-        documentModificationUnit.setModification(documentModification);
-        documentClaimModificationChange.setDocumentModification(documentModificationUnit);
-        ModificationChange docModificationChange = ModificationChange.claim_modification(documentClaimModificationChange);
-        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), docModificationChange));
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(),
+                modificationUnit.getModificationId(), docModificationChange));
 
         Claim modifiedClaim = callService(() -> client.getClaim("party_id", claim.getId()));
         List<ModificationUnit> changeset = modifiedClaim.getChangeset();
         ModificationUnit docModificationUnit = changeset.get(0);
         Assert.assertEquals(documentModificationUnit.getId(),
                 docModificationUnit.getModification().getClaimModification().getDocumentModification().getId());
-        Assert.assertTrue(docModificationUnit.getModification().getClaimModification().getDocumentModification().getModification().isSetChanged());
+        Assert.assertTrue(
+                docModificationUnit.getModification().getClaimModification().getDocumentModification().getModification()
+                        .isSetChanged());
         Assert.assertNotNull(docModificationUnit.getChangedAt());
     }
 
     @Test
     public void updatePartyModificationTest() {
+
+        ShopLocation shopLocation = new ShopLocation();
+        shopLocation.setUrl("newTestLocationUrl");
+        ShopParams shopParams = buildShopParams();
+        shopParams.setLocation(shopLocation);
+        ShopModification shopModificationThrift = new ShopModification();
+        shopModificationThrift.setCreation(shopParams);
+        ShopModificationUnit shopModificationUnit = new ShopModificationUnit();
+        shopModificationUnit.setId("testShopModId");
+        shopModificationUnit.setModification(shopModificationThrift);
+        PartyModificationChange partyModificationChange = new PartyModificationChange();
+        partyModificationChange.setShopModification(shopModificationUnit);
+
         Modification shopModification = buildShopModification();
         Claim claim = createClaim(
                 client,
@@ -318,59 +359,49 @@ public class ClaimManagementHandlerTest extends AbstractIntegrationTest {
                 )
         );
         ModificationUnit modificationUnit = claim.changeset.get(0);
-
-        PartyModificationChange partyModificationChange = new PartyModificationChange();
-        ShopModification shopModificationThrift = new ShopModification();
-        ShopParams shopParams = buildShopParams();
-        ShopLocation shopLocation = new ShopLocation();
-        shopLocation.setUrl("newTestLocationUrl");
-        shopParams.setLocation(shopLocation);
-        shopModificationThrift.setCreation(shopParams);
-        ShopModificationUnit shopModificationUnit = new ShopModificationUnit();
-        shopModificationUnit.setId("testShopModId");
-        shopModificationUnit.setModification(shopModificationThrift);
-        partyModificationChange.setShopModification(shopModificationUnit);
-
         ModificationChange modificationChange = ModificationChange.party_modification(partyModificationChange);
-        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(), modificationUnit.getModificationId(), modificationChange));
+        runService(() -> client.updateModification("party_id", claim.getId(), claim.getRevision(),
+                modificationUnit.getModificationId(), modificationChange));
 
         Claim modifiedClaim = callService(() -> client.getClaim("party_id", claim.getId()));
         ModificationUnit changedModificationUnit = modifiedClaim.getChangeset().get(0);
-        ShopModificationUnit shopModificationChanged = changedModificationUnit.getModification().getPartyModification().getShopModification();
-        Assert.assertEquals(shopLocation.getUrl(), shopModificationChanged.getModification().getCreation().getLocation().getUrl());
+        ShopModificationUnit shopModificationChanged =
+                changedModificationUnit.getModification().getPartyModification().getShopModification();
+        Assert.assertEquals(shopLocation.getUrl(),
+                shopModificationChanged.getModification().getCreation().getLocation().getUrl());
     }
 
     private Modification buildDocumentModification() {
-        ClaimModification docModification = new ClaimModification();
         DocumentModificationUnit documentModificationUnit = new DocumentModificationUnit();
         documentModificationUnit.setId("testDocId");
         DocumentModification documentModification = new DocumentModification();
         DocumentChanged documentChanged = new DocumentChanged();
         documentModification.setChanged(documentChanged);
         documentModificationUnit.setModification(documentModification);
+        ClaimModification docModification = new ClaimModification();
         docModification.setDocumentModification(documentModificationUnit);
         return Modification.claim_modification(docModification);
     }
 
     private Modification buildCommentModification() {
-        ClaimModification claimModification = new ClaimModification();
         CommentModificationUnit commentModificationUnit = new CommentModificationUnit();
         commentModificationUnit.setId("12345");
         CommentModification commentModification = new CommentModification();
         commentModification.setCreation(new CommentCreated());
         commentModificationUnit.setModification(commentModification);
+        ClaimModification claimModification = new ClaimModification();
         claimModification.setCommentModification(commentModificationUnit);
 
         return Modification.claim_modification(claimModification);
     }
 
     private Modification buildShopModification() {
-        PartyModification partyModification = new PartyModification();
         ShopModificationUnit shopModificationUnit = new ShopModificationUnit();
         shopModificationUnit.setId("testShopModId");
         ShopModification shopModification = new ShopModification();
         shopModification.setCreation(buildShopParams());
         shopModificationUnit.setModification(shopModification);
+        PartyModification partyModification = new PartyModification();
         partyModification.setShopModification(shopModificationUnit);
 
         return Modification.party_modification(partyModification);

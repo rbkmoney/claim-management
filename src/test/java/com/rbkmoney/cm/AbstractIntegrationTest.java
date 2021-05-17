@@ -18,11 +18,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @ContextConfiguration(initializers = AbstractIntegrationTest.Initializer.class)
 public abstract class AbstractIntegrationTest {
 
-    @Value("${local.server.port}")
-    protected int port;
-
     @ClassRule
     public static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:11.4");
+    @Value("${local.server.port}")
+    protected int port;
 
     public static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override

@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractAdjustmentModificationModelToContractModificationConverter implements ClaimConverter<ContractAdjustmentModificationModel, ContractModification> {
+public class ContractAdjustmentModificationModelToContractModificationConverter
+        implements ClaimConverter<ContractAdjustmentModificationModel, ContractModification> {
 
     @Lazy
     @Autowired

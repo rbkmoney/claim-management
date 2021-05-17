@@ -8,7 +8,8 @@ import com.rbkmoney.geck.common.util.TBaseUtil;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CommentModificationUnitToCommentModificationModelConverter implements ClaimConverter<CommentModificationUnit, CommentModificationModel> {
+public class CommentModificationUnitToCommentModificationModelConverter
+        implements ClaimConverter<CommentModificationUnit, CommentModificationModel> {
 
     @Override
     public CommentModificationModel convert(CommentModificationUnit commentModificationUnit) {

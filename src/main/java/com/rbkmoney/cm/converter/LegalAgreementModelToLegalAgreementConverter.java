@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class LegalAgreementModelToLegalAgreementConverter implements ClaimConverter<LegalAgreementModel, LegalAgreement> {
+public class LegalAgreementModelToLegalAgreementConverter
+        implements ClaimConverter<LegalAgreementModel, LegalAgreement> {
     @Override
     public LegalAgreement convert(LegalAgreementModel legalAgreementModel) {
         return new LegalAgreement()

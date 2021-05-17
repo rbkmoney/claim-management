@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class InternationalLegalEntityModelToLegalEntityConverter implements ClaimConverter<InternationalLegalEntityModel, LegalEntity> {
+public class InternationalLegalEntityModelToLegalEntityConverter
+        implements ClaimConverter<InternationalLegalEntityModel, LegalEntity> {
 
     @Lazy
     @Autowired

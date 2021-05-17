@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrivateEntityToContractorPrivateEntityCreationModificationModelConverter implements ClaimConverter<PrivateEntity, ContractorPrivateEntityCreationModificationModel> {
+public class PrivateEntityToContractorPrivateEntityCreationModificationModelConverter
+        implements ClaimConverter<PrivateEntity, ContractorPrivateEntityCreationModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,8 +19,10 @@ public class PrivateEntityToContractorPrivateEntityCreationModificationModelConv
 
     @Override
     public ContractorPrivateEntityCreationModificationModel convert(PrivateEntity privateEntity) {
-        ContractorPrivateEntityCreationModificationModel contractorPrivateEntityCreationModificationModel = new ContractorPrivateEntityCreationModificationModel();
-        contractorPrivateEntityCreationModificationModel.setPrivateEntity(conversionService.convert(privateEntity, PrivateEntityModel.class));
+        ContractorPrivateEntityCreationModificationModel contractorPrivateEntityCreationModificationModel =
+                new ContractorPrivateEntityCreationModificationModel();
+        contractorPrivateEntityCreationModificationModel
+                .setPrivateEntity(conversionService.convert(privateEntity, PrivateEntityModel.class));
         return contractorPrivateEntityCreationModificationModel;
     }
 }

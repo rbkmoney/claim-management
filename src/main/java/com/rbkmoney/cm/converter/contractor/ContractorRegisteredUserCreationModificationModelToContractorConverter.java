@@ -7,9 +7,11 @@ import com.rbkmoney.damsel.domain.RegisteredUser;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContractorRegisteredUserCreationModificationModelToContractorConverter implements ClaimConverter<ContractorRegisteredUserCreationModificationModel, Contractor> {
+public class ContractorRegisteredUserCreationModificationModelToContractorConverter
+        implements ClaimConverter<ContractorRegisteredUserCreationModificationModel, Contractor> {
     @Override
-    public Contractor convert(ContractorRegisteredUserCreationModificationModel contractorRegisteredUserCreationModificationModel) {
+    public Contractor convert(
+            ContractorRegisteredUserCreationModificationModel contractorRegisteredUserCreationModificationModel) {
         return Contractor.registered_user(
                 new RegisteredUser()
                         .setEmail(contractorRegisteredUserCreationModificationModel.getEmail())

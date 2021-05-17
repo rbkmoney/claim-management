@@ -9,7 +9,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RussianPrivateEntityModelToRussianPrivateEntityConverter implements ClaimConverter<RussianPrivateEntityModel, RussianPrivateEntity> {
+public class RussianPrivateEntityModelToRussianPrivateEntityConverter
+        implements ClaimConverter<RussianPrivateEntityModel, RussianPrivateEntity> {
 
     @Lazy
     @Autowired
@@ -21,6 +22,7 @@ public class RussianPrivateEntityModelToRussianPrivateEntityConverter implements
                 .setSecondName(russianPrivateEntityModel.getSecondName())
                 .setFirstName(russianPrivateEntityModel.getFirstName())
                 .setMiddleName(russianPrivateEntityModel.getMiddleName())
-                .setContactInfo(conversionService.convert(russianPrivateEntityModel.getContactInfo(), ContactInfo.class));
+                .setContactInfo(
+                        conversionService.convert(russianPrivateEntityModel.getContactInfo(), ContactInfo.class));
     }
 }

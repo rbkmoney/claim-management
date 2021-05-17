@@ -9,7 +9,8 @@ import com.rbkmoney.damsel.claim_management.FileModification;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FileModificationModelToFileModificationConverter implements ClaimConverter<FileModificationModel, FileModification> {
+public class FileModificationModelToFileModificationConverter
+        implements ClaimConverter<FileModificationModel, FileModification> {
     @Override
     public FileModification convert(FileModificationModel fileModificationModel) {
         switch (fileModificationModel.getFileModificationType()) {
@@ -20,7 +21,8 @@ public class FileModificationModelToFileModificationConverter implements ClaimCo
             case changed:
                 return FileModification.changed(new FileChanged());
             default:
-                throw new IllegalArgumentException(String.format("Unknown type '%s'", fileModificationModel.getFileModificationType()));
+                throw new IllegalArgumentException(
+                        String.format("Unknown type '%s'", fileModificationModel.getFileModificationType()));
         }
     }
 }

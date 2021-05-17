@@ -27,8 +27,9 @@ public class AppConfig {
     }
 
     @Bean
-    public ContinuationTokenService continuationTokenService(@Value("${claim-management.continuation-secret}") String secret,
-                                                             ObjectMapper objectMapper) {
+    public ContinuationTokenService continuationTokenService(
+            @Value("${claim-management.continuation-secret}") String secret,
+            ObjectMapper objectMapper) {
         return new ContinuationTokenService(secret, objectMapper);
     }
 
@@ -41,7 +42,8 @@ public class AppConfig {
                                                          ClaimEventFactory claimEventFactory,
                                                          KafkaTemplate<String, TBase> kafkaTemplate,
                                                          RetryTemplate retryTemplate,
-                                                         @Value("${kafka.topics.claim-event-sink.id}") String eventSinkTopic) {
+                                                         @Value("${kafka.topics.claim-event-sink.id}")
+                                                                 String eventSinkTopic) {
         return new ClaimManagementServiceImpl(
                 continuationTokenService,
                 conversionWrapperService,
@@ -66,7 +68,8 @@ public class AppConfig {
     public ClaimCommitterService claimCommitterService(ClaimManagementService claimManagementService,
                                                        ConversionWrapperService conversionWrapperService,
                                                        CommitterConfig committerConfig) {
-        return new ClaimCommitterService(claimManagementService, conversionWrapperService, committerConfig.getCommitters());
+        return new ClaimCommitterService(claimManagementService, conversionWrapperService,
+                committerConfig.getCommitters());
     }
 
 }

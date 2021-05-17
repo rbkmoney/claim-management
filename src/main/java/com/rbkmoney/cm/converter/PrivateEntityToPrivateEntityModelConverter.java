@@ -19,7 +19,8 @@ public class PrivateEntityToPrivateEntityModelConverter implements ClaimConverte
     public PrivateEntityModel convert(PrivateEntity privateEntity) {
         switch (privateEntity.getSetField()) {
             case RUSSIAN_PRIVATE_ENTITY:
-                return conversionService.convert(privateEntity.getRussianPrivateEntity(), RussianPrivateEntityModel.class);
+                return conversionService
+                        .convert(privateEntity.getRussianPrivateEntity(), RussianPrivateEntityModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", privateEntity.getSetField()));
         }

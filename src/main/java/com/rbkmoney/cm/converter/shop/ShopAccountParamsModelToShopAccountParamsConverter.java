@@ -7,7 +7,8 @@ import com.rbkmoney.damsel.domain.CurrencyRef;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShopAccountParamsModelToShopAccountParamsConverter implements ClaimConverter<ShopAccountParamsModel, ShopAccountParams> {
+public class ShopAccountParamsModelToShopAccountParamsConverter
+        implements ClaimConverter<ShopAccountParamsModel, ShopAccountParams> {
     @Override
     public ShopAccountParams convert(ShopAccountParamsModel shopAccountParamsModel) {
         return new ShopAccountParams()

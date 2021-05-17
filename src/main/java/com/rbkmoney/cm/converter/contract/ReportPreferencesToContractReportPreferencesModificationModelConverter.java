@@ -10,7 +10,8 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReportPreferencesToContractReportPreferencesModificationModelConverter implements ClaimConverter<ReportPreferences, ContractReportPreferencesModificationModel> {
+public class ReportPreferencesToContractReportPreferencesModificationModelConverter
+        implements ClaimConverter<ReportPreferences, ContractReportPreferencesModificationModel> {
 
     @Lazy
     @Autowired
@@ -18,13 +19,15 @@ public class ReportPreferencesToContractReportPreferencesModificationModelConver
 
     @Override
     public ContractReportPreferencesModificationModel convert(ReportPreferences reportPreferences) {
-        ContractReportPreferencesModificationModel contractReportPreferencesModificationModel = new ContractReportPreferencesModificationModel();
+        ContractReportPreferencesModificationModel contractReportPreferencesModificationModel =
+                new ContractReportPreferencesModificationModel();
         if (reportPreferences.isSetServiceAcceptanceActPreferences()) {
             ServiceAcceptanceActPreferencesModel serviceAcceptanceActPreferencesModel = conversionService.convert(
                     reportPreferences.getServiceAcceptanceActPreferences(),
                     ServiceAcceptanceActPreferencesModel.class
             );
-            contractReportPreferencesModificationModel.setServiceAcceptanceActPreferences(serviceAcceptanceActPreferencesModel);
+            contractReportPreferencesModificationModel
+                    .setServiceAcceptanceActPreferences(serviceAcceptanceActPreferencesModel);
         }
         return contractReportPreferencesModificationModel;
     }
