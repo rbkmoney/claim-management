@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DocumentModificationModelToDocumentModificationConverter
         implements ClaimConverter<DocumentModificationModel, DocumentModification> {
+
     @Override
     public DocumentModification convert(DocumentModificationModel documentModificationModel) {
         switch (documentModificationModel.getDocumentModificationType()) {
@@ -22,4 +23,5 @@ public class DocumentModificationModelToDocumentModificationConverter
                         String.format("Unknown type '%s'", documentModificationModel.getDocumentModificationType()));
         }
     }
+
 }

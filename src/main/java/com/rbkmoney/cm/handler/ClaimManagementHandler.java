@@ -143,7 +143,10 @@ public class ClaimManagementHandler implements ClaimManagementSrv.Iface {
     }
 
     @Override
-    public void updateModification(String partyId, long id, int revision, long modificationId,
+    public void updateModification(String partyId,
+                                   long id,
+                                   int revision,
+                                   long modificationId,
                                    ModificationChange modificationChange) throws TException {
         try {
             claimManagementService.updateModification(partyId, id, revision, modificationId, modificationChange);

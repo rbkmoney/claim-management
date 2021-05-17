@@ -6,15 +6,4 @@ public class ModificationWrongTypeException extends RuntimeException {
         super();
     }
 
-    public ModificationWrongTypeException(String message) {
-        super(message);
-    }
-
-    public ModificationWrongTypeException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ModificationWrongTypeException(Throwable cause) {
-        super(cause);
-    }
 }

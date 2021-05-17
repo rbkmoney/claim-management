@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContractorIdentificationLevelToContractorIdentificationLevelModificationModelConverter
         implements ClaimConverter<ContractorIdentificationLevel, ContractorIdentificationLevelModificationModel> {
+
     @Override
     public ContractorIdentificationLevelModificationModel convert(
             ContractorIdentificationLevel contractorIdentificationLevel) {
@@ -22,4 +23,5 @@ public class ContractorIdentificationLevelToContractorIdentificationLevelModific
         );
         return contractorIdentificationLevelModificationModel;
     }
+
 }

@@ -12,6 +12,7 @@ import java.util.Optional;
 @Component
 public class ShopPayoutScheduleModificationModelToShopModificationConverter
         implements ClaimConverter<ShopPayoutScheduleModificationModel, ShopModification> {
+
     @Override
     public ShopModification convert(ShopPayoutScheduleModificationModel shopPayoutScheduleModificationModel) {
         return ShopModification.payout_schedule_modification(
@@ -23,4 +24,5 @@ public class ShopPayoutScheduleModificationModelToShopModificationConverter
                         )
         );
     }
+
 }

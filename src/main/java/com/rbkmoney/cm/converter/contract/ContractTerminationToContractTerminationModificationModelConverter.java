@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContractTerminationToContractTerminationModificationModelConverter
         implements ClaimConverter<ContractTermination, ContractTerminationModificationModel> {
+
     @Override
     public ContractTerminationModificationModel convert(ContractTermination contractTermination) {
         ContractTerminationModificationModel contractTerminationModificationModel =
@@ -15,4 +16,5 @@ public class ContractTerminationToContractTerminationModificationModelConverter
         contractTerminationModificationModel.setReason(contractTermination.getReason());
         return contractTerminationModificationModel;
     }
+
 }

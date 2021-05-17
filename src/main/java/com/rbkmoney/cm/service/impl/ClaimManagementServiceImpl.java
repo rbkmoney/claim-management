@@ -282,8 +282,8 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
     @Transactional
     public Page<ClaimModel> searchClaims(ClaimPageSearchRequest claimSearchRequest,
                                          ClaimPageSearchParameters claimSearchParameters) {
-        log.info("Trying to search claims, claimSearchRequest='{}', claimSearchParameters='{}'", claimSearchRequest,
-                claimSearchParameters);
+        log.info("Trying to search claims, claimSearchRequest='{}', claimSearchParameters='{}'",
+                claimSearchRequest, claimSearchParameters);
 
         Page<ClaimModel> claims = claimRepository.findAll(
                 equalsByPartyIdClaimIdEmailAndStatusIn(
@@ -364,8 +364,8 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
                 conversionService.convert(modificationChange, ModificationModel.class);
 
         if (!modificationModel.getClass().equals(modificationChangeModel.getClass())) {
-            log.warn("Wrong modification type: {}. Expected type: {}", modificationChangeModel.getClass(),
-                    modificationModel.getClass());
+            log.warn("Wrong modification type: {}. Expected type: {}",
+                    modificationChangeModel.getClass(), modificationModel.getClass());
             throw new ModificationWrongTypeException();
         }
 
@@ -416,8 +416,8 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
         if (!expectedStatuses.isEmpty()
                 && !expectedStatuses.contains(claimModel.getClaimStatus().getClaimStatusEnum())) {
             throw new InvalidClaimStatusException(
-                    String.format("Invalid claim status, expected='%s', actual='%s'", expectedStatuses,
-                            claimModel.getClaimStatus().getClaimStatusEnum()),
+                    String.format("Invalid claim status, expected='%s', actual='%s'",
+                            expectedStatuses, claimModel.getClaimStatus().getClaimStatusEnum()),
                     claimModel.getClaimStatus()
             );
         }
@@ -426,8 +426,8 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
     private void checkRevision(ClaimModel claimModel, int revision) {
         if (claimModel.getRevision() != revision) {
             throw new InvalidRevisionException(
-                    String.format("Invalid claim revision, expected='%s', actual='%s'", claimModel.getRevision(),
-                            revision)
+                    String.format("Invalid claim revision, expected='%s', actual='%s'",
+                            claimModel.getRevision(), revision)
             );
         }
     }

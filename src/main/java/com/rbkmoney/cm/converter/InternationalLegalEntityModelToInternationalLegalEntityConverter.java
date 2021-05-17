@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class InternationalLegalEntityModelToInternationalLegalEntityConverter
         implements ClaimConverter<InternationalLegalEntityModel, InternationalLegalEntity> {
+
     @Override
     public InternationalLegalEntity convert(InternationalLegalEntityModel internationalLegalEntityModel) {
         return new InternationalLegalEntity()
@@ -16,4 +17,5 @@ public class InternationalLegalEntityModelToInternationalLegalEntityConverter
                 .setRegisteredNumber(internationalLegalEntityModel.getRegisteredNumber())
                 .setRegisteredAddress(internationalLegalEntityModel.getRegisteredAddress());
     }
+
 }

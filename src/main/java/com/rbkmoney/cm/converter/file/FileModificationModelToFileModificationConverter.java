@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileModificationModelToFileModificationConverter
         implements ClaimConverter<FileModificationModel, FileModification> {
+
     @Override
     public FileModification convert(FileModificationModel fileModificationModel) {
         switch (fileModificationModel.getFileModificationType()) {
@@ -25,4 +26,5 @@ public class FileModificationModelToFileModificationConverter
                         String.format("Unknown type '%s'", fileModificationModel.getFileModificationType()));
         }
     }
+
 }

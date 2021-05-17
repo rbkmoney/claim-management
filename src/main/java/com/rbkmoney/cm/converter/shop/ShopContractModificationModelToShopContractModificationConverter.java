@@ -8,10 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShopContractModificationModelToShopContractModificationConverter
         implements ClaimConverter<ShopContractModificationModel, ShopContractModification> {
+
     @Override
     public ShopContractModification convert(ShopContractModificationModel shopContractModificationModel) {
         return new ShopContractModification()
                 .setContractId(shopContractModificationModel.getContractId())
                 .setPayoutToolId(shopContractModificationModel.getPayoutToolId());
     }
+
 }

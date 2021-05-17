@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContractContractorIdToContractContractorChangeModificationModelConverter
         implements ClaimConverter<String, ContractContractorChangeModificationModel> {
+
     @Override
     public ContractContractorChangeModificationModel convert(String contractorId) {
         ContractContractorChangeModificationModel contractContractorChangeModificationModel =
@@ -14,4 +15,5 @@ public class ContractContractorIdToContractContractorChangeModificationModelConv
         contractContractorChangeModificationModel.setContractorId(contractorId);
         return contractContractorChangeModificationModel;
     }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StatusModificationModelToStatusModificationConverter
         implements ClaimConverter<StatusModificationModel, StatusModification> {
+
     @Override
     public StatusModification convert(StatusModificationModel statusModificationModel) {
         switch (statusModificationModel.getStatusModificationType()) {
@@ -19,4 +20,5 @@ public class StatusModificationModelToStatusModificationConverter
                         String.format("Unknown type '%s'", statusModificationModel.getStatusModificationType()));
         }
     }
+
 }

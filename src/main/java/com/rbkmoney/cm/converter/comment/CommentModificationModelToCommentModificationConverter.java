@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentModificationModelToCommentModificationConverter
         implements ClaimConverter<CommentModificationModel, CommentModification> {
+
     @Override
     public CommentModification convert(CommentModificationModel commentModificationModel) {
         switch (commentModificationModel.getCommentModificationType()) {
@@ -25,4 +26,5 @@ public class CommentModificationModelToCommentModificationConverter
                         String.format("Unknown type '%s'", commentModificationModel.getCommentModificationType()));
         }
     }
+
 }

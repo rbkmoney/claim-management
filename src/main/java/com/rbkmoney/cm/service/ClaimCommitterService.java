@@ -38,8 +38,8 @@ public class ClaimCommitterService {
 
         if (claimModel.getRevision() != revision) {
             throw new InvalidRevisionException(
-                    String.format("Invalid claim revision, expected='%s', actual='%s'", claimModel.getRevision(),
-                            revision)
+                    String.format("Invalid claim revision, expected='%s', actual='%s'",
+                            claimModel.getRevision(), revision)
             );
         }
 
@@ -79,8 +79,8 @@ public class ClaimCommitterService {
 
     @SneakyThrows
     public void sendAccept(String partyId, Claim claim, CommitterConfig.Committer committer) {
-        log.info("Trying to accept claim in service, serviceId='{}', partyId='{}', claimId='{}'", committer.getId(),
-                partyId, claim.getId());
+        log.info("Trying to accept claim in service, serviceId='{}', partyId='{}', claimId='{}'",
+                committer.getId(), partyId, claim.getId());
         try {
             buildClaimCommitterClient(committer).accept(partyId, claim);
             log.info("Claim have been accepted in service, serviceId='{}', partyId='{}', claimId='{}'",
@@ -105,11 +105,11 @@ public class ClaimCommitterService {
 
     @SneakyThrows
     public void sendCommit(String partyId, Claim claim, CommitterConfig.Committer committer) {
-        log.info("Trying to commit claim in service, serviceId='{}', partyId='{}' claimId='{}'", committer.getId(),
-                partyId, claim.getId());
+        log.info("Trying to commit claim in service, serviceId='{}', partyId='{}' claimId='{}'",
+                committer.getId(), partyId, claim.getId());
         buildClaimCommitterClient(committer).commit(partyId, claim);
-        log.info("Claim have been commited in service, serviceId='{}', partyId='{}', claimId='{}'", committer.getId(),
-                partyId, claim.getId());
+        log.info("Claim have been commited in service, serviceId='{}', partyId='{}', claimId='{}'",
+                committer.getId(), partyId, claim.getId());
     }
 
     private ClaimCommitterSrv.Iface buildClaimCommitterClient(CommitterConfig.Committer committer) {

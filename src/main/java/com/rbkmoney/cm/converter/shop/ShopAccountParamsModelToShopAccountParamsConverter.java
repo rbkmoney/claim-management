@@ -9,9 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ShopAccountParamsModelToShopAccountParamsConverter
         implements ClaimConverter<ShopAccountParamsModel, ShopAccountParams> {
+
     @Override
     public ShopAccountParams convert(ShopAccountParamsModel shopAccountParamsModel) {
         return new ShopAccountParams()
                 .setCurrency(new CurrencyRef(shopAccountParamsModel.getCurrencySymbolicCode()));
     }
+
 }
