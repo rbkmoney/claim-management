@@ -1,8 +1,11 @@
 package com.rbkmoney.cm.converter;
 
 import com.rbkmoney.cm.model.InternationalLegalEntityModel;
+import com.rbkmoney.damsel.domain.CountryCode;
+import com.rbkmoney.damsel.domain.CountryRef;
 import com.rbkmoney.damsel.domain.InternationalLegalEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 public class InternationalLegalEntityModelToInternationalLegalEntityConverter
@@ -15,7 +18,10 @@ public class InternationalLegalEntityModelToInternationalLegalEntityConverter
                 .setTradingName(internationalLegalEntityModel.getTradingName())
                 .setActualAddress(internationalLegalEntityModel.getActualAddress())
                 .setRegisteredNumber(internationalLegalEntityModel.getRegisteredNumber())
-                .setRegisteredAddress(internationalLegalEntityModel.getRegisteredAddress());
+                .setRegisteredAddress(internationalLegalEntityModel.getRegisteredAddress())
+                .setCountry(StringUtils.hasLength(internationalLegalEntityModel.getCountryCode())
+                        ? new CountryRef(CountryCode.valueOf(internationalLegalEntityModel.getCountryCode()))
+                        : null);
     }
 
 }
