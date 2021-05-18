@@ -135,7 +135,6 @@
         <dependency>
             <groupId>com.rbkmoney.geck</groupId>
             <artifactId>serializer</artifactId>
-            <version>${geck.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
