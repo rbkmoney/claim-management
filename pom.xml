@@ -205,7 +205,7 @@
                     <attachToTest>false</attachToTest>
                 </configuration>
                 <executions>
-                    <execution>`
+                    <execution>
                         <goals>
                             <goal>process</goal>
                         </goals>
