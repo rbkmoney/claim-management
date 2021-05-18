@@ -29,4 +29,6 @@ public class InternationalLegalEntityModel extends LegalEntityModel {
 
     private String registeredNumber;
 
+    private String countryCode;
+
 }

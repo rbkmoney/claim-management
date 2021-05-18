@@ -1,8 +1,8 @@
 package com.rbkmoney.cm.converter;
 
 import com.rbkmoney.cm.model.InternationalBankDetailsModel;
+import com.rbkmoney.damsel.domain.CountryCode;
 import com.rbkmoney.damsel.domain.InternationalBankDetails;
-import com.rbkmoney.damsel.domain.Residence;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class InternationalBankDetailsModelToInternationalBankDetailsConverter
                 .setName(internationalBankDetailsModel.getName())
                 .setCountry(
                         Optional.ofNullable(internationalBankDetailsModel.getCountryCode())
-                                .map(Residence::findByValue)
+                                .map(CountryCode::findByValue)
                                 .orElse(null)
                 );
     }
