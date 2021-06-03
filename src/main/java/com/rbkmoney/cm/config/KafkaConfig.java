@@ -96,7 +96,6 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, Event> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
-        factory.getContainerProperties().setAckOnError(false);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
         factory.setErrorHandler(errorHandler);
         factory.setConcurrency(concurrency);
@@ -105,7 +104,10 @@ public class KafkaConfig {
 
     @Bean
     public ErrorHandler kafkaErrorHandler() {
-        return new SeekToCurrentWithSleepErrorHandler(errorHandlerSleepTimeSeconds, errorHandlerMaxAttempts);
+        SeekToCurrentWithSleepErrorHandler seekToCurrentErrorHandler =
+                new SeekToCurrentWithSleepErrorHandler(errorHandlerSleepTimeSeconds, errorHandlerMaxAttempts);
+        seekToCurrentErrorHandler.setAckAfterHandle(false);
+        return seekToCurrentErrorHandler;
     }
 
     private void sslConfigure(Map<String, Object> configProps) {

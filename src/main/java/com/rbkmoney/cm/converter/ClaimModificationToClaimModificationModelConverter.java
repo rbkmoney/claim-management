@@ -3,6 +3,7 @@ package com.rbkmoney.cm.converter;
 import com.rbkmoney.cm.model.ClaimModificationModel;
 import com.rbkmoney.cm.model.comment.CommentModificationModel;
 import com.rbkmoney.cm.model.document.DocumentModificationModel;
+import com.rbkmoney.cm.model.external.info.ExternalInfoModificationModel;
 import com.rbkmoney.cm.model.file.FileModificationModel;
 import com.rbkmoney.cm.model.status.StatusModificationModel;
 import com.rbkmoney.damsel.claim_management.ClaimModification;
@@ -33,6 +34,9 @@ public class ClaimModificationToClaimModificationModelConverter
             case DOCUMENT_MODIFICATION:
                 return conversionService
                         .convert(claimModification.getDocumentModification(), DocumentModificationModel.class);
+            case EXTERNAL_INFO_MODIFICATION:
+                return conversionService
+                        .convert(claimModification.getExternalInfoModification(), ExternalInfoModificationModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", claimModification.getSetField()));
         }

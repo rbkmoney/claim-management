@@ -8,6 +8,7 @@ import com.rbkmoney.cm.model.comment.CommentModificationModel;
 import com.rbkmoney.cm.model.contract.ContractModificationModel;
 import com.rbkmoney.cm.model.contractor.ContractorModificationModel;
 import com.rbkmoney.cm.model.document.DocumentModificationModel;
+import com.rbkmoney.cm.model.external.info.ExternalInfoModificationModel;
 import com.rbkmoney.cm.model.file.FileModificationModel;
 import com.rbkmoney.cm.model.shop.ShopModificationModel;
 import com.rbkmoney.cm.model.status.StatusModificationModel;
@@ -89,6 +90,21 @@ public class ConversionServiceTest {
                         conversionService.convert(statusModificationUnit, StatusModificationModel.class),
                         ClaimModification.class
                 ).getStatusModification()
+        );
+    }
+
+    @Test
+    @Repeat(10)
+    public void testExternalInfoModificationConverters() {
+        ExternalInfoModificationUnit externalInfoModificationUnit =
+                MockUtil.generateTBase(ExternalInfoModificationUnit.class);
+        externalInfoModificationUnit.setDocumentId("123");
+        assertEquals(
+                externalInfoModificationUnit,
+                conversionService.convert(
+                        conversionService.convert(externalInfoModificationUnit, ExternalInfoModificationModel.class),
+                        ClaimModification.class
+                ).getExternalInfoModification()
         );
     }
 
