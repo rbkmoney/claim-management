@@ -2,7 +2,7 @@ create table cm.external_info_modification_model
 (
     id                   int8                  not null,
     document_id          character varying     not null,
-    roistat_id           character varying     not null,
+    roistat_id           character varying,
     primary key (id)
 );
 
