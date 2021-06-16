@@ -10,7 +10,7 @@ public class PayoutToolInfoPaymentInstitutionAccountModelToPayoutToolInfoConvert
         implements ClaimConverter<PayoutToolInfoPaymentInstitutionAccountModel, PayoutToolInfo> {
 
     @Override
-    public PayoutToolInfo convert(PayoutToolInfoPaymentInstitutionAccountModel payoutToolInfoPaymentInstitutionAccountModel) {
+    public PayoutToolInfo convert(PayoutToolInfoPaymentInstitutionAccountModel paymentInstitutionAccountModel) {
         return PayoutToolInfo.payment_institution_account(new PaymentInstitutionAccount());
     }
 }
