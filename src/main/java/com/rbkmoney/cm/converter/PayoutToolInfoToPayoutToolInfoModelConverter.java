@@ -1,9 +1,6 @@
 package com.rbkmoney.cm.converter;
 
-import com.rbkmoney.cm.model.PayoutToolInfoInternationalBankAccountModel;
-import com.rbkmoney.cm.model.PayoutToolInfoModel;
-import com.rbkmoney.cm.model.PayoutToolInfoRussianBankAccountModel;
-import com.rbkmoney.cm.model.PayoutToolInfoWalletInfoModel;
+import com.rbkmoney.cm.model.*;
 import com.rbkmoney.damsel.domain.PayoutToolInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -29,6 +26,9 @@ public class PayoutToolInfoToPayoutToolInfoModelConverter
                         PayoutToolInfoInternationalBankAccountModel.class);
             case WALLET_INFO:
                 return conversionService.convert(payoutToolInfo.getWalletInfo(), PayoutToolInfoWalletInfoModel.class);
+            case PAYMENT_INSTITUTION_ACCOUNT:
+                return conversionService.convert(payoutToolInfo.getPaymentInstitutionAccount(),
+                        PayoutToolInfoPaymentInstitutionAccountModel.class);
             default:
                 throw new IllegalArgumentException(String.format("Unknown type '%s'", payoutToolInfo.getSetField()));
         }
