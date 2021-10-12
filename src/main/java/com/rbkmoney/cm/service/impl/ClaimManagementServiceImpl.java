@@ -362,6 +362,9 @@ public class ClaimManagementServiceImpl implements ClaimManagementService {
 
         ModificationModel modificationChangeModel =
                 conversionService.convert(modificationChange, ModificationModel.class);
+        if (modificationChangeModel == null) {
+            throw new IllegalStateException("ModificationModel can't be null");
+        }
 
         if (!modificationModel.getClass().equals(modificationChangeModel.getClass())) {
             log.warn("Wrong modification type: {}. Expected type: {}",
