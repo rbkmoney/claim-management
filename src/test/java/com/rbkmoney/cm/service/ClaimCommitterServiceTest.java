@@ -110,15 +110,11 @@ public class ClaimCommitterServiceTest extends AbstractWithCommittersIntegration
 
         ClaimModel claimModel = createClaimWithPendingAcceptance("party_id");
 
-        try {
-            claimCommitterService.doCommitClaim(claimModel.getPartyId(), claimModel.getId(), claimModel.getRevision());
-            fail();
-        } catch (RuntimeException ex) {
-            // do nothing
-        }
+        claimCommitterService.doCommitClaim(claimModel.getPartyId(), claimModel.getId(), claimModel.getRevision());
+
         ClaimModel newClaimModel = claimManagementService.getClaim(claimModel.getPartyId(), claimModel.getId());
-        assertEquals(claimModel.getClaimStatus(), newClaimModel.getClaimStatus());
-        assertEquals(claimModel.getRevision(), newClaimModel.getRevision());
+        assertEquals(pending, newClaimModel.getClaimStatus().getClaimStatusEnum());
+        assertEquals(2, newClaimModel.getRevision());
     }
 
     @Test
