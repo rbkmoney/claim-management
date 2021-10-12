@@ -22,6 +22,9 @@ public class ContractModificationUnitToContractModificationModelConverter
         ContractModification contractModification = contractModificationUnit.getModification();
         ContractModificationModel contractModificationModel =
                 conversionService.convert(contractModification, ContractModificationModel.class);
+        if (contractModificationModel == null) {
+            throw new IllegalStateException("ContractModificationModel can't be null");
+        }
         contractModificationModel.setContractId(contractModificationUnit.getId());
         return contractModificationModel;
     }

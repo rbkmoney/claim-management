@@ -22,6 +22,9 @@ public class ContractorModificationUnitToContractorModificationModelConverter
         ContractorModification contractorModification = contractorModificationUnit.getModification();
         ContractorModificationModel contractorModificationModel =
                 conversionService.convert(contractorModification, ContractorModificationModel.class);
+        if (contractorModificationModel == null) {
+            throw new IllegalStateException("ContractorModificationModel can't be null");
+        }
         contractorModificationModel.setContractorId(contractorModificationUnit.getId());
         return contractorModificationModel;
     }

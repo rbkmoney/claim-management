@@ -22,6 +22,9 @@ public class ShopCashRegisterModificationUnitToShopCashRegisterModificationModel
         CashRegisterModification modification = cashRegisterModificationUnit.getModification();
         ShopCashRegisterModificationModel cashRegisterModificationModel =
                 conversionService.convert(modification, ShopCashRegisterModificationModel.class);
+        if (cashRegisterModificationModel == null) {
+            throw new IllegalStateException("ShopCashRegisterModificationModel can't be null");
+        }
         cashRegisterModificationModel.setRegisterId(cashRegisterModificationUnit.getId());
         return cashRegisterModificationModel;
     }

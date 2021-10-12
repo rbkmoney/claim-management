@@ -21,6 +21,9 @@ public class ModificationUnitToModificationModelConverter
     public ModificationModel convert(ModificationUnit modificationUnit) {
         ModificationModel modificationModel =
                 conversionService.convert(modificationUnit.getModification(), ModificationModel.class);
+        if (modificationModel == null) {
+            throw new IllegalStateException("ModificationModel can't be null");
+        }
         UserInfoModel userInfoModel = conversionService.convert(modificationUnit.getUserInfo(), UserInfoModel.class);
         modificationModel.setId(modificationUnit.getModificationId());
         modificationModel.setCreatedAt(TypeUtil.stringToInstant(modificationUnit.getCreatedAt()));

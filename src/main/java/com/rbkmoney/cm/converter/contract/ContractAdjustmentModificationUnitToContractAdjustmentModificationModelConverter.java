@@ -24,6 +24,9 @@ public class ContractAdjustmentModificationUnitToContractAdjustmentModificationM
                 contractAdjustmentModificationUnit.getModification();
         ContractAdjustmentModificationModel contractAdjustmentModificationModel =
                 conversionService.convert(contractAdjustmentModification, ContractAdjustmentModificationModel.class);
+        if (contractAdjustmentModificationModel == null) {
+            throw new IllegalStateException("ContractAdjustmentModificationModel can't be null");
+        }
         contractAdjustmentModificationModel
                 .setContractAdjustmentId(contractAdjustmentModificationUnit.getAdjustmentId());
         return contractAdjustmentModificationModel;

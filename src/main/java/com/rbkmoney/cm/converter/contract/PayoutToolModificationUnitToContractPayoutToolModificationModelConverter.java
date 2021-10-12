@@ -2,6 +2,7 @@ package com.rbkmoney.cm.converter.contract;
 
 import com.rbkmoney.cm.converter.ClaimConverter;
 import com.rbkmoney.cm.model.contract.ContractPayoutToolModificationModel;
+import com.rbkmoney.cm.model.contractor.ContractorModificationModel;
 import com.rbkmoney.damsel.claim_management.PayoutToolModificationUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -20,6 +21,9 @@ public class PayoutToolModificationUnitToContractPayoutToolModificationModelConv
     public ContractPayoutToolModificationModel convert(PayoutToolModificationUnit payoutToolModificationUnit) {
         ContractPayoutToolModificationModel payoutToolModificationModel = conversionService
                 .convert(payoutToolModificationUnit.getModification(), ContractPayoutToolModificationModel.class);
+        if (payoutToolModificationModel == null) {
+            throw new IllegalStateException("ContractPayoutToolModificationModel can't be null");
+        }
         payoutToolModificationModel.setPayoutToolId(payoutToolModificationUnit.getPayoutToolId());
         return payoutToolModificationModel;
     }
