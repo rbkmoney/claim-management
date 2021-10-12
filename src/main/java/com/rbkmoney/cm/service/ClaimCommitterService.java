@@ -16,6 +16,7 @@ import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.thrift.TException;
 
 import javax.transaction.Transactional;
 
@@ -53,9 +54,9 @@ public class ClaimCommitterService {
 
         new WFlow().createServiceFork(
                 () -> {
+                    addUserInfoFromLastModification(claimModel);
+                    Claim claim = conversionWrapperService.convertClaim(claimModel);
                     try {
-                        addUserInfoFromLastModification(claimModel);
-                        Claim claim = conversionWrapperService.convertClaim(claimModel);
                         committers.forEach(committer -> sendAccept(partyId, claim, committer));
                         claimManagementService.acceptClaim(partyId, claimId, revision);
                         committers.forEach(committer -> sendCommit(partyId, claim, committer));
@@ -65,6 +66,9 @@ public class ClaimCommitterService {
                                 "An invalid changeset occurred while trying to apply the claim, " +
                                         "rollback to pending status",
                                 ex);
+                        claimManagementService.failClaimAcceptance(partyId, claimId, revision);
+                    } catch (Exception ex) {
+                        log.warn("Exception during accept and commit claim. partyId={}; claimId={}", partyId, claimId);
                         claimManagementService.failClaimAcceptance(partyId, claimId, revision);
                     }
                 }
