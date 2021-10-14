@@ -10,16 +10,15 @@ import com.rbkmoney.cm.model.ModificationModel;
 import com.rbkmoney.cm.util.ContextUtil;
 import com.rbkmoney.damsel.claim_management.Claim;
 import com.rbkmoney.damsel.claim_management.ClaimCommitterSrv;
+import com.rbkmoney.damsel.claim_management.Event;
 import com.rbkmoney.damsel.claim_management.InvalidChangeset;
 import com.rbkmoney.woody.api.flow.WFlow;
 import com.rbkmoney.woody.thrift.impl.http.THSpawnClientBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.thrift.TException;
 
 import javax.transaction.Transactional;
-
 import java.util.List;
 
 @Slf4j
@@ -36,6 +35,11 @@ public class ClaimCommitterService {
     public void doCommitClaim(String partyId, long claimId, int revision) {
         log.info("Trying to commit and accept claim, partyId='{}', claimId='{}'", partyId, claimId);
         ClaimModel claimModel = claimManagementService.getClaim(partyId, claimId);
+
+        if (revision < claimModel.getRevision()) {
+            log.warn("Ignore old claim revision partyId='{}', claimId='{}'", partyId, claimId);
+            return;
+        }
 
         if (claimModel.getRevision() != revision) {
             throw new InvalidRevisionException(
@@ -68,7 +72,8 @@ public class ClaimCommitterService {
                                 ex);
                         claimManagementService.failClaimAcceptance(partyId, claimId, revision);
                     } catch (Exception ex) {
-                        log.warn("Exception during accept and commit claim. partyId={}; claimId={}", partyId, claimId);
+                        log.warn("Exception during accept and commit claim. partyId={}; claimId={}",
+                                partyId, claimId, ex);
                         claimManagementService.failClaimAcceptance(partyId, claimId, revision);
                     }
                 }
