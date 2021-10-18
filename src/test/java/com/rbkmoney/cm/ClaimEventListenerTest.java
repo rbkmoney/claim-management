@@ -4,7 +4,8 @@ import com.rbkmoney.cm.meta.UserIdentityEmailExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityIdExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityRealmExtensionKit;
 import com.rbkmoney.cm.meta.UserIdentityUsernameExtensionKit;
-import com.rbkmoney.cm.model.*;
+import com.rbkmoney.cm.model.ClaimModel;
+import com.rbkmoney.cm.model.ClaimStatusEnum;
 import com.rbkmoney.cm.repository.ClaimRepository;
 import com.rbkmoney.cm.service.ClaimManagementService;
 import com.rbkmoney.cm.service.ConversionWrapperService;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -67,14 +67,14 @@ public class ClaimEventListenerTest extends AbstractKafkaIntegrationTest {
         Event event = new Event();
         event.setOccuredAt(TypeUtil.temporalToString(LocalDateTime.now()));
         Change change = new Change();
+        event.setChange(change);
         ClaimStatusChanged claimStatusChanged = new ClaimStatusChanged();
+        change.setStatusChanged(claimStatusChanged);
         claimStatusChanged.setId(1);
         claimStatusChanged.setPartyId(partyId);
         claimStatusChanged.setStatus(ClaimStatus.pending_acceptance(new ClaimPendingAcceptance()));
         claimStatusChanged.setRevision(0);
         claimStatusChanged.setUpdatedAt(TypeUtil.temporalToString(LocalDateTime.now()));
-        change.setStatusChanged(claimStatusChanged);
-        event.setChange(change);
 
         // When
         Claim pendingClaim = createClaim(client, conversionWrapperService, partyId, 5);
