@@ -63,7 +63,7 @@ public class ClaimEventListenerTest extends AbstractKafkaIntegrationTest {
     @Test
     public void testClaimStatusChangeHandler() throws InterruptedException, ExecutionException {
         // Given
-        String partyId = UUID.randomUUID().toString();
+        final String partyId = UUID.randomUUID().toString();
         Event event = new Event();
         event.setOccuredAt(TypeUtil.temporalToString(LocalDateTime.now()));
         Change change = new Change();
