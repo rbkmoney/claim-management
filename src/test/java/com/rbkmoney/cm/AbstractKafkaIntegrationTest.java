@@ -13,32 +13,36 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.ClassRule;
-import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.utility.DockerImageName;
 
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
 
 @Slf4j
-@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(
+        classes = ClaimManagementApplication.class,
         initializers = AbstractKafkaIntegrationTest.Initializer.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 public abstract class AbstractKafkaIntegrationTest extends AbstractIntegrationTest {
 
-    public static final String KAFKA_DOCKER_VERSION = "5.0.1";
+    @Value("${kafka.topics.claim-event-sink.id}")
+    public String eventSinkTopic;
 
     @ClassRule
-    public static KafkaContainer kafka = new KafkaContainer(KAFKA_DOCKER_VERSION).withEmbeddedZookeeper();
+    public static KafkaContainer kafka =
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:5.4.3"));
 
-    public static <T> Consumer<String, T> createConsumer(Class clazz) {
+    protected <T> Consumer<String, T> createConsumer(Class clazz) {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -48,7 +52,7 @@ public abstract class AbstractKafkaIntegrationTest extends AbstractIntegrationTe
         return new KafkaConsumer<>(props);
     }
 
-    public static <T> Producer<String, T> createProducer() {
+    protected <T> Producer<String, T> createProducer() {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
         props.put(ProducerConfig.CLIENT_ID_CONFIG, "CLIENT");
@@ -62,15 +66,24 @@ public abstract class AbstractKafkaIntegrationTest extends AbstractIntegrationTe
 
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-            TestPropertyValues
-                    .of("kafka.bootstrap.servers=" + kafka.getBootstrapServers())
+            kafka.start();
+            TestPropertyValues.of(
+                            "kafka.bootstrap.servers=" + kafka.getBootstrapServers(),
+                            "kafka.topics.claim-event-sink.enabled=true"
+                    )
                     .applyTo(configurableApplicationContext.getEnvironment());
             initTopic(CLAIM_EVENT_SINK);
         }
 
         @NotNull
         private <T> Consumer<String, T> initTopic(String topicName) {
-            Consumer<String, T> consumer = createConsumer(ClaimManagementEventDeserializer.class);
+            Properties props = new Properties();
+            props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafka.getBootstrapServers());
+            props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ClaimManagementEventDeserializer.class);
+            props.put(ConsumerConfig.GROUP_ID_CONFIG, "test");
+            props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+            Consumer<String, T> consumer = new KafkaConsumer<>(props);
             try {
                 consumer.subscribe(Collections.singletonList(topicName));
                 consumer.poll(Duration.ofMillis(100L));
